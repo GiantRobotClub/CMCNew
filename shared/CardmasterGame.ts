@@ -1,5 +1,6 @@
 import { INVALID_MOVE } from "boardgame.io/dist/types/src/core/constants";
 import type { Game, Move } from "boardgame.io";
+import { Stage, TurnOrder } from "boardgame.io/core";
 import { CMCCard, CreateBasicCard, CreateDebugCard } from "./CMCCard";
 import { CMCPlayer, CreateDefaultPlayer } from "./Player";
 
@@ -18,20 +19,26 @@ export interface CMCGameState {
   };
   players: {
     "0": {
-      hand: [];
+      hand: CMCCard[];
     };
     "1": {
-      hand: [];
+      hand: CMCCard[];
     };
   };
   secret: {
     decks: {
-      "0": [];
-      "1": [];
+      "0": CMCCard[];
+      "1": CMCCard[];
     };
   };
 }
-const passTurn: Move<CMCGameState> = ({ G, ctx }) => {};
+const passTurn: Move<CMCGameState> = ({ G, ctx, events }) => {
+  events.endTurn();
+};
+
+const passStage: Move<CMCGameState> = ({ G, ctx, events }) => {
+  events.endStage();
+};
 
 export const CardmasterConflict: Game<CMCGameState> = {
   setup: ({ ctx }, setupData): CMCGameState => {
@@ -74,10 +81,10 @@ export const CardmasterConflict: Game<CMCGameState> = {
       },
       players: {
         "0": {
-          hand: [],
+          hand: [CreateDebugCard()],
         },
         "1": {
-          hand: [],
+          hand: [CreateDebugCard(), CreateDebugCard()],
         },
       },
       secret: {
@@ -87,6 +94,55 @@ export const CardmasterConflict: Game<CMCGameState> = {
         },
       },
     };
+  },
+  turn: {
+    activePlayers: {
+      currentPlayer: "draw",
+    },
+    order: TurnOrder.CUSTOM(["0", "1"]), // anyone else is a spectator
+    onBegin: ({ G, ctx, events, random }) => {
+      return G;
+    },
+    stages: {
+      draw: {
+        moves: {
+          passStage: passStage,
+        }, // automatically does the draw for you
+        next: "play",
+      },
+      play: {
+        moves: {
+          //chooseCard
+          //chooseAbility
+          passStage: passStage,
+        },
+        next: "combat",
+      },
+      combat: {
+        moves: {
+          //chooseCard
+          passStage: passStage,
+        },
+
+        next: "resolve",
+      },
+      resolve: {
+        moves: {
+          passTurn: passTurn,
+        },
+        next: "draw",
+      },
+
+      // states depending on player actions
+      pickTarget: {},
+      pickHandCard: {},
+      pickPlayer: {},
+      respond: {
+        moves: {
+          passStage: passStage,
+        },
+      },
+    },
   },
 
   moves: {
