@@ -1,0 +1,15 @@
+const SERVER_PORT = 3030;
+const CLIENT_PORT = 3000;
+const GAME_PORT = 3050;
+
+enum CardType {
+  EMPTY = 0,
+  DUMMY,
+  MONSTER,
+  EFFECT,
+  SPELL,
+  LOCATION,
+  PERSONA,
+}
+
+export { SERVER_PORT, CLIENT_PORT, GAME_PORT, CardType };
