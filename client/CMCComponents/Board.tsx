@@ -16,6 +16,8 @@ export function CMCBoard(props: CMCProps) {
   const flexStyle: CSSProperties = {
     display: "flex",
   };
+  let currentPlayer = props.ctx.currentPlayer;
+  let otherPlayer = props.ctx.currentPlayer == "0" ? 1 : 0;
   return (
     <div>
       <div className="debug">
@@ -31,30 +33,30 @@ export function CMCBoard(props: CMCProps) {
         <div style={{ height: "100%", background: "green", width: "100px" }}>
           player info
           <div style={{ height: "50%", width: "100px" }}>
-            {JSON.stringify(props.G.player[0])}
+            {JSON.stringify(props.G.player[otherPlayer])}
           </div>
           <div style={{ height: "50%" }}>
-            {JSON.stringify(props.G.player[1])}
+            {JSON.stringify(props.G.player[currentPlayer])}
           </div>
         </div>
         <div style={{ height: "100px" }}>
           <div style={flexStyle}>
-            {state.slots[0].monsters.map((card, index) => (
+            {state.slots[otherPlayer].monsters.map((card, index) => (
               <CMCCardVisual card={card} key={"0m" + index} />
             ))}
           </div>
           <div style={flexStyle}>
-            {state.slots[0].effects.map((card, index) => (
+            {state.slots[otherPlayer].effects.map((card, index) => (
               <CMCCardVisual card={card} key={"0e" + index} />
             ))}
           </div>
           <div style={flexStyle}>
-            {state.slots[1].effects.map((card, index) => (
+            {state.slots[currentPlayer].effects.map((card, index) => (
               <CMCCardVisual card={card} key={"1e" + index} />
             ))}
           </div>
           <div style={flexStyle}>
-            {state.slots[1].monsters.map((card, index) => (
+            {state.slots[currentPlayer].monsters.map((card, index) => (
               <CMCCardVisual card={card} key={"1m" + index} />
             ))}
           </div>

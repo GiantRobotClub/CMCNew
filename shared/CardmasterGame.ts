@@ -1,5 +1,5 @@
 import { INVALID_MOVE } from "boardgame.io/dist/types/src/core/constants";
-import type { Game, Move } from "boardgame.io";
+import type { Ctx, Game, Move } from "boardgame.io";
 import { Stage, TurnOrder } from "boardgame.io/core";
 import { CMCCard, CreateBasicCard, CreateDebugCard } from "./CMCCard";
 import { CMCPlayer, CreateDefaultPlayer } from "./Player";
@@ -8,8 +8,10 @@ import { current } from "immer";
 import {
   Ability_Trigger,
   TriggeringTrigger,
+  TriggerNames,
   TriggerPlayerType,
 } from "./Abilities";
+import { Console } from "console";
 
 export interface CMCGameState {
   player: [CMCPlayer, CMCPlayer];
@@ -39,22 +41,30 @@ export interface CMCGameState {
     };
   };
 }
+
+function TriggerAuto(name: string, ctx: Ctx, G: CMCGameState): void {
+  if (ctx.activePlayers !== null) {
+    Ability_Trigger(
+      {
+        name: name,
+        stage: ctx.activePlayers[ctx.currentPlayer],
+        triggeringPlayer: ctx.currentPlayer,
+      },
+      G,
+      ctx
+    );
+  }
+}
+
 const passTurn: Move<CMCGameState> = ({ G, ctx, events }) => {
   events.endTurn();
 };
 
 const passStage: Move<CMCGameState> = ({ G, ctx, events }) => {
+  console.dir(ctx);
+  TriggerAuto(TriggerNames.END_STAGE, ctx, G);
   events.endStage();
-  Ability_Trigger(
-    {
-      name: "start_stage",
-      stage: "draw",
-      triggeringPlayer: ctx.currentPlayer,
-    },
-    G,
-    ctx
-  );
-  console.log(G);
+  console.dir(ctx);
 };
 
 export const CardmasterConflict: Game<CMCGameState> = {
@@ -114,10 +124,22 @@ export const CardmasterConflict: Game<CMCGameState> = {
   },
   turn: {
     activePlayers: {
-      currentPlayer: "initial",
+      currentPlayer: "draw",
     },
     order: TurnOrder.CUSTOM(["0", "1"]), // anyone else is a spectator
     onBegin: ({ G, ctx, events, random }) => {
+      if (ctx.activePlayers !== null) {
+        TriggerAuto(TriggerNames.START_TURN, ctx, G);
+      }
+
+      return G;
+    },
+    onEnd: ({ G, ctx, events, random }) => {
+      if (ctx.activePlayers !== null) {
+        TriggerAuto(TriggerNames.END_STAGE, ctx, G);
+        TriggerAuto(TriggerNames.END_TURN, ctx, G);
+      }
+
       return G;
     },
     stages: {

@@ -12,6 +12,11 @@ enum TriggerType {
   AUTOMATIC_PRECOMBAT,
 }
 
+enum TriggerNames {
+  START_TURN = "start_turn",
+  END_STAGE = "end_stage",
+  END_TURN = "end_turn",
+}
 interface Ability {
   triggerType: TriggerType;
   targetCode?: string;
@@ -40,8 +45,7 @@ function Ability_Trigger(
   ctx: Ctx
 ) {
   let newG = G;
-
-  const triggername: string = trigger_data.name;
+  console.log("Ability trigger check " + JSON.stringify(trigger_data));
   for (const slotplayer in G.slots) {
     for (const subplayer in G.slots[slotplayer]) {
       for (const subrow of G.slots[slotplayer][subplayer]) {
@@ -84,4 +88,5 @@ export {
   TriggeringTrigger,
   TriggerType,
   TriggerPlayerType,
+  TriggerNames,
 };

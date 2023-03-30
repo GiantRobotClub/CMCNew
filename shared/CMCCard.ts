@@ -2,10 +2,11 @@ import { CardType } from "../shared/Constants";
 import {
   Ability,
   TriggeringTrigger,
+  TriggerNames,
   TriggerPlayerType,
   TriggerType,
 } from "./Abilities";
-import { ManaGenerate, StartStage } from "./CardFunctions";
+import { ManaGenerate, TriggerStage } from "./CardFunctions";
 interface CMCCardBase {
   name: string;
   type: CardType;
@@ -71,9 +72,9 @@ function CreateDebugCard(): CMCEffectCard {
   const debugAbility: Ability = {
     triggerType: TriggerType.AUTOMATIC_STAGE,
     activateCode: ManaGenerate.toString(),
-    triggerCode: StartStage.toString(),
+    triggerCode: TriggerStage.toString(),
     metadata: {
-      triggername: "start_stage",
+      triggername: TriggerNames.START_TURN,
       triggerstage: "draw",
       color: "A",
       amount: 1,

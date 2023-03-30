@@ -1,5 +1,10 @@
 import { Ctx } from "boardgame.io";
-import { Ability, TriggeringTrigger, TriggerPlayerType } from "./Abilities";
+import {
+  Ability,
+  TriggeringTrigger,
+  TriggerNames,
+  TriggerPlayerType,
+} from "./Abilities";
 import { CMCGameState } from "./CardmasterGame";
 import { CMCCard } from "./CMCCard";
 import { CMCPlayer } from "./Player";
@@ -21,7 +26,7 @@ export function ManaGenerate(
   return newG;
 }
 
-export function StartStage(
+export function TriggerStage(
   card: CMCCard,
   ability: Ability,
   trigger: TriggeringTrigger,
@@ -29,7 +34,7 @@ export function StartStage(
   G: CMCGameState,
   ctx: Ctx
 ): boolean {
-  console.log("Checking " + trigger);
+  console.log("Checking " + JSON.stringify(trigger));
   if (!ctx.activePlayers) {
     console.log("No active players");
     return false;
@@ -47,8 +52,8 @@ export function StartStage(
     );
     return false;
   }
-  if (ability.metadata.triggername != "start_stage") {
-    console.log(ability.metadata.triggername + " isnt start_stage");
+  if (trigger.name != ability.metadata.triggername) {
+    console.log(trigger.name + " isnt " + ability.metadata.triggername);
     return false;
   }
   console.log("Ability is go");
