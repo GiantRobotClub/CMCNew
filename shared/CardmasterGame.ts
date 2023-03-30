@@ -3,6 +3,13 @@ import type { Game, Move } from "boardgame.io";
 import { Stage, TurnOrder } from "boardgame.io/core";
 import { CMCCard, CreateBasicCard, CreateDebugCard } from "./CMCCard";
 import { CMCPlayer, CreateDefaultPlayer } from "./Player";
+import { draw } from "svelte/types/runtime/transition";
+import { current } from "immer";
+import {
+  Ability_Trigger,
+  TriggeringTrigger,
+  TriggerPlayerType,
+} from "./Abilities";
 
 export interface CMCGameState {
   player: [CMCPlayer, CMCPlayer];
@@ -38,6 +45,16 @@ const passTurn: Move<CMCGameState> = ({ G, ctx, events }) => {
 
 const passStage: Move<CMCGameState> = ({ G, ctx, events }) => {
   events.endStage();
+  Ability_Trigger(
+    {
+      name: "start_stage",
+      stage: "draw",
+      triggeringPlayer: ctx.currentPlayer,
+    },
+    G,
+    ctx
+  );
+  console.log(G);
 };
 
 export const CardmasterConflict: Game<CMCGameState> = {
@@ -97,13 +114,19 @@ export const CardmasterConflict: Game<CMCGameState> = {
   },
   turn: {
     activePlayers: {
-      currentPlayer: "draw",
+      currentPlayer: "initial",
     },
     order: TurnOrder.CUSTOM(["0", "1"]), // anyone else is a spectator
     onBegin: ({ G, ctx, events, random }) => {
       return G;
     },
     stages: {
+      initial: {
+        moves: {
+          passStage: passStage,
+        },
+        next: "draw",
+      },
       draw: {
         moves: {
           passStage: passStage,

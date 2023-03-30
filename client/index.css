@@ -66,4 +66,17 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+
+}
+
+.mana_venerated {
+  color: rgb(238, 120, 105);
+
+}
+.mana_profane {
+  color: purple
+}
+
+.mana_anodyne {
+  color: green
 }
