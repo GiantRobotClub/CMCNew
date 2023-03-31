@@ -2,7 +2,6 @@ import React, { CSSProperties } from "react";
 import CMCCardVisual from "./Card";
 import { CMCGameState } from "../../shared/CardmasterGame";
 import type { BoardProps } from "boardgame.io/react";
-import { claim_text } from "svelte/internal";
 interface CMCProps extends BoardProps<CMCGameState> {
   // Additional custom properties for your component
 }

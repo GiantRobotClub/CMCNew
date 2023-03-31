@@ -12,9 +12,15 @@ import {
   TriggerPlayerType,
 } from "./Abilities";
 import { Console } from "console";
+import { string } from "prop-types";
 
 export interface CMCGameState {
-  player: [CMCPlayer, CMCPlayer];
+  player: {
+    "0": CMCPlayer;
+    "1": CMCPlayer;
+  };
+  returnstage: string;
+  currentmetadata: any;
   slots: {
     "0": {
       effects: [CMCCard, CMCCard, CMCCard, CMCCard, CMCCard];
@@ -56,6 +62,7 @@ function TriggerAuto(name: string, ctx: Ctx, G: CMCGameState): void {
   }
 }
 
+// moves
 const passTurn: Move<CMCGameState> = ({ G, ctx, events }) => {
   events.endTurn();
 };
@@ -66,11 +73,22 @@ const passStage: Move<CMCGameState> = ({ G, ctx, events }) => {
   events.endStage();
   console.dir(ctx);
 };
+const playCardFromHand: Move<CMCGameState> = (
+  { G, ctx, events },
+  idx: number
+) => {
+  let hand = ctx.currentPlayer;
+};
 
 export const CardmasterConflict: Game<CMCGameState> = {
   setup: ({ ctx }, setupData): CMCGameState => {
     return {
-      player: [CreateDefaultPlayer(), CreateDefaultPlayer()],
+      player: {
+        "0": CreateDefaultPlayer("0"),
+        "1": CreateDefaultPlayer("1"),
+      },
+      returnstage: "",
+      currentmetadata: {},
       slots: {
         "0": {
           effects: [
@@ -157,7 +175,7 @@ export const CardmasterConflict: Game<CMCGameState> = {
       },
       play: {
         moves: {
-          //chooseCard
+          playCardFromHand: playCardFromHand,
           //chooseAbility
           passStage: passStage,
         },

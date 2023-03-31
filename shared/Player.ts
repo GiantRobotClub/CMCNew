@@ -1,30 +1,36 @@
 interface CMCPlayer {
-  mana: {
-    V: number;
-    A: number;
-    P: number;
+  resources: {
+    mana: {
+      V: number;
+      A: number;
+      P: number;
+    };
+    health: number;
+    power: number;
   };
-  health: number;
   decksize: number;
   currentDeck: number;
   currentGrave: number;
-  power: number;
   name: string;
+  id: string;
 }
 
-function CreateDefaultPlayer(): CMCPlayer {
+function CreateDefaultPlayer(playerId: string): CMCPlayer {
   const player: CMCPlayer = {
-    mana: {
-      V: 1,
-      A: 1,
-      P: 1,
+    resources: {
+      power: 0,
+      health: 100,
+      mana: {
+        V: 1,
+        A: 1,
+        P: 1,
+      },
     },
-    health: 100,
     currentDeck: 100,
     currentGrave: 0,
     decksize: 100,
-    power: 0,
-    name: "CARDMASTER",
+    name: "CARDMASTER" + playerId,
+    id: playerId,
   };
   return player;
 }

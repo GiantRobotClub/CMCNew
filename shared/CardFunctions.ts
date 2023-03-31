@@ -1,4 +1,5 @@
 import { Ctx } from "boardgame.io";
+import { couldStartTrivia } from "typescript";
 import {
   Ability,
   TriggeringTrigger,
@@ -8,6 +9,36 @@ import {
 import { CMCGameState } from "./CardmasterGame";
 import { CMCCard } from "./CMCCard";
 import { CMCPlayer } from "./Player";
+
+// defaultcost checks everything in the player.resources against the card.cost.
+export function DefaultCost(
+  card: CMCCard,
+  owner: string,
+  G: CMCGameState,
+  ctx: Ctx,
+  dry: boolean
+): boolean {
+  const player: CMCPlayer = G.player[owner];
+  for (const check in card.cost) {
+    for (const sub in card.cost[check]) {
+      if (player[check][sub] < card.cost[check][sub]) {
+        return false;
+      }
+    }
+  }
+
+  // if we are actually calling to check
+  if (!dry) {
+    for (const check in card.cost) {
+      for (const sub in card.cost[check]) {
+        G.player[owner][check][sub] =
+          G.player[owner][check][sub] - card.cost[check][sub];
+      }
+    }
+  }
+
+  return true;
+}
 
 export function ManaGenerate(
   card: CMCCard,
@@ -19,8 +50,8 @@ export function ManaGenerate(
 ): CMCGameState {
   let newG = G;
   let player: CMCPlayer = newG.player[ctx.currentPlayer];
-  player.mana[ability.metadata.color] =
-    player.mana[ability.metadata.color] + ability.metadata.amount;
+  player.resources.mana[ability.metadata.color] =
+    player.resources.mana[ability.metadata.color] + ability.metadata.amount;
   newG.player[ctx.currentPlayer] = player;
   console.log(newG);
   return newG;

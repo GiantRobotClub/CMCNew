@@ -69,14 +69,14 @@ button:focus-visible {
 
 }
 
-.mana_venerated {
+.costV {
   color: rgb(238, 120, 105);
 
 }
-.mana_profane {
+.costP {
   color: purple
 }
 
-.mana_anodyne {
+.costA {
   color: green
 }

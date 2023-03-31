@@ -2,6 +2,7 @@ import { Ctx } from "boardgame.io";
 import { CMCGameState } from "./CardmasterGame";
 import { CMCCard } from "./CMCCard";
 import { CMCPlayer } from "./Player";
+import * as CardFunctions from "./CardFunctions";
 
 enum TriggerType {
   ACTIVATED = 0,
@@ -67,11 +68,11 @@ function handleTrigger(
   let newG = G;
   for (const ability of card.abilities) {
     if (ability.triggerCode) {
-      const triggerFunc: Function = eval("(" + ability.triggerCode + ")");
-      console.log(triggerFunc);
+      const triggerFunc: Function = CardFunctions[ability.triggerCode];
+      console.log(CardFunctions);
       if (triggerFunc(card, ability, trigger_data, owner, G, ctx)) {
         if (ability.activateCode) {
-          const abilityFunc: Function = eval("(" + ability.activateCode + ")");
+          const abilityFunc: Function = CardFunctions[ability.activateCode];
           console.log(newG);
           newG = abilityFunc(card, ability, trigger_data, owner, G, ctx);
           console.log(newG);

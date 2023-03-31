@@ -29,10 +29,15 @@ interface CMCCardBase {
 
 interface CMCCard extends CMCCardBase {
   abilities: Ability[];
+
+  costFunction: string;
+  playFunction: string;
 }
 
 function CreateBasicCard(): CMCCard {
   const card: CMCCard = {
+    costFunction: "DefaultCost",
+    playFunction: "DefaultPlay",
     name: "",
     type: CardType.EMPTY,
     sac: {
@@ -66,13 +71,13 @@ function CreateEffectCard(): CMCEffectCard {
 function CreateDebugCard(): CMCEffectCard {
   const card: CMCEffectCard = CreateEffectCard();
   card.name = "DEBUG";
-  card.sac.mana.A = 1;
+  card.sac.mana.A = 2;
   card.cost.mana.A = 1;
 
   const debugAbility: Ability = {
     triggerType: TriggerType.AUTOMATIC_STAGE,
-    activateCode: ManaGenerate.toString(),
-    triggerCode: TriggerStage.toString(),
+    activateCode: "ManaGenerate",
+    triggerCode: "TriggerStage",
     metadata: {
       triggername: TriggerNames.START_TURN,
       triggerstage: "draw",

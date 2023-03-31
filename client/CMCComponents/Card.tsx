@@ -2,9 +2,8 @@ import React, { CSSProperties } from "react";
 import { blank_object } from "svelte/internal";
 import { CMCCard } from "../../shared/CMCCard";
 
-import { GiEvilMoon, GiHolyGrail } from "react-icons/gi";
-import { FaBalanceScale } from "react-icons/fa";
 import { CardType } from "../../shared/Constants";
+import icons from "./Icons";
 
 function CMCCardVisual({ card }) {
   const cardStyle: CSSProperties = {
@@ -30,55 +29,39 @@ function CMCCardVisual({ card }) {
     <div style={cardStyleActive}>
       <div className="manaline">
         <div className="costline">
-          <>
-            <span className="mana_venerated">
-              <>
-                <GiHolyGrail />
-
-                {cardObject.cost.mana.V}
-              </>
-            </span>
-
-            <span className="mana_anodyne">
-              <>
-                <FaBalanceScale />
-                {cardObject.cost.mana.A}
-              </>
-            </span>
-
-            <span className="mana_profane">
-              <>
-                <GiEvilMoon />
-                {cardObject.cost.mana.P}
-              </>
-            </span>
-          </>
+          {Object.keys(cardObject.cost).map((type) => {
+            return Object.keys(cardObject.cost[type]).map((key) => {
+              if (!cardObject.cost[type][key])
+                return <span className="empty"></span>;
+              const costkey = "cost" + key;
+              const costamount = cardObject.cost[type][key];
+              console.log(icons[key]);
+              return (
+                <span className={costkey} key={costkey}>
+                  {icons[key]}
+                  {costamount}
+                </span>
+              );
+            });
+          })}
         </div>
 
         <div className="sacline">
-          <>
-            <span className="mana_venerated">
-              <>
-                <GiHolyGrail />
-
-                {cardObject.sac.mana.V}
-              </>
-            </span>
-
-            <span className="mana_anodyne">
-              <>
-                <FaBalanceScale />
-                {cardObject.sac.mana.A}
-              </>
-            </span>
-
-            <span className="mana_profane">
-              <>
-                <GiEvilMoon />
-                {cardObject.sac.mana.P}
-              </>
-            </span>
-          </>
+          {Object.keys(cardObject.sac).map((type) => {
+            return Object.keys(cardObject.sac[type]).map((key) => {
+              if (!cardObject.sac[type][key])
+                return <span className="empty"></span>;
+              const costkey = "cost" + key;
+              const costamount = cardObject.sac[type][key];
+              console.log(icons[key]);
+              return (
+                <span className={costkey} key={costkey}>
+                  {icons[key]}
+                  {costamount}
+                </span>
+              );
+            });
+          })}
         </div>
       </div>
       {cardObject.name}
