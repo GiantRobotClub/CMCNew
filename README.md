@@ -1,3 +1,3 @@
 # CMCNew
 
-Cardmaster Conflict RESHUFFLED
+Cardmaster Conflict will return
