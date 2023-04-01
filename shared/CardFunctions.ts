@@ -13,15 +13,19 @@ import { CMCPlayer } from "./Player";
 // defaultcost checks everything in the player.resources against the card.cost.
 export function DefaultCost(
   card: CMCCard,
-  owner: string,
+  playertocheck: string,
   G: CMCGameState,
   ctx: Ctx,
   dry: boolean
 ): boolean {
-  const player: CMCPlayer = G.player[owner];
+  const fullplayer: CMCPlayer = G.player[playertocheck];
+
+  if (!fullplayer) {
+    return false;
+  }
   for (const check in card.cost) {
     for (const sub in card.cost[check]) {
-      if (player[check][sub] < card.cost[check][sub]) {
+      if (fullplayer.resources[check][sub] < card.cost[check][sub]) {
         return false;
       }
     }
@@ -31,12 +35,11 @@ export function DefaultCost(
   if (!dry) {
     for (const check in card.cost) {
       for (const sub in card.cost[check]) {
-        G.player[owner][check][sub] =
-          G.player[owner][check][sub] - card.cost[check][sub];
+        fullplayer.resources[check][sub] =
+          fullplayer.resources[check][sub] - card.cost[check][sub];
       }
     }
   }
-
   return true;
 }
 
@@ -53,7 +56,6 @@ export function ManaGenerate(
   player.resources.mana[ability.metadata.color] =
     player.resources.mana[ability.metadata.color] + ability.metadata.amount;
   newG.player[ctx.currentPlayer] = player;
-  console.log(newG);
   return newG;
 }
 
@@ -65,28 +67,18 @@ export function TriggerStage(
   G: CMCGameState,
   ctx: Ctx
 ): boolean {
-  console.log("Checking " + JSON.stringify(trigger));
   if (!ctx.activePlayers) {
-    console.log("No active players");
     return false;
   }
   let playerToCheck = owner;
   if (trigger.triggeringPlayer != owner) {
-    console.log(owner + " isnt " + trigger.triggeringPlayer);
     return false;
   }
   if (ctx.activePlayers[playerToCheck] != ability.metadata.triggerstage) {
-    console.log(
-      ctx.activePlayers[playerToCheck] +
-        " isnt " +
-        ability.metadata.triggerstage
-    );
     return false;
   }
   if (trigger.name != ability.metadata.triggername) {
-    console.log(trigger.name + " isnt " + ability.metadata.triggername);
     return false;
   }
-  console.log("Ability is go");
   return true;
 }

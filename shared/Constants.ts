@@ -12,4 +12,28 @@ enum CardType {
   PERSONA,
 }
 
-export { SERVER_PORT, CLIENT_PORT, GAME_PORT, CardType };
+enum ClickType {
+  HAND = 0,
+  EFFECT,
+  MONSTER,
+  GRAVEYARD,
+  LOCATION,
+  PERSONA,
+  PLAYER,
+}
+
+enum Stages {
+  initial = "initial",
+  draw = "draw",
+  play = "play",
+  combat = "combat",
+  resolve = "resolve",
+  respond = "respond",
+  defense = "defense",
+  pickTarget = "pickTarget",
+  pickHandCard = "pickHandCard",
+  pickSlot = "pickSlot",
+  pickPlayer = "pickPlayer",
+}
+
+export { SERVER_PORT, CLIENT_PORT, GAME_PORT, CardType, ClickType, Stages };

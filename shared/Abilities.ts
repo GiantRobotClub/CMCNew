@@ -1,7 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { CMCGameState } from "./CardmasterGame";
 import { CMCCard } from "./CMCCard";
-import { CMCPlayer } from "./Player";
 import * as CardFunctions from "./CardFunctions";
 
 enum TriggerType {
@@ -46,7 +45,7 @@ function Ability_Trigger(
   ctx: Ctx
 ) {
   let newG = G;
-  console.log("Ability trigger check " + JSON.stringify(trigger_data));
+  //console.log("Ability trigger check " + JSON.stringify(trigger_data));
   for (const slotplayer in G.slots) {
     for (const subplayer in G.slots[slotplayer]) {
       for (const subrow of G.slots[slotplayer][subplayer]) {
@@ -69,13 +68,12 @@ function handleTrigger(
   for (const ability of card.abilities) {
     if (ability.triggerCode) {
       const triggerFunc: Function = CardFunctions[ability.triggerCode];
-      console.log(CardFunctions);
+      //console.log(CardFunctions);
       if (triggerFunc(card, ability, trigger_data, owner, G, ctx)) {
         if (ability.activateCode) {
           const abilityFunc: Function = CardFunctions[ability.activateCode];
-          console.log(newG);
           newG = abilityFunc(card, ability, trigger_data, owner, G, ctx);
-          console.log(newG);
+          //console.log(newG);
         }
       }
     }

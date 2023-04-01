@@ -69,6 +69,13 @@ button:focus-visible {
 
 }
 
+.costline{
+  text-align:left;
+}
+.sacline {
+  text-align:right;
+}
+
 .costV {
   color: rgb(238, 120, 105);
 

@@ -2,6 +2,9 @@ import React, { CSSProperties } from "react";
 import CMCCardVisual from "./Card";
 import { CMCGameState } from "../../shared/CardmasterGame";
 import type { BoardProps } from "boardgame.io/react";
+import { CanClickCard } from "../../shared/LogicFunctions";
+import { CardType, ClickType } from "../../shared/Constants";
+import { CMCCard } from "../../shared/CMCCard";
 interface CMCProps extends BoardProps<CMCGameState> {
   // Additional custom properties for your component
 }
@@ -11,12 +14,34 @@ export function CMCBoard(props: CMCProps) {
 
   const endTurn = () => props.moves.passTurn();
   const endStage = () => props.moves.passStage();
+  const clickCard = (card: CMCCard) => {
+    if (card.type == CardType.EMPTY) {
+      props.moves.chooseSlot(card, you);
+    }
+  };
+  const clickCardFromHand = (card: CMCCard) => {
+    props.moves.playCardFromHand(card, you);
+  };
 
   const flexStyle: CSSProperties = {
     display: "flex",
   };
   let currentPlayer = props.ctx.currentPlayer;
-  let otherPlayer = props.ctx.currentPlayer == "0" ? 1 : 0;
+  let you = currentPlayer;
+  if (props.isMultiplayer && props.playerID != null) {
+    you = props.playerID;
+  }
+  let otherPlayer = you == "0" ? "1" : "0";
+  let activePlayer = currentPlayer;
+
+  if (props.ctx.activePlayers) {
+    if ("0" in props.ctx.activePlayers) {
+      activePlayer = "0";
+    } else {
+      activePlayer = "1";
+    }
+  }
+
   return (
     <div>
       <div className="debug">
@@ -40,39 +65,106 @@ export function CMCBoard(props: CMCProps) {
         </div>
         <div style={{ height: "100px" }}>
           <div style={flexStyle}>
-            {state.slots[otherPlayer].monsters.map((card, index) => (
-              <CMCCardVisual card={card} key={"0m" + index} />
+            {state.slots[otherPlayer].monsters.map(
+              (card: CMCCard, index: number) => (
+                <CMCCardVisual
+                  card={card}
+                  doClick={() => clickCard(card)}
+                  canClick={CanClickCard(
+                    card,
+                    you,
+                    ClickType.MONSTER,
+                    props.ctx,
+                    props.G
+                  )}
+                  key={"0m" + index}
+                />
+              )
+            )}
+          </div>
+          <div style={flexStyle}>
+            {state.slots[otherPlayer].effects.map(
+              (card: CMCCard, index: number) => (
+                <CMCCardVisual
+                  card={card}
+                  doClick={() => clickCard(card)}
+                  key={"0e" + index}
+                  canClick={CanClickCard(
+                    card,
+                    you,
+                    ClickType.EFFECT,
+                    props.ctx,
+                    props.G
+                  )}
+                />
+              )
+            )}
+          </div>
+          <div style={flexStyle}>
+            {state.slots[you].effects.map((card: CMCCard, index: number) => (
+              <CMCCardVisual
+                card={card}
+                doClick={() => clickCard(card)}
+                key={"1e" + index}
+                canClick={CanClickCard(
+                  card,
+                  you,
+                  ClickType.EFFECT,
+                  props.ctx,
+                  props.G
+                )}
+              />
             ))}
           </div>
           <div style={flexStyle}>
-            {state.slots[otherPlayer].effects.map((card, index) => (
-              <CMCCardVisual card={card} key={"0e" + index} />
-            ))}
-          </div>
-          <div style={flexStyle}>
-            {state.slots[currentPlayer].effects.map((card, index) => (
-              <CMCCardVisual card={card} key={"1e" + index} />
-            ))}
-          </div>
-          <div style={flexStyle}>
-            {state.slots[currentPlayer].monsters.map((card, index) => (
-              <CMCCardVisual card={card} key={"1m" + index} />
+            {state.slots[you].monsters.map((card: CMCCard, index: number) => (
+              <CMCCardVisual
+                card={card}
+                doClick={() => clickCard(card)}
+                key={"1m" + index}
+                canClick={CanClickCard(
+                  card,
+                  you,
+                  ClickType.MONSTER,
+                  props.ctx,
+                  props.G
+                )}
+              />
             ))}
           </div>
         </div>
       </div>
       <div>
-        <button onClick={() => endTurn()}>END</button>
-        <button onClick={() => endStage()}>NEXT</button>
+        {activePlayer == you ? (
+          <div>
+            <button onClick={() => endTurn()}>END</button>
+            <button onClick={() => endStage()}>NEXT</button>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
       <div className="handcontainer">
         <div className="hand" style={flexStyle}>
-          {state.players[props.ctx.currentPlayer].hand.map((card, index) => (
-            <CMCCardVisual
-              card={card}
-              key={props.ctx.currentPlayer + "h" + index}
-            />
-          ))}
+          {state.players[props.ctx.currentPlayer].hand.map(
+            (card: CMCCard, index: number) => (
+              <CMCCardVisual
+                card={card}
+                activeCard={
+                  props.G.activeCard ? props.G.activeCard == card : false
+                }
+                key={props.ctx.currentPlayer + "h" + index + "test"}
+                doClick={() => clickCardFromHand(card)}
+                canClick={CanClickCard(
+                  card,
+                  you,
+                  ClickType.HAND,
+                  props.ctx,
+                  props.G
+                )}
+              />
+            )
+          )}
         </div>
       </div>
     </div>

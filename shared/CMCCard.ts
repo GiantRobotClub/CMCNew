@@ -1,4 +1,6 @@
-import { CardType } from "../shared/Constants";
+import { Ctx } from "boardgame.io";
+import { FaLeaf, FaSearch } from "react-icons/fa";
+import { CardType, ClickType, Stages } from "../shared/Constants";
 import {
   Ability,
   TriggeringTrigger,
@@ -7,7 +9,14 @@ import {
   TriggerType,
 } from "./Abilities";
 import { ManaGenerate, TriggerStage } from "./CardFunctions";
+import { CMCGameState } from "./CardmasterGame";
+
+import * as CardFunctions from "./CardFunctions";
+import { Stage } from "boardgame.io/dist/types/packages/core";
+import { UUID } from "crypto";
+import { GiCutDiamond } from "react-icons/gi";
 interface CMCCardBase {
+  guid: string;
   name: string;
   type: CardType;
   cost: {
@@ -36,6 +45,7 @@ interface CMCCard extends CMCCardBase {
 
 function CreateBasicCard(): CMCCard {
   const card: CMCCard = {
+    guid: crypto.randomUUID(),
     costFunction: "DefaultCost",
     playFunction: "DefaultPlay",
     name: "",
@@ -80,7 +90,7 @@ function CreateDebugCard(): CMCEffectCard {
     triggerCode: "TriggerStage",
     metadata: {
       triggername: TriggerNames.START_TURN,
-      triggerstage: "draw",
+      triggerstage: "initial",
       color: "A",
       amount: 1,
     },
