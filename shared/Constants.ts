@@ -34,6 +34,25 @@ enum Stages {
   pickHandCard = "pickHandCard",
   pickSlot = "pickSlot",
   pickPlayer = "pickPlayer",
+  error = "error",
 }
 
-export { SERVER_PORT, CLIENT_PORT, GAME_PORT, CardType, ClickType, Stages };
+enum Alignment {
+  NONE,
+  ANODYNE,
+  PROFANE,
+  VENERATED,
+  AP,
+  PV,
+  VA,
+  GOLDEN,
+}
+export {
+  SERVER_PORT,
+  CLIENT_PORT,
+  GAME_PORT,
+  CardType,
+  ClickType,
+  Stages,
+  Alignment,
+};

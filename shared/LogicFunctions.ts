@@ -5,6 +5,24 @@ import { ClickType, CardType, Stages } from "./Constants";
 
 import * as CardFunctions from "./CardFunctions";
 import { CMCPlayer } from "./Player";
+import { rule } from "postcss";
+
+function DrawCard(
+  playerId: string,
+  cardcount: number,
+  G: CMCGameState
+): boolean {
+  if (G.secret.decks[playerId].length < cardcount) {
+    //get milled idiot
+    return false;
+  }
+  for (let i = 0; i < cardcount; i++) {
+    const card = G.secret.decks[playerId].pop();
+    G.players[playerId].hand.push(card);
+  }
+
+  return true;
+}
 
 function PlayerAddResource(playerid: string, resource: any, G: CMCGameState) {
   let player: CMCPlayer = G.player[playerid];
@@ -318,4 +336,5 @@ export {
   PlaceCard,
   RemoveFromHand,
   PlayerAddResource,
+  DrawCard,
 };

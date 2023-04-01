@@ -1,7 +1,12 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import type { Ctx, Game, Move } from "boardgame.io";
 import { Stage, TurnOrder } from "boardgame.io/core";
-import { CMCCard, CreateBasicCard, CreateDebugCard } from "./CMCCard";
+import {
+  CMCCard,
+  CreateBasicCard,
+  CreateDebugCard,
+  CreateDebugMonsterCard,
+} from "./CMCCard";
 import { CMCPlayer, CreateDefaultPlayer } from "./Player";
 
 import {
@@ -12,7 +17,8 @@ import {
   TriggerPlayerType,
 } from "./Abilities";
 import { CardType, Stages } from "./Constants";
-import { PlayEntity } from "./LogicFunctions";
+import { DrawCard, PlayEntity } from "./LogicFunctions";
+import { GetActivePlayer, GetActiveStage } from "./Util";
 
 export interface CMCGameState {
   player: {
@@ -49,6 +55,7 @@ export interface CMCGameState {
   activeAbility?: Ability;
   activeCard?: CMCCard;
   returnStage?: Stages;
+  loser?: string;
 }
 
 function resetActive(G: CMCGameState) {
@@ -79,7 +86,19 @@ const passTurn: Move<CMCGameState> = ({ G, ctx, events }) => {
 const passStage: Move<CMCGameState> = ({ G, ctx, events }) => {
   resetActive(G);
   TriggerAuto(TriggerNames.END_STAGE, ctx, G);
+
+  console.log("check:" + GetActiveStage(ctx));
+  if (GetActiveStage(ctx) == Stages.initial) {
+    // going into draw phase
+    const okay = DrawCard(GetActivePlayer(ctx), 1, G);
+
+    if (!okay) {
+      G.loser = GetActivePlayer(ctx);
+    }
+  }
+
   events.endStage();
+  console.log("check:" + GetActiveStage(ctx));
 };
 const playCardFromHand: Move<CMCGameState> = (
   { G, ctx, events },
@@ -175,7 +194,7 @@ export const CardmasterConflict: Game<CMCGameState> = {
       },
       players: {
         "0": {
-          hand: [CreateDebugCard()],
+          hand: [CreateDebugCard(), CreateDebugMonsterCard()],
         },
         "1": {
           hand: [CreateDebugCard(), CreateDebugCard()],
@@ -183,8 +202,13 @@ export const CardmasterConflict: Game<CMCGameState> = {
       },
       secret: {
         decks: {
-          "0": [],
-          "1": [],
+          "0": [CreateDebugMonsterCard(), CreateDebugCard()],
+          "1": [
+            CreateDebugMonsterCard(),
+            CreateDebugCard(),
+            CreateDebugMonsterCard(),
+            CreateDebugCard(),
+          ],
         },
       },
     };
