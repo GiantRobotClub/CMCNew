@@ -8,10 +8,13 @@ import { CMCPlayer } from "./Player";
 
 function PlayerAddResource(playerid: string, resource: any, G: CMCGameState) {
   let player: CMCPlayer = G.player[playerid];
+  console.log("Player: " + playerid);
+  console.dir(resource);
+  console.dir(G.player[playerid].resources);
   for (const check in resource) {
     for (const sub in resource[check]) {
-      player.resources[check][sub] =
-        player.resources[check][sub] + resource[check[sub]];
+      G.player[playerid].resources[check][sub] += resource[check][sub];
+      console.log(G.player[playerid].resources[check][sub]);
     }
   }
 }

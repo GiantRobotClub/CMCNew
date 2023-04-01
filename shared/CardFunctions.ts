@@ -56,9 +56,9 @@ export function ManaGenerate(
   let resource = {
     mana: {},
   };
-  resource[ability.metadata.color] = ability.metadata.amount;
+  resource.mana[ability.metadata.color] = ability.metadata.amount;
 
-  PlayerAddResource(playerid, resource, G);
+  PlayerAddResource(playerid, resource, newG);
 
   newG.player[ctx.currentPlayer] = player;
   return newG;
