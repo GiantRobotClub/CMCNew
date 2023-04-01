@@ -15,6 +15,7 @@ import * as CardFunctions from "./CardFunctions";
 import { Stage } from "boardgame.io/dist/types/packages/core";
 import { UUID } from "crypto";
 import { GiCutDiamond } from "react-icons/gi";
+import { CMCPlayer } from "./Player";
 
 interface CMCCardBase {
   guid: string;
@@ -87,6 +88,22 @@ interface CMCMonsterCard extends CMCEntityCard {
   life: number;
 }
 
+interface CMCPersonaCard extends CMCCard {
+  playerID: string;
+  player: CMCPlayer;
+}
+
+function CreatePersonaCard(
+  player: CMCPlayer,
+  playerID: string
+): CMCPersonaCard {
+  const card: CMCPersonaCard = {
+    player: player,
+    playerID: playerID,
+    ...CreateBasicCard(),
+  };
+  return card;
+}
 function CreateEntityCard(): CMCEntityCard {
   const card: CMCEntityCard = {
     dizzy: false,
@@ -113,6 +130,7 @@ function CreateEffectCard(): CMCEffectCard {
   return card;
 }
 
+/////////////////debugging cards //////////////////
 function CreateDebugCard(): CMCEffectCard {
   const card: CMCEffectCard = CreateEffectCard();
   card.name = "GENERATOR";
@@ -163,4 +181,5 @@ export {
   CreateDebugCard,
   CreateBasicCard,
   CreateDebugMonsterCard,
+  CMCMonsterCard,
 };

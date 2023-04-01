@@ -1,6 +1,6 @@
 import React, { CSSProperties } from "react";
 import { blank_object } from "svelte/internal";
-import { CMCCard } from "../../shared/CMCCard";
+import { CMCCard, CMCMonsterCard } from "../../shared/CMCCard";
 
 import { CardType } from "../../shared/Constants";
 import icons from "./Icons";
@@ -30,6 +30,7 @@ function CMCCardVisual({ card, canClick, doClick, activeCard = false }) {
     boxShadow: "inset 0 0 5pt 5pt red",
   };
   const cardObject: CMCCard = card;
+  let attackLine = <div></div>;
   if (card.type == CardType.EMPTY) {
     return (
       <button
@@ -42,6 +43,13 @@ function CMCCardVisual({ card, canClick, doClick, activeCard = false }) {
       >
         <div></div>
       </button>
+    );
+  } else if (card.type == CardType.MONSTER) {
+    attackLine = (
+      <div>
+        <div id="attack">{(cardObject as CMCMonsterCard).attack}</div>
+        <div id="life">{(cardObject as CMCMonsterCard).life}</div>
+      </div>
     );
   }
   return (
@@ -93,8 +101,11 @@ function CMCCardVisual({ card, canClick, doClick, activeCard = false }) {
             })}
           </div>
         </div>
-        {cardObject.name}
-        act: {activeCard ? "yes" : "no"}
+        <div className="nameline">{cardObject.name}</div>
+        <div className="cardpic">
+          <img src={cardObject.picture} />
+        </div>
+        <div className="attackline">{attackLine}</div>
       </div>
     </button>
   );
