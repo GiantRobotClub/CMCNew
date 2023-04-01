@@ -8,6 +8,7 @@ import {
 } from "./Abilities";
 import { CMCGameState } from "./CardmasterGame";
 import { CMCCard } from "./CMCCard";
+import { OwnerOf, PlayerAddResource, PlayerPay } from "./LogicFunctions";
 import { CMCPlayer } from "./Player";
 
 // defaultcost checks everything in the player.resources against the card.cost.
@@ -33,11 +34,8 @@ export function DefaultCost(
 
   // if we are actually calling to check
   if (!dry) {
-    for (const check in card.cost) {
-      for (const sub in card.cost[check]) {
-        fullplayer.resources[check][sub] =
-          fullplayer.resources[check][sub] - card.cost[check][sub];
-      }
+    if (!PlayerPay(playertocheck, card.cost, G)) {
+      return false;
     }
   }
   return true;
@@ -52,9 +50,16 @@ export function ManaGenerate(
   ctx: Ctx
 ): CMCGameState {
   let newG = G;
-  let player: CMCPlayer = newG.player[ctx.currentPlayer];
-  player.resources.mana[ability.metadata.color] =
-    player.resources.mana[ability.metadata.color] + ability.metadata.amount;
+  let playerid = OwnerOf(card, G);
+  let player: CMCPlayer = newG.player[playerid];
+
+  let resource = {
+    mana: {},
+  };
+  resource[ability.metadata.color] = ability.metadata.amount;
+
+  PlayerAddResource(playerid, resource, G);
+
   newG.player[ctx.currentPlayer] = player;
   return newG;
 }

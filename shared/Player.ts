@@ -5,8 +5,13 @@ interface CMCPlayer {
       A: number;
       P: number;
     };
-    health: number;
-    power: number;
+    intrinsic: {
+      health: number;
+    };
+    power: {
+      power: number;
+      max: number;
+    };
   };
   decksize: number;
   currentDeck: number;
@@ -18,8 +23,13 @@ interface CMCPlayer {
 function CreateDefaultPlayer(playerId: string): CMCPlayer {
   const player: CMCPlayer = {
     resources: {
-      power: 0,
-      health: 100,
+      power: {
+        power: 0,
+        max: 0,
+      },
+      intrinsic: {
+        health: 100,
+      },
       mana: {
         V: 1,
         A: 1,

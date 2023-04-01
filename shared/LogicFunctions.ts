@@ -4,7 +4,108 @@ import { CMCCard } from "./CMCCard";
 import { ClickType, CardType, Stages } from "./Constants";
 
 import * as CardFunctions from "./CardFunctions";
-import { INVALID_MOVE } from "boardgame.io/dist/types/packages/core";
+import { CMCPlayer } from "./Player";
+
+function PlayerAddResource(playerid: string, resource: any, G: CMCGameState) {
+  let player: CMCPlayer = G.player[playerid];
+  for (const check in resource) {
+    for (const sub in resource[check]) {
+      player.resources[check][sub] =
+        player.resources[check][sub] + resource[check[sub]];
+    }
+  }
+}
+
+function PlayerPay(playerid: string, cost: any, G: CMCGameState) {
+  const fullplayer: CMCPlayer = G.player[playerid];
+
+  if (!fullplayer) {
+    return false;
+  }
+  for (const check in cost) {
+    for (const sub in cost[check]) {
+      if (fullplayer.resources[check][sub] < cost[check[sub]]) {
+        return false;
+      }
+      fullplayer.resources[check][sub] =
+        fullplayer.resources[check][sub] - cost[check][sub];
+    }
+  }
+  return true;
+}
+
+// function to take a card object and apply it to an in game slot.
+function PlaceCard(
+  card: CMCCard,
+  slot: CMCCard,
+  playerID: string,
+  G: CMCGameState
+): boolean {
+  let subplayerfound = "";
+  let subrowfound = -1;
+  let slotplayerfound = "";
+  for (const slotplayer in G.slots) {
+    for (const subplayer in G.slots[slotplayer]) {
+      for (const [index, subrow] of G.slots[slotplayer][subplayer].entries()) {
+        const foundCard: CMCCard = subrow;
+        if (subrow.guid == slot.guid) {
+          subplayerfound = subplayer;
+          subrowfound = index;
+          slotplayerfound = slotplayer;
+        }
+      }
+    }
+  }
+
+  if (subrowfound == -1 || subplayerfound == "" || slotplayerfound == "") {
+    return false;
+  }
+
+  G.slots[slotplayerfound][subplayerfound][subrowfound] = card;
+
+  return true;
+}
+
+//remove card from hand, always do it after the card goes where it needs to (such as graveyard, play field)
+function RemoveFromHand(
+  card: CMCCard,
+  playerID: string,
+  G: CMCGameState
+): boolean {
+  let subplayerfound = "";
+  let subrowfound = -1;
+  let slotplayerfound = "";
+
+  let found = false;
+  let hand: CMCCard[] = G.players[playerID].hand;
+  hand.forEach((crd, idx) => {
+    if (crd.guid == card.guid) {
+      found = true;
+    }
+  });
+
+  if (!found) {
+    return false;
+  }
+  for (const slotplayer in G.slots) {
+    for (const subplayer in G.slots[slotplayer]) {
+      for (const [index, subrow] of G.slots[slotplayer][subplayer].entries()) {
+        const foundCard: CMCCard = subrow;
+        if (subrow.guid == card.guid) {
+          subplayerfound = subplayer;
+          subrowfound = index;
+          slotplayerfound = slotplayer;
+        }
+      }
+    }
+  }
+  if (subrowfound == -1 || subplayerfound == "" || slotplayerfound == "") {
+    return false;
+  }
+  console.log("hand:" + G.players[playerID].hand.length);
+  G.players[playerID].hand = hand.filter((crd, i) => crd.guid != card.guid);
+  return true;
+}
 
 // standard play entity function, player pays cost and card moves from hand to slot
 function PlayEntity(
@@ -38,30 +139,14 @@ function PlayEntity(
   console.log(success_pay);
   if (!success_pay) return false;
 
-  let subplayerfound = "";
-  let subrowfound = -1;
-  let slotplayerfound = "";
-  for (const slotplayer in G.slots) {
-    for (const subplayer in G.slots[slotplayer]) {
-      for (const [index, subrow] of G.slots[slotplayer][subplayer].entries()) {
-        const foundCard: CMCCard = subrow;
-        if (subrow.guid == slot.guid) {
-          subplayerfound = subplayer;
-          subrowfound = index;
-          slotplayerfound = slotplayer;
-        }
-      }
-    }
-  }
-
-  if (subrowfound == -1 || subplayerfound == "" || slotplayerfound == "") {
+  if (!PlaceCard(card, slot, playerID, G)) {
     return false;
   }
-  console.log("hand:" + G.players[playerID].hand.length);
-  G.players[playerID].hand = hand.filter((crd, i) => crd.guid != card.guid);
-  G.slots[slotplayerfound][subplayerfound][subrowfound] = card;
 
-  console.log("hand:" + G.players[playerID].hand.length);
+  if (!RemoveFromHand(card, playerID, G)) {
+    return false;
+  }
+
   return G;
 }
 
@@ -221,4 +306,13 @@ function CanClickCard(
   return false;
 }
 
-export { OwnerOf, CanClickCard, ClickCard, PlayEntity };
+export {
+  OwnerOf,
+  CanClickCard,
+  ClickCard,
+  PlayEntity,
+  PlayerPay,
+  PlaceCard,
+  RemoveFromHand,
+  PlayerAddResource,
+};
