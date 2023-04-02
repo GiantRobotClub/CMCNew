@@ -1,3 +1,5 @@
+import { CMCCard, CMCPersonaCard, CreateDebugPersonaCard } from "./CMCCard";
+
 interface CMCPlayer {
   resources: {
     mana: {
@@ -16,8 +18,12 @@ interface CMCPlayer {
   decksize: number;
   currentDeck: number;
   currentGrave: number;
+  currentHand: number;
   name: string;
   id: string;
+  persona: CMCPersonaCard;
+
+  graveyard: CMCCard[];
 }
 
 function CreateDefaultPlayer(playerId: string): CMCPlayer {
@@ -28,33 +34,24 @@ function CreateDefaultPlayer(playerId: string): CMCPlayer {
         max: 0,
       },
       intrinsic: {
-        health: 100,
+        health: 0,
       },
       mana: {
-        V: 1,
-        A: 1,
-        P: 1,
+        V: 0,
+        A: 0,
+        P: 0,
       },
     },
     currentDeck: 100,
     currentGrave: 0,
+    currentHand: 0,
     decksize: 100,
     name: "CARDMASTER" + playerId,
     id: playerId,
+    persona: CreateDebugPersonaCard(playerId),
+    graveyard: [],
   };
   return player;
 }
 
-/*
-
-
-  addMana(v: number, a: number, p: number) {
-    // trigger event "manaadd" with the right details
-
-    // change mana
-    this.mana.V = this.mana.V + v;
-    this.mana.A = this.mana.A + a;
-    this.mana.P = this.mana.P + p;
-  }
-  */
 export { CMCPlayer, CreateDefaultPlayer };

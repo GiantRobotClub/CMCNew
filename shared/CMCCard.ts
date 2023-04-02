@@ -8,14 +8,6 @@ import {
   TriggerPlayerType,
   TriggerType,
 } from "./Abilities";
-import { ManaGenerate, TriggerStage } from "./CardFunctions";
-import { CMCGameState } from "./CardmasterGame";
-
-import * as CardFunctions from "./CardFunctions";
-import { Stage } from "boardgame.io/dist/types/packages/core";
-import { UUID } from "crypto";
-import { GiCutDiamond } from "react-icons/gi";
-import { CMCPlayer } from "./Player";
 
 interface CMCCardBase {
   guid: string;
@@ -90,18 +82,25 @@ interface CMCMonsterCard extends CMCEntityCard {
 
 interface CMCPersonaCard extends CMCCard {
   playerID: string;
-  player: CMCPlayer;
+  startingResource: any;
+  resourcePerTurn: any;
+  startingHand: number;
+  drawPerTurn: number;
+  // anything else you can do through ability triggers
 }
 
-function CreatePersonaCard(
-  player: CMCPlayer,
-  playerID: string
-): CMCPersonaCard {
+function CreatePersonaCard(playerID: string): CMCPersonaCard {
   const card: CMCPersonaCard = {
-    player: player,
     playerID: playerID,
+    startingResource: {},
+    resourcePerTurn: {},
+    startingHand: 1,
+    drawPerTurn: 1,
+
     ...CreateBasicCard(),
   };
+
+  card.type = CardType.PERSONA;
   return card;
 }
 function CreateEntityCard(): CMCEntityCard {
@@ -174,12 +173,28 @@ function CreateDebugMonsterCard(): CMCMonsterCard {
   return card;
 }
 
+function CreateDebugPersonaCard(playerid: string): CMCPersonaCard {
+  const card: CMCPersonaCard = CreatePersonaCard(playerid);
+  card.resourcePerTurn = { mana: { V: 1, A: 1, P: 1 } };
+  card.startingResource = {
+    mana: { V: 1, A: 1, P: 1 },
+    intrinsic: { health: 100 },
+  };
+  card.drawPerTurn = 1;
+  card.startingHand = 1;
+
+  return card;
+}
+
 export {
   CMCCard,
   CMCEffectCard,
+  CMCMonsterCard,
+  CMCPersonaCard,
   CreateEffectCard,
   CreateDebugCard,
+  CreatePersonaCard,
   CreateBasicCard,
   CreateDebugMonsterCard,
-  CMCMonsterCard,
+  CreateDebugPersonaCard,
 };

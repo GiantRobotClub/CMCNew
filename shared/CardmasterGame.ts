@@ -17,8 +17,8 @@ import {
   TriggerPlayerType,
 } from "./Abilities";
 import { CardType, Stages } from "./Constants";
-import { DrawCard, PlayEntity } from "./LogicFunctions";
-import { GetActivePlayer, GetActiveStage } from "./Util";
+import { DrawCard, PlayEntity, PlayerAddResource } from "./LogicFunctions";
+import { GetActivePlayer, GetActiveStage, OtherPlayer } from "./Util";
 
 export interface CMCGameState {
   player: {
@@ -56,6 +56,8 @@ export interface CMCGameState {
   activeCard?: CMCCard;
   returnStage?: Stages;
   loser?: string;
+  location?: CMCCard;
+  didinitialsetup: boolean;
 }
 
 function resetActive(G: CMCGameState) {
@@ -63,6 +65,7 @@ function resetActive(G: CMCGameState) {
   G.activeCard = undefined;
   G.returnStage = undefined;
 }
+
 function TriggerAuto(name: string, ctx: Ctx, G: CMCGameState): void {
   if (ctx.activePlayers !== null) {
     Ability_Trigger(
@@ -86,14 +89,16 @@ const passTurn: Move<CMCGameState> = ({ G, ctx, events }) => {
 const passStage: Move<CMCGameState> = ({ G, ctx, events }) => {
   resetActive(G);
   TriggerAuto(TriggerNames.END_STAGE, ctx, G);
-
+  const activePlayer = GetActivePlayer(ctx);
   console.log("check:" + GetActiveStage(ctx));
   if (GetActiveStage(ctx) == Stages.initial) {
     // going into draw phase
-    const okay = DrawCard(GetActivePlayer(ctx), 1, G);
+    const player: CMCPlayer = G.player[activePlayer];
+    console.log("Drawing another card");
+    const okay = DrawCard(activePlayer, player.persona.drawPerTurn, G);
 
     if (!okay) {
-      G.loser = GetActivePlayer(ctx);
+      G.loser = activePlayer;
     }
   }
 
@@ -156,11 +161,12 @@ export const CardmasterConflict: Game<CMCGameState> = {
         "1": CreateDefaultPlayer("1"),
       },
       returnstage: "",
+      didinitialsetup: false,
       currentmetadata: {},
       slots: {
         "0": {
           effects: [
-            CreateDebugCard(),
+            CreateBasicCard(),
             CreateBasicCard(),
             CreateBasicCard(),
             CreateBasicCard(),
@@ -194,16 +200,26 @@ export const CardmasterConflict: Game<CMCGameState> = {
       },
       players: {
         "0": {
-          hand: [CreateDebugCard(), CreateDebugMonsterCard()],
+          hand: [],
         },
         "1": {
-          hand: [CreateDebugCard(), CreateDebugCard()],
+          hand: [],
         },
       },
       secret: {
         decks: {
-          "0": [CreateDebugMonsterCard(), CreateDebugCard()],
+          "0": [
+            CreateDebugMonsterCard(),
+            CreateDebugCard(),
+            CreateDebugCard(),
+            CreateDebugCard(),
+            CreateDebugCard(),
+            CreateDebugCard(),
+            CreateDebugMonsterCard(),
+          ],
           "1": [
+            CreateDebugCard(),
+            CreateDebugMonsterCard(),
             CreateDebugMonsterCard(),
             CreateDebugCard(),
             CreateDebugMonsterCard(),
@@ -221,9 +237,28 @@ export const CardmasterConflict: Game<CMCGameState> = {
     onBegin: ({ G, ctx, events, random }) => {
       if (ctx.activePlayers !== null) {
         TriggerAuto(TriggerNames.START_TURN, ctx, G);
-      }
 
-      return G;
+        const activePlayer = GetActivePlayer(ctx);
+        // do turn mana, unless this is the first turn, then do initial mana and hand
+        if (ctx.turn == 1 && activePlayer == "0" && !G.didinitialsetup) {
+          G.didinitialsetup = true;
+          var e = new Error();
+          console.log(e.stack);
+          // this is the beginning of the game
+          for (const playerno in ["0", "1"]) {
+            const player: CMCPlayer = G.player[playerno];
+            const okay = DrawCard(playerno, player.persona.startingHand, G);
+            if (!okay) {
+              G.loser = playerno;
+            }
+            PlayerAddResource(playerno, player.persona.startingResource, G);
+          }
+        } else {
+          const player: CMCPlayer = G.player[activePlayer];
+
+          PlayerAddResource(activePlayer, player.persona.startingResource, G);
+        }
+      }
     },
     onEnd: ({ G, ctx, events, random }) => {
       if (ctx.activePlayers !== null) {
@@ -232,6 +267,9 @@ export const CardmasterConflict: Game<CMCGameState> = {
       }
 
       return G;
+    },
+    onMove: ({ G, ctx, events, random }) => {
+      CheckState(G);
     },
     stages: {
       error: {},
@@ -310,11 +348,28 @@ export const CardmasterConflict: Game<CMCGameState> = {
   },
 };
 
+function CheckState(G: CMCGameState) {
+  for (const playerid in ["0", "1"]) {
+    // check player health
+    const player: CMCPlayer = G.player[playerid];
+    if (player.resources.intrinsic.health <= 0) {
+      G.loser = playerid;
+    }
+    // set player deck values for visual reasons
+    player.currentDeck = G.secret.decks[playerid].length;
+    player.currentGrave = G.player[playerid].graveyard.length;
+    player.currentHand = G.players[playerid].hand.length;
+  }
+}
+
 function IsVictory(G: CMCGameState) {
+  if (G.loser) {
+    return { winner: OtherPlayer(G.loser) };
+  }
   return false;
 }
 
-// Return true if all `cells` are occupied.
+// there's no draws in this game
 function IsDraw(G: CMCGameState) {
   return false;
 }

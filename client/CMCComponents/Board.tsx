@@ -55,12 +55,39 @@ export function CMCBoard(props: CMCProps) {
       </div>
       <div style={{ display: "flex", height: "410px", width: "600px" }}>
         <div style={{ height: "100%", background: "green", width: "100px" }}>
-          player info
           <div style={{ height: "50%", width: "100px" }}>
-            {JSON.stringify(props.G.player[otherPlayer])}
+            <CMCCardVisual
+              big={true}
+              activeCard={false}
+              player={props.G.player[otherPlayer]}
+              card={props.G.player[otherPlayer].persona}
+              doClick={() => clickCard(props.G.player[otherPlayer].persona)}
+              canClick={CanClickCard(
+                props.G.player[otherPlayer].persona,
+                you,
+                ClickType.MONSTER,
+                props.ctx,
+                props.G
+              )}
+              key={"player" + otherPlayer}
+            />
           </div>
           <div style={{ height: "50%" }}>
-            {JSON.stringify(props.G.player[currentPlayer])}
+            <CMCCardVisual
+              big={true}
+              activeCard={false}
+              player={props.G.player[you]}
+              card={props.G.player[you].persona}
+              doClick={() => clickCard(props.G.player[you].persona)}
+              canClick={CanClickCard(
+                props.G.player[you].persona,
+                you,
+                ClickType.MONSTER,
+                props.ctx,
+                props.G
+              )}
+              key={"player" + you}
+            />
           </div>
         </div>
         <div style={{ height: "100px" }}>
@@ -68,6 +95,9 @@ export function CMCBoard(props: CMCProps) {
             {state.slots[otherPlayer].monsters.map(
               (card: CMCCard, index: number) => (
                 <CMCCardVisual
+                  big={false}
+                  activeCard={false}
+                  player={props.G.player[otherPlayer]}
                   card={card}
                   doClick={() => clickCard(card)}
                   canClick={CanClickCard(
@@ -86,6 +116,9 @@ export function CMCBoard(props: CMCProps) {
             {state.slots[otherPlayer].effects.map(
               (card: CMCCard, index: number) => (
                 <CMCCardVisual
+                  big={false}
+                  activeCard={false}
+                  player={props.G.player[otherPlayer]}
                   card={card}
                   doClick={() => clickCard(card)}
                   key={"0e" + index}
@@ -103,6 +136,9 @@ export function CMCBoard(props: CMCProps) {
           <div style={flexStyle}>
             {state.slots[you].effects.map((card: CMCCard, index: number) => (
               <CMCCardVisual
+                big={false}
+                activeCard={false}
+                player={props.G.player[you]}
                 card={card}
                 doClick={() => clickCard(card)}
                 key={"1e" + index}
@@ -119,6 +155,9 @@ export function CMCBoard(props: CMCProps) {
           <div style={flexStyle}>
             {state.slots[you].monsters.map((card: CMCCard, index: number) => (
               <CMCCardVisual
+                big={false}
+                activeCard={false}
+                player={props.G.player[you]}
                 card={card}
                 doClick={() => clickCard(card)}
                 key={"1m" + index}
@@ -149,6 +188,8 @@ export function CMCBoard(props: CMCProps) {
           {state.players[props.ctx.currentPlayer].hand.map(
             (card: CMCCard, index: number) => (
               <CMCCardVisual
+                big={false}
+                player={props.G.player[you]}
                 card={card}
                 activeCard={
                   props.G.activeCard ? props.G.activeCard == card : false

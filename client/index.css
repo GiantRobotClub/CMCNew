@@ -39,7 +39,7 @@ h1 {
 button {
   border-radius: 8px;
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
+  padding:1px;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
@@ -86,4 +86,69 @@ button:focus-visible {
 
 .costA {
   color: green
+}
+
+.resV {
+  color: rgb(238, 120, 105);
+
+}
+.resP {
+  color: purple
+}
+
+.resA {
+  color: green
+}
+
+.respower {
+  color: yellow;
+  text-shadow: 1px 1px black
+}
+.reshealth { 
+  color: red
+}
+
+.playerdeck {
+  border: 1px solid black;
+  color: grey
+}
+
+.playerresources {
+  display:flex
+}
+
+
+.cardStyle {
+  width: 100px;
+  height: 100px;
+  
+  padding: 0; margin: 0;
+}
+
+.bigCardStyle {
+  height: 150px
+}
+
+.cardStyleActive {
+  border: 1px solid black;
+  background-color: white;
+  color: black
+}
+
+.cardStyleEmpty {
+  
+  border: 1px solid white;
+  background: grey;
+}
+.cardStyleClickable {
+  box-shadow: inset 0 0 2pt 2pt green;
+  color: black
+  
+}
+.cardStyleClickable:hover {
+  box-shadow: inset 0 0 3pt 3pt green;
+  background-color:grey
+}
+.cardStyleClicked {
+  background-color:rgb(255, 214, 208)
 }

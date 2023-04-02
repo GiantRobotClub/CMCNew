@@ -7,6 +7,8 @@ import * as CardFunctions from "./CardFunctions";
 import { CMCPlayer } from "./Player";
 import { rule } from "postcss";
 
+import { current } from "immer";
+
 function DrawCard(
   playerId: string,
   cardcount: number,
@@ -26,13 +28,9 @@ function DrawCard(
 
 function PlayerAddResource(playerid: string, resource: any, G: CMCGameState) {
   let player: CMCPlayer = G.player[playerid];
-  console.log("Player: " + playerid);
-  console.dir(resource);
-  console.dir(G.player[playerid].resources);
   for (const check in resource) {
     for (const sub in resource[check]) {
       G.player[playerid].resources[check][sub] += resource[check][sub];
-      console.log(G.player[playerid].resources[check][sub]);
     }
   }
 }
