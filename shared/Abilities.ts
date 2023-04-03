@@ -81,6 +81,20 @@ function handleTrigger(
 
   return newG;
 }
+
+function TriggerAuto(name: string, ctx: Ctx, G: CMCGameState): void {
+  if (ctx.activePlayers !== null) {
+    Ability_Trigger(
+      {
+        name: name,
+        stage: ctx.activePlayers[ctx.currentPlayer],
+        triggeringPlayer: ctx.currentPlayer,
+      },
+      G,
+      ctx
+    );
+  }
+}
 export {
   Ability,
   Ability_Trigger,
@@ -88,4 +102,5 @@ export {
   TriggerType,
   TriggerPlayerType,
   TriggerNames,
+  TriggerAuto,
 };

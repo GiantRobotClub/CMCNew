@@ -520,6 +520,31 @@ function CanClickCard(
   return false;
 }
 
+function resetActive(G: CMCGameState) {
+  G.activeAbility = undefined;
+  G.activeCard = undefined;
+  G.returnStage = undefined;
+}
+function resetCombat(G: CMCGameState) {
+  G.combat = undefined;
+  G.resolution = undefined;
+}
+
+// update player data with secret info such as deck size
+function CheckState(G: CMCGameState) {
+  for (const playerid in PlayerIDs) {
+    // check player health
+    const player: CMCPlayer = G.playerData[playerid];
+    if (player.resources.intrinsic.health <= 0) {
+      G.loser = playerid;
+    }
+    // set player deck values for visual reasons
+    player.currentDeck = G.secret.decks[playerid].length;
+    player.currentGrave = G.playerData[playerid].graveyard.length;
+    player.currentHand = G.players[playerid].hand.length;
+  }
+}
+
 export {
   OwnerOf,
   CanClickCard,
@@ -533,4 +558,7 @@ export {
   DamageResult,
   CardScan,
   GenerateRandomGuid,
+  resetActive,
+  resetCombat,
+  CheckState,
 };
