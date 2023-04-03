@@ -1,4 +1,5 @@
 import { Ctx } from "boardgame.io";
+import { RandomAPI } from "boardgame.io/dist/types/src/plugins/random/random";
 import { current } from "immer";
 import { instanceOf } from "prop-types";
 import { FaCcMastercard } from "react-icons/fa";
@@ -43,7 +44,7 @@ function StartCombatPhase(): CMCCombat {
 
 // do combat calculations including damage
 
-function ResolveCombat(G: CMCGameState, ctx: Ctx) {
+function ResolveCombat(G: CMCGameState, ctx: Ctx, random: RandomAPI) {
   if (G.combat === undefined) {
     // combat is not ready, return.
     return false;
@@ -144,7 +145,7 @@ function ResolveCombat(G: CMCGameState, ctx: Ctx) {
     };
     fullresults.results.push(result);
   }
-  CardScan(G);
+  CardScan(G, random);
   // complete
   G.resolution = fullresults;
 }

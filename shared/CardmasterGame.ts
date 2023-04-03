@@ -22,6 +22,7 @@ import { CardType, ClickType, PlayerIDs, Stages } from "./Constants";
 import {
   CanClickCard,
   DrawCard,
+  GenerateRandomGuid,
   OwnerOf,
   PlayEntity,
   PlayerAddResource,
@@ -86,7 +87,7 @@ const passTurn: Move<CMCGameState> = ({ G, ctx, events }) => {
 };
 
 // move to next stage and handle the new stage's start
-const passStage: Move<CMCGameState> = ({ G, ctx, events }) => {
+const passStage: Move<CMCGameState> = ({ G, ctx, events, random }) => {
   resetActive(G);
   TriggerAuto(TriggerNames.END_STAGE, ctx, G);
   const activePlayer = GetActivePlayer(ctx);
@@ -117,7 +118,7 @@ const passStage: Move<CMCGameState> = ({ G, ctx, events }) => {
     }
   } else if (GetActiveStage(ctx) == Stages.defense) {
     events.setActivePlayers({ currentPlayer: Stages.resolve });
-    ResolveCombat(G, ctx);
+    ResolveCombat(G, ctx, random);
     // resolve combat and go to resolve step.
     // resolveCombat(G,ctx)
   } else {
@@ -323,6 +324,80 @@ function TriggerAuto(name: string, ctx: Ctx, G: CMCGameState): void {
 // Initial game state
 export const CardmasterConflict: Game<CMCGameState> = {
   setup: ({ ctx }, setupData): CMCGameState => {
+    // decks can be done through the game creation api, but here we will set up a default deck
+
+    const decks = {
+      "0": [
+        CreateDebugMonsterCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugMonsterCard(),
+        CreateDebugMonsterCard(),
+        CreateDebugCard(),
+        CreateDebugMonsterCard(),
+        CreateDebugMonsterCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugMonsterCard(),
+
+        CreateDebugMonsterCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugMonsterCard(),
+        CreateDebugMonsterCard(),
+        CreateDebugCard(),
+        CreateDebugMonsterCard(),
+        CreateDebugMonsterCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugMonsterCard(),
+      ],
+      "1": [
+        CreateDebugMonsterCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugMonsterCard(),
+        CreateDebugMonsterCard(),
+        CreateDebugCard(),
+        CreateDebugMonsterCard(),
+        CreateDebugMonsterCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugMonsterCard(),
+
+        CreateDebugMonsterCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugMonsterCard(),
+        CreateDebugMonsterCard(),
+        CreateDebugCard(),
+        CreateDebugMonsterCard(),
+        CreateDebugMonsterCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugCard(),
+        CreateDebugMonsterCard(),
+      ],
+    };
     return {
       playerData: {
         "0": CreateDefaultPlayer("0"),
@@ -375,28 +450,11 @@ export const CardmasterConflict: Game<CMCGameState> = {
         },
       },
       secret: {
-        decks: {
-          "0": [
-            CreateDebugMonsterCard(),
-            CreateDebugCard(),
-            CreateDebugCard(),
-            CreateDebugCard(),
-            CreateDebugCard(),
-            CreateDebugCard(),
-            CreateDebugMonsterCard(),
-          ],
-          "1": [
-            CreateDebugCard(),
-            CreateDebugMonsterCard(),
-            CreateDebugMonsterCard(),
-            CreateDebugCard(),
-            CreateDebugMonsterCard(),
-            CreateDebugCard(),
-          ],
-        },
+        decks: decks,
       },
     };
   },
+
   turn: {
     activePlayers: {
       currentPlayer: Stages.initial,
@@ -409,6 +467,29 @@ export const CardmasterConflict: Game<CMCGameState> = {
         const activePlayer = GetActivePlayer(ctx);
         // do turn mana, unless this is the first turn, then do initial mana and hand
         if (ctx.turn == 1 && activePlayer == "0" && !G.didinitialsetup) {
+          // sjhuffle decks
+          random.Shuffle(G.secret.decks["0"]);
+          random.Shuffle(G.secret.decks["1"]);
+
+          // go through every card and reset the guids to something random
+          for (const playerno in PlayerIDs) {
+            for (const card in G.secret.decks[playerno]) {
+              G.secret.decks[playerno][card].guid = GenerateRandomGuid(random);
+            }
+            G.playerData[playerno].persona.guid = GenerateRandomGuid(random);
+          }
+
+          for (const slotplayer in G.slots) {
+            for (const subplayer in G.slots[slotplayer]) {
+              for (const [index, card] of G.slots[slotplayer][
+                subplayer
+              ].entries()) {
+                G.slots[slotplayer][subplayer][index].guid =
+                  GenerateRandomGuid(random);
+              }
+            }
+          }
+
           G.didinitialsetup = true;
           // this is the beginning of the game
           for (const playerno in PlayerIDs) {
@@ -425,6 +506,7 @@ export const CardmasterConflict: Game<CMCGameState> = {
           PlayerAddResource(activePlayer, player.persona.resourcePerTurn, G);
         }
       }
+      CheckState(G);
     },
     onEnd: ({ G, ctx, events, random }) => {
       if (ctx.activePlayers !== null) {

@@ -40,10 +40,10 @@ interface CMCCard extends CMCCardBase {
   playFunction: string;
 }
 
-function CreateBasicCard(): CMCCard {
+function CreateBasicCard(guid: string = ""): CMCCard {
   const card: CMCCard = {
     alignment: Alignment.NONE,
-    guid: crypto.randomUUID(),
+    guid: guid ? guid : crypto.randomUUID(),
     subtype: "",
     costFunction: "DefaultCost",
     playFunction: "DefaultPlay",

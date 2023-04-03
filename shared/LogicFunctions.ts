@@ -14,6 +14,10 @@ import { CMCPlayer } from "./Player";
 import { rule } from "postcss";
 
 import { current } from "immer";
+import {
+  Random,
+  RandomAPI,
+} from "boardgame.io/dist/types/src/plugins/random/random";
 
 // adds a card from deck to hand
 function DrawCard(
@@ -69,7 +73,7 @@ interface DamageResult {
 }
 
 // check if any card needs updating, eg: is destroyed
-function CardScan(G: CMCGameState): void {
+function CardScan(G: CMCGameState, random: RandomAPI): void {
   for (const slotplayer in G.slots) {
     for (const subplayer in G.slots[slotplayer]) {
       for (const [index, card] of G.slots[slotplayer][subplayer].entries()) {
@@ -83,12 +87,25 @@ function CardScan(G: CMCGameState): void {
           // add monster to graveyard
           G.playerData[OwnerOf(entity, G)].graveyard.push(entity);
           //new slot
-          G.slots[slotplayer][subplayer][index] = CreateBasicCard();
+          G.slots[slotplayer][subplayer][index] = CreateBasicCard(
+            GenerateRandomGuid(random)
+          );
         }
       }
     }
   }
 }
+
+// generate a new guid
+function GenerateRandomGuid(random: RandomAPI) {
+  let guid: string = "[";
+  for (let num = 0; num <= 100; num++) {
+    guid += random.D20();
+  }
+  guid += "]";
+  return guid;
+}
+
 // deal damage. source is used for triggers of various kinds.
 function DealDamage(
   damagee: CMCMonsterCard | CMCPersonaCard,
@@ -515,4 +532,5 @@ export {
   DealDamage,
   DamageResult,
   CardScan,
+  GenerateRandomGuid,
 };
