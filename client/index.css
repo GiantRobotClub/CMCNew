@@ -2,6 +2,7 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  width:100%;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -12,6 +13,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  font-size: 2svh
+  
 }
 
 a {
@@ -32,7 +35,7 @@ body {
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 3.2rem;
   line-height: 1.1;
 }
 
@@ -40,7 +43,7 @@ button {
   border-radius: 8px;
   border: 1px solid transparent;
   padding:1px;
-  font-size: 1em;
+  font-size: 1rem;
   font-weight: 500;
   font-family: inherit;
   background-color: #1a1a1a;
@@ -119,14 +122,16 @@ button:focus-visible {
 
 
 .cardStyle {
-  width: 100px;
-  height: 100px;
+  width: 7rem;
+  height: 7rem;
   
   padding: 0; margin: 0;
 }
 
 .bigCardStyle {
-  height: 150px
+  height: 10rem;
+  width: 7rem;
+  font-size: 90%;
 }
 
 .cardStyleActive {
@@ -151,4 +156,26 @@ button:focus-visible {
 }
 .cardStyleClicked {
   background-color:rgb(255, 214, 208)
+}
+
+
+.cmcBoard {
+  display: flex;
+   height: 28rem;
+   width: 44rem;
+}
+
+.playerBox {
+  height: 100%;
+  background-color:green;
+  width: 7rem
+}
+
+.playerCardBox {
+  height: 50%;
+  width: 7rem;
+}
+
+.cardrow {
+  height: 7rem
 }

@@ -63,9 +63,9 @@ export function CMCBoard(props: CMCProps) {
         player: {props.ctx.currentPlayer}
         <br />
       </div>
-      <div style={{ display: "flex", height: "410px", width: "600px" }}>
-        <div style={{ height: "100%", background: "green", width: "100px" }}>
-          <div style={{ height: "50%", width: "100px" }}>
+      <div className="cmcBoard">
+        <div className="playerBox">
+          <div className="playerCardBox">
             <CMCCardVisual
               big={true}
               activeCard={false}
@@ -82,7 +82,7 @@ export function CMCBoard(props: CMCProps) {
               key={"player" + otherPlayer}
             />
           </div>
-          <div style={{ height: "50%" }}>
+          <div className="playerCardBox">
             <CMCCardVisual
               big={true}
               activeCard={false}
@@ -100,7 +100,7 @@ export function CMCBoard(props: CMCProps) {
             />
           </div>
         </div>
-        <div style={{ height: "100px" }}>
+        <div className="cardRow">
           <div style={flexStyle}>
             {state.slots[otherPlayer].monsters.map(
               (card: CMCCard, index: number) => (
