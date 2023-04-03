@@ -71,6 +71,7 @@ function CreateBasicCard(): CMCCard {
 }
 
 interface CMCEntityCard extends CMCCard {
+  destroyed: boolean;
   dizzy: boolean;
   status: any;
 }
@@ -107,6 +108,7 @@ function CreateEntityCard(): CMCEntityCard {
   const card: CMCEntityCard = {
     dizzy: false,
     status: {},
+    destroyed: false,
     ...CreateBasicCard(),
   };
   return card;
@@ -190,6 +192,7 @@ export {
   CMCCard,
   CMCEffectCard,
   CMCMonsterCard,
+  CMCEntityCard,
   CMCPersonaCard,
   CreateEffectCard,
   CreateDebugCard,

@@ -14,9 +14,16 @@ export function CMCBoard(props: CMCProps) {
 
   const endTurn = () => props.moves.passTurn();
   const endStage = () => props.moves.passStage();
+  const cancel = () => props.moves.cancel();
   const clickCard = (card: CMCCard) => {
     if (card.type == CardType.EMPTY) {
       props.moves.chooseSlot(card, you);
+    } else if (
+      card.type == CardType.MONSTER ||
+      card.type == CardType.EFFECT ||
+      card.type == CardType.PERSONA
+    ) {
+      props.moves.pickEntity(card, you);
     }
   };
   const clickCardFromHand = (card: CMCCard) => {
@@ -31,8 +38,11 @@ export function CMCBoard(props: CMCProps) {
   if (props.isMultiplayer && props.playerID != null) {
     you = props.playerID;
   }
-  let otherPlayer = you == "0" ? "1" : "0";
   let activePlayer = currentPlayer;
+
+  you = activePlayer;
+
+  let otherPlayer = you == "0" ? "1" : "0";
 
   if (props.ctx.activePlayers) {
     if ("0" in props.ctx.activePlayers) {
@@ -59,13 +69,13 @@ export function CMCBoard(props: CMCProps) {
             <CMCCardVisual
               big={true}
               activeCard={false}
-              player={props.G.player[otherPlayer]}
-              card={props.G.player[otherPlayer].persona}
-              doClick={() => clickCard(props.G.player[otherPlayer].persona)}
+              player={props.G.playerData[otherPlayer]}
+              card={props.G.playerData[otherPlayer].persona}
+              doClick={() => clickCard(props.G.playerData[otherPlayer].persona)}
               canClick={CanClickCard(
-                props.G.player[otherPlayer].persona,
+                props.G.playerData[otherPlayer].persona,
                 you,
-                ClickType.MONSTER,
+                ClickType.PERSONA,
                 props.ctx,
                 props.G
               )}
@@ -76,13 +86,13 @@ export function CMCBoard(props: CMCProps) {
             <CMCCardVisual
               big={true}
               activeCard={false}
-              player={props.G.player[you]}
-              card={props.G.player[you].persona}
-              doClick={() => clickCard(props.G.player[you].persona)}
+              player={props.G.playerData[you]}
+              card={props.G.playerData[you].persona}
+              doClick={() => clickCard(props.G.playerData[you].persona)}
               canClick={CanClickCard(
-                props.G.player[you].persona,
+                props.G.playerData[you].persona,
                 you,
-                ClickType.MONSTER,
+                ClickType.PERSONA,
                 props.ctx,
                 props.G
               )}
@@ -97,7 +107,7 @@ export function CMCBoard(props: CMCProps) {
                 <CMCCardVisual
                   big={false}
                   activeCard={false}
-                  player={props.G.player[otherPlayer]}
+                  player={props.G.playerData[otherPlayer]}
                   card={card}
                   doClick={() => clickCard(card)}
                   canClick={CanClickCard(
@@ -118,7 +128,7 @@ export function CMCBoard(props: CMCProps) {
                 <CMCCardVisual
                   big={false}
                   activeCard={false}
-                  player={props.G.player[otherPlayer]}
+                  player={props.G.playerData[otherPlayer]}
                   card={card}
                   doClick={() => clickCard(card)}
                   key={"0e" + index}
@@ -138,7 +148,7 @@ export function CMCBoard(props: CMCProps) {
               <CMCCardVisual
                 big={false}
                 activeCard={false}
-                player={props.G.player[you]}
+                player={props.G.playerData[you]}
                 card={card}
                 doClick={() => clickCard(card)}
                 key={"1e" + index}
@@ -157,7 +167,7 @@ export function CMCBoard(props: CMCProps) {
               <CMCCardVisual
                 big={false}
                 activeCard={false}
-                player={props.G.player[you]}
+                player={props.G.playerData[you]}
                 card={card}
                 doClick={() => clickCard(card)}
                 key={"1m" + index}
@@ -174,10 +184,11 @@ export function CMCBoard(props: CMCProps) {
         </div>
       </div>
       <div>
-        {activePlayer == you ? (
+        {!props.isMultiplayer || activePlayer == you ? (
           <div>
             <button onClick={() => endTurn()}>END</button>
             <button onClick={() => endStage()}>NEXT</button>
+            <button onClick={() => cancel()}>CANCEL</button>
           </div>
         ) : (
           ""
@@ -189,7 +200,7 @@ export function CMCBoard(props: CMCProps) {
             (card: CMCCard, index: number) => (
               <CMCCardVisual
                 big={false}
-                player={props.G.player[you]}
+                player={props.G.playerData[you]}
                 card={card}
                 activeCard={
                   props.G.activeCard ? props.G.activeCard == card : false

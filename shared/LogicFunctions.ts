@@ -1,7 +1,13 @@
 import { Ctx } from "boardgame.io";
 import { CMCGameState } from "./CardmasterGame";
-import { CMCCard } from "./CMCCard";
-import { ClickType, CardType, Stages } from "./Constants";
+import {
+  CMCCard,
+  CMCEntityCard,
+  CMCMonsterCard,
+  CMCPersonaCard,
+  CreateBasicCard,
+} from "./CMCCard";
+import { ClickType, CardType, Stages, PlayerIDs } from "./Constants";
 
 import * as CardFunctions from "./CardFunctions";
 import { CMCPlayer } from "./Player";
@@ -9,6 +15,7 @@ import { rule } from "postcss";
 
 import { current } from "immer";
 
+// adds a card from deck to hand
 function DrawCard(
   playerId: string,
   cardcount: number,
@@ -26,17 +33,19 @@ function DrawCard(
   return true;
 }
 
+// adds resource (eg mana)
 function PlayerAddResource(playerid: string, resource: any, G: CMCGameState) {
-  let player: CMCPlayer = G.player[playerid];
+  let player: CMCPlayer = G.playerData[playerid];
   for (const check in resource) {
     for (const sub in resource[check]) {
-      G.player[playerid].resources[check][sub] += resource[check][sub];
+      G.playerData[playerid].resources[check][sub] += resource[check][sub];
     }
   }
 }
 
+// reduces resource.
 function PlayerPay(playerid: string, cost: any, G: CMCGameState) {
-  const fullplayer: CMCPlayer = G.player[playerid];
+  const fullplayer: CMCPlayer = G.playerData[playerid];
 
   if (!fullplayer) {
     return false;
@@ -51,6 +60,74 @@ function PlayerPay(playerid: string, cost: any, G: CMCGameState) {
     }
   }
   return true;
+}
+
+interface DamageResult {
+  card: CMCCard;
+  damage: number;
+  overage: number; // damage - health, except in certain circumstances
+}
+
+// check if any card needs updating, eg: is destroyed
+function CardScan(G: CMCGameState): void {
+  for (const slotplayer in G.slots) {
+    for (const subplayer in G.slots[slotplayer]) {
+      for (const [index, card] of G.slots[slotplayer][subplayer].entries()) {
+        if (card.type == CardType.EMPTY) {
+          continue;
+        }
+        const entity = card as CMCEntityCard;
+
+        // is it dead
+        if (entity.destroyed) {
+          // add monster to graveyard
+          G.playerData[OwnerOf(entity, G)].graveyard.push(entity);
+          //new slot
+          G.slots[slotplayer][subplayer][index] = CreateBasicCard();
+        }
+      }
+    }
+  }
+}
+// deal damage. source is used for triggers of various kinds.
+function DealDamage(
+  damagee: CMCMonsterCard | CMCPersonaCard,
+  source: CMCCard,
+  amount: number,
+  G: CMCGameState
+): DamageResult {
+  if ("life" in damagee) {
+    const damageResult: DamageResult = {
+      card: damagee,
+      damage: 0,
+      overage: 0,
+    };
+    damageResult.damage = amount;
+    damageResult.overage = amount - damagee.life;
+    for (const slotplayer in G.slots) {
+      for (const subplayer in G.slots[slotplayer]) {
+        for (const [index, card] of G.slots[slotplayer][subplayer].entries()) {
+          if (card.guid == damagee.guid) {
+            G.slots[slotplayer][subplayer][index].life -= amount;
+            if (G.slots[slotplayer][subplayer][index].life <= 0) {
+              G.slots[slotplayer][subplayer][index].destroyed = true;
+            }
+          }
+        }
+      }
+    }
+
+    return damageResult;
+  } else {
+    const damageResult: DamageResult = {
+      card: damagee,
+      damage: 0,
+      overage: 0,
+    };
+    damageResult.damage = amount;
+    G.playerData[damagee.playerID].resources.intrinsic.health -= amount;
+    return damageResult;
+  }
 }
 
 // function to take a card object and apply it to an in game slot.
@@ -169,12 +246,13 @@ function PlayEntity(
   return G;
 }
 
+// determine ownerof card
 function OwnerOf(card: CMCCard, G: CMCGameState) {
   for (const slotplayer in G.slots) {
     for (const subplayer in G.slots[slotplayer]) {
       for (const subrow of G.slots[slotplayer][subplayer]) {
         const slot: CMCCard = subrow;
-        if (slot === card) {
+        if (slot.guid === card.guid) {
           return slotplayer;
         }
       }
@@ -189,22 +267,16 @@ function OwnerOf(card: CMCCard, G: CMCGameState) {
   // check graveyard
 
   // check persona
-
+  for (const playnumber in PlayerIDs) {
+    if (G.playerData[playnumber].persona.guid == card.guid) {
+      return playnumber;
+    }
+  }
   // check who played location
 
   return "-1";
 }
 
-function ClickCard(
-  card: CMCCard,
-  playerId: string,
-  clickType: ClickType,
-  ctx: Ctx,
-  G: CMCGameState
-) {
-  // translate to a move
-  console.log("Clicked on " + card.name);
-}
 function CanClickCard(
   card: CMCCard,
   playerId: string,
@@ -271,9 +343,9 @@ function CanClickCard(
     return true;
   } else if (
     clickType == ClickType.MONSTER ||
-    ClickType.EFFECT ||
-    ClickType.PERSONA ||
-    ClickType.GRAVEYARD
+    clickType == ClickType.EFFECT ||
+    clickType == ClickType.PERSONA ||
+    clickType == ClickType.GRAVEYARD
   ) {
     // case one: you are playing an entity card from your hand and are selecting the slot.
     if (stage == Stages.pickSlot) {
@@ -317,6 +389,112 @@ function CanClickCard(
       }
 
       return true;
+    } else if (stage == Stages.combat) {
+      // picking attackers
+      if (card.type != CardType.MONSTER) {
+        console.log("Can only pick monsters");
+        return false; // can only pick monsters
+      }
+      if (OwnerOf(card, G) != activePlayer) {
+        console.log(
+          "Can only pick your monsters: owner is " + OwnerOf(card, G)
+        );
+        // the owner of the active card is different than the monster owner
+        return false;
+      }
+      const monster = card as CMCMonsterCard;
+      if (monster.dizzy) {
+        console.log("Can only pick undizzy monsters");
+        // cant attack when dizzy
+        return false;
+      }
+      // is the monster already attacking?
+      if (!G.combat) {
+        console.log("no G");
+        return false;
+      }
+      for (const combatant of G.combat.targets) {
+        if (combatant.attacker.guid == monster.guid) {
+          console.log("already attacking");
+          return false;
+        }
+      }
+      //todo: is the monster capaable of attacking?
+
+      return true;
+    } else if (stage == Stages.defense) {
+      // picking attacking monster
+      if (card.type != CardType.MONSTER) {
+        return false; // can only pick monsters
+      }
+      if (OwnerOf(card, G) == activePlayer) {
+        // you cant attack yourself
+        return false;
+      }
+      const monster = card as CMCMonsterCard;
+
+      if (!G.combat) {
+        return false;
+      }
+      //todo: is the monster capaable of defending?
+
+      // is the monster attacking?
+      for (const combatant of G.combat.targets) {
+        if (combatant.attacker.guid == monster.guid) {
+          console.log("Monster is locked");
+          if (combatant.locked) {
+            // monster is locked on it's current target
+            return false;
+          }
+        }
+      }
+      return true;
+    } else if (stage == Stages.pickCombatTarget) {
+      // picking defending monster
+      if (card.type != CardType.MONSTER && card.type != CardType.PERSONA) {
+        return false; // can only pick monsters or  players
+      }
+      if (OwnerOf(card, G) == activePlayer) {
+        // you cant attack yourself
+        return false;
+      }
+      const monster = card as CMCMonsterCard | CMCPersonaCard;
+
+      if (!G.combat) {
+        return false;
+      }
+      //todo: is the monster capable of defending?
+
+      // is the monster already defending?
+      for (const combatant of G.combat.targets) {
+        if (combatant.defender.guid == monster.guid) {
+          return false;
+        }
+      }
+      return true;
+    } else if (stage == Stages.pickCombatDefense) {
+      // picking defending monster
+      if (card.type != CardType.MONSTER) {
+        return false; // can only pick monsters
+      }
+      if (OwnerOf(card, G) != activePlayer) {
+        // you cant defend with oponent's monsters
+        return false;
+      }
+      const monster = card as CMCMonsterCard;
+
+      if (!G.combat) {
+        return false;
+      }
+      //todo: is the monster capable of defending?
+
+      // is the monster already defending?
+      for (const combatant of G.combat.targets) {
+        if (combatant.defender.guid == monster.guid) {
+          return false;
+        }
+      }
+      return true;
     }
   } else if ((clickType = ClickType.LOCATION)) {
     return false;
@@ -328,11 +506,13 @@ function CanClickCard(
 export {
   OwnerOf,
   CanClickCard,
-  ClickCard,
   PlayEntity,
   PlayerPay,
   PlaceCard,
   RemoveFromHand,
   PlayerAddResource,
   DrawCard,
+  DealDamage,
+  DamageResult,
+  CardScan,
 };

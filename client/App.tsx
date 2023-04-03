@@ -12,6 +12,7 @@ function App() {
         <Route path="/game" element={<Game />} />
         <Route path="/" element={<Default />} />
         <Route path="/play" element={<Cmc />} />
+        <Route path="/public" />
       </Routes>
     </Router>
   );

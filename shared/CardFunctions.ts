@@ -19,7 +19,7 @@ export function DefaultCost(
   ctx: Ctx,
   dry: boolean
 ): boolean {
-  const fullplayer: CMCPlayer = G.player[playertocheck];
+  const fullplayer: CMCPlayer = G.playerData[playertocheck];
 
   if (!fullplayer) {
     return false;
@@ -51,7 +51,7 @@ export function ManaGenerate(
 ): CMCGameState {
   let newG = G;
   let playerid = OwnerOf(card, G);
-  let player: CMCPlayer = newG.player[playerid];
+  let player: CMCPlayer = newG.playerData[playerid];
 
   let resource = {
     mana: {},
@@ -60,7 +60,7 @@ export function ManaGenerate(
 
   PlayerAddResource(playerid, resource, newG);
 
-  newG.player[ctx.currentPlayer] = player;
+  newG.playerData[ctx.currentPlayer] = player;
   return newG;
 }
 

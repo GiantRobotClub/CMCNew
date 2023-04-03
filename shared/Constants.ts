@@ -20,6 +20,7 @@ enum ClickType {
   LOCATION,
   PERSONA,
   PLAYER,
+  INVALID,
 }
 
 enum Stages {
@@ -30,7 +31,9 @@ enum Stages {
   resolve = "resolve",
   respond = "respond",
   defense = "defense",
-  pickTarget = "pickTarget",
+  pickCombatTarget = "pickCombatTarget",
+  pickAbilityTarget = "pickAbilityTarget",
+  pickCombatDefense = "pickCombatDefense",
   pickHandCard = "pickHandCard",
   pickSlot = "pickSlot",
   pickPlayer = "pickPlayer",
@@ -47,6 +50,8 @@ enum Alignment {
   VA,
   GOLDEN,
 }
+
+const PlayerIDs = ["0", "1"];
 export {
   SERVER_PORT,
   CLIENT_PORT,
@@ -55,4 +60,5 @@ export {
   ClickType,
   Stages,
   Alignment,
+  PlayerIDs,
 };

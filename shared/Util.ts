@@ -1,5 +1,5 @@
 import { Ctx } from "boardgame.io";
-import { Stages } from "./Constants";
+import { PlayerIDs, Stages } from "./Constants";
 
 export function OtherPlayer(player: string) {
   return player === "1" ? "0" : "1";
@@ -7,7 +7,7 @@ export function OtherPlayer(player: string) {
 
 export function GetActivePlayer(ctx: Ctx): string {
   if (ctx.activePlayers) {
-    const players = ["0", "1"];
+    const players = PlayerIDs;
     for (const player of players) {
       if (player in ctx.activePlayers) {
         return player;

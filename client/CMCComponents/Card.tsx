@@ -61,6 +61,7 @@ function CMCCardVisual({
   if (card.type == CardType.EMPTY) {
     return (
       <button
+        key={cardObject.guid}
         onClick={doClick}
         disabled={!canClick}
         className={
@@ -81,11 +82,16 @@ function CMCCardVisual({
           {Object.keys(cardObject.cost).map((type) => {
             return Object.keys(cardObject.cost[type]).map((key) => {
               if (!cardObject.cost[type][key])
-                return <span className="empty"></span>;
+                return (
+                  <span
+                    className="empty"
+                    key={type + key + cardObject.guid}
+                  ></span>
+                );
               const costkey = "cost" + key;
               const costamount = cardObject.cost[type][key];
               return (
-                <span className={costkey} key={costkey}>
+                <span className={costkey} key={costkey + cardObject.guid}>
                   {icons[key]}
                   {costamount}
                 </span>
@@ -102,11 +108,16 @@ function CMCCardVisual({
         {Object.keys(cardObject.sac).map((type) => {
           return Object.keys(cardObject.sac[type]).map((key) => {
             if (!cardObject.sac[type][key])
-              return <span className="empty"></span>;
+              return (
+                <span
+                  className="empty"
+                  key={type + key + cardObject.guid}
+                ></span>
+              );
             const costkey = "cost" + key;
             const costamount = cardObject.sac[type][key];
             return (
-              <span className={costkey} key={costkey}>
+              <span className={costkey} key={costkey + cardObject.guid}>
                 {icons[key]}
                 {costamount}
               </span>
@@ -135,11 +146,16 @@ function CMCCardVisual({
                 !player.resources[type].hasOwnProperty(key) ||
                 (player.resources[type][key] <= 0 && type != "mana")
               )
-                return <span className="empty"></span>;
+                return (
+                  <span
+                    className="empty"
+                    key={type + key + cardObject.guid}
+                  ></span>
+                );
               const costkey = "res" + key;
               const costamount = player.resources[type][key];
               return (
-                <div className={costkey} key={costkey}>
+                <div className={costkey} key={costkey + cardObject.guid}>
                   {icons[key]}
                   {costamount}
                 </div>
@@ -158,6 +174,7 @@ function CMCCardVisual({
   }
   return (
     <button
+      key={cardObject.guid}
       onClick={doClick}
       disabled={!canClick}
       className={
