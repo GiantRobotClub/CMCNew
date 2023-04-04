@@ -78,6 +78,7 @@ function ResolveCombat(G: CMCGameState, ctx: Ctx, random: RandomAPI) {
       continue;
     }
     if (
+      resolution.defender &&
       resolution.defender.type == CardType.MONSTER &&
       "attack" in resolution.defender
     ) {
@@ -120,7 +121,7 @@ function ResolveCombat(G: CMCGameState, ctx: Ctx, random: RandomAPI) {
     }
     let playerDamage: number = 0;
     // check if there's overage damage or it's a direct player attack
-    if ("attack" in resolution.defender) {
+    if (resolution.defender && "attack" in resolution.defender) {
       if (resolution.locked) {
         playerDamage = 0;
       } else {
@@ -159,6 +160,9 @@ function SetCombatAttacker(
   G: CMCGameState,
   defender: CMCMonsterCard | CMCPersonaCard
 ): boolean {
+  if (!defender || defender === undefined) {
+    return false;
+  }
   if (G.combat === undefined) {
     // combat is not ready, return.
     return false;

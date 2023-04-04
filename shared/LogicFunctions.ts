@@ -100,7 +100,7 @@ function CardScan(G: CMCGameState, random: RandomAPI): void {
 function GenerateRandomGuid(random: RandomAPI) {
   let guid: string = "[";
   for (let num = 0; num <= 100; num++) {
-    guid += random.D20();
+    guid += random.D20() + " ";
   }
   guid += "]";
   return guid;
@@ -294,6 +294,7 @@ function OwnerOf(card: CMCCard, G: CMCGameState) {
   return "-1";
 }
 
+// function run on all cards to determine clickability and legal moves
 function CanClickCard(
   card: CMCCard,
   playerId: string,
@@ -409,30 +410,23 @@ function CanClickCard(
     } else if (stage == Stages.combat) {
       // picking attackers
       if (card.type != CardType.MONSTER) {
-        console.log("Can only pick monsters");
         return false; // can only pick monsters
       }
       if (OwnerOf(card, G) != activePlayer) {
-        console.log(
-          "Can only pick your monsters: owner is " + OwnerOf(card, G)
-        );
         // the owner of the active card is different than the monster owner
         return false;
       }
       const monster = card as CMCMonsterCard;
       if (monster.dizzy) {
-        console.log("Can only pick undizzy monsters");
         // cant attack when dizzy
         return false;
       }
       // is the monster already attacking?
       if (!G.combat) {
-        console.log("no G");
         return false;
       }
       for (const combatant of G.combat.targets) {
         if (combatant.attacker.guid == monster.guid) {
-          console.log("already attacking");
           return false;
         }
       }
@@ -484,7 +478,7 @@ function CanClickCard(
 
       // is the monster already defending?
       for (const combatant of G.combat.targets) {
-        if (combatant.defender.guid == monster.guid) {
+        if (combatant.defender && combatant.defender.guid == monster.guid) {
           return false;
         }
       }
@@ -507,7 +501,7 @@ function CanClickCard(
 
       // is the monster already defending?
       for (const combatant of G.combat.targets) {
-        if (combatant.defender.guid == monster.guid) {
+        if (combatant.defender && combatant.defender.guid == monster.guid) {
           return false;
         }
       }
@@ -520,11 +514,14 @@ function CanClickCard(
   return false;
 }
 
+// reset the selected cards and stages
 function resetActive(G: CMCGameState) {
+  console.log("Restting active from " + G.returnStage);
   G.activeAbility = undefined;
   G.activeCard = undefined;
   G.returnStage = undefined;
 }
+// reset combat at end of turn
 function resetCombat(G: CMCGameState) {
   G.combat = undefined;
   G.resolution = undefined;

@@ -36,7 +36,6 @@ const passStage: Move<CMCGameState> = ({ G, ctx, events, random }) => {
   if (GetActiveStage(ctx) == Stages.initial) {
     // going into draw phase
     const player: CMCPlayer = G.playerData[activePlayer];
-    console.log("Drawing another card");
     const okay = DrawCard(activePlayer, player.persona.drawPerTurn, G);
 
     if (!okay) {
@@ -74,7 +73,10 @@ const playCardFromHand: Move<CMCGameState> = (
   playerId: string
 ) => {
   if (!ctx.activePlayers) {
-    return;
+    return INVALID_MOVE;
+  }
+  if (G.activeCard) {
+    return INVALID_MOVE;
   }
   if (card.type == CardType.EFFECT || card.type == CardType.MONSTER) {
     G.activeCard = card;
@@ -86,41 +88,54 @@ const playCardFromHand: Move<CMCGameState> = (
 // cancel your current selection and go back to the top level selection mode
 const cancel: Move<CMCGameState> = ({ G, ctx, events }, playerId: string) => {
   if (!ctx.activePlayers || !ctx.activePlayers[playerId]) {
-    return;
+    return INVALID_MOVE;
   }
-  if (G.returnStage) {
-    if (
-      GetActiveStage(ctx) == Stages.combat ||
-      GetActiveStage(ctx) == Stages.pickCombatTarget
-    ) {
-      // reset combat
-      G.combat = StartCombatPhase();
-    } else if (
-      GetActiveStage(ctx) == Stages.defense ||
-      GetActiveStage(ctx) == Stages.pickCombatDefense
-    ) {
-      // reset defenders except locked ones.
-      if (G.combat) {
-        for (const combatant of G.combat.targets) {
-          if (combatant.locked) {
-            continue;
-          }
-          if (combatant.defender.type == CardType.MONSTER) {
-            combatant.defender = G.players[GetActivePlayer(ctx)].persona;
-          }
+
+  console.log("Returning to " + G.returnStage);
+  if (
+    GetActiveStage(ctx) == Stages.combat ||
+    GetActiveStage(ctx) == Stages.pickCombatTarget
+  ) {
+    // reset combat
+    G.combat = StartCombatPhase();
+  } else if (
+    GetActiveStage(ctx) == Stages.defense ||
+    GetActiveStage(ctx) == Stages.pickCombatDefense
+  ) {
+    // reset defenders except locked ones.
+    if (G.combat) {
+      for (const combatant of G.combat.targets) {
+        if (combatant.locked) {
+          continue;
+        }
+        if (combatant.defender && combatant.defender.type == CardType.MONSTER) {
+          combatant.defender = G.playerData[GetActivePlayer(ctx)].persona;
         }
       }
     }
-    if (
-      GetActiveStage(ctx) != Stages.combat &&
-      GetActiveStage(ctx) != Stages.defense
-    )
-      events.setStage(G.returnStage);
-
-    resetActive(G);
   }
+
+  if (G.returnStage) {
+    if (G.activeAbility || G.activeCard) {
+      events.setStage(G.returnStage);
+    } else if (
+      GetActiveStage(ctx) == Stages.pickCombatDefense ||
+      GetActiveStage(ctx) == Stages.pickCombatTarget ||
+      GetActiveStage(ctx) == Stages.pickPlayer ||
+      GetActiveStage(ctx) == Stages.pickHandCard ||
+      GetActiveStage(ctx) == Stages.pickSlot ||
+      GetActiveStage(ctx) == Stages.pickAbilityTarget
+    ) {
+      events.setStage(G.returnStage);
+    }
+  } else {
+    // oh no your stage is broken???????
+    return "INVALID_MOVE";
+  }
+  resetActive(G);
 };
 
+// pick something on the board
 const pickEntity: Move<CMCGameState> = (
   { G, ctx, events },
   card: CMCCard,
@@ -135,27 +150,24 @@ const pickEntity: Move<CMCGameState> = (
       ? ClickType.PERSONA
       : ClickType.INVALID;
   if (clickType == ClickType.INVALID) {
-    console.log("Click is invalid");
     return INVALID_MOVE;
   }
 
   if (!CanClickCard(card, playerId, clickType, ctx, G)) {
-    console.log("Cant click card");
     return INVALID_MOVE;
   }
   // determine based on state
   if (GetActiveStage(ctx) == Stages.combat) {
     // pick attacker
     if (card.type != CardType.MONSTER) {
-      console.log("Card is not a monster");
       return INVALID_MOVE;
     }
     if (OwnerOf(card, G) != playerId) {
-      console.log("Card is not owned by you");
       return INVALID_MOVE;
     }
     G.activeCard = card;
-    G.returnstage = Stages.combat;
+    G.returnStage = Stages.combat;
+    console.log("Setting returnstage to combat");
     events.setStage(Stages.pickCombatTarget);
   } else if (GetActiveStage(ctx) == Stages.pickCombatTarget) {
     if (!G.activeCard) {
@@ -175,7 +187,11 @@ const pickEntity: Move<CMCGameState> = (
       return INVALID_MOVE;
     }
     G.activeCard = undefined;
-    events.setStage(G.returnstage);
+    if (G.returnStage) {
+      events.setStage(G.returnStage);
+    } else {
+      return INVALID_MOVE;
+    }
     // pick defender
   } else if (GetActiveStage(ctx) == Stages.defense) {
     if (card.type != CardType.MONSTER) {
@@ -187,7 +203,7 @@ const pickEntity: Move<CMCGameState> = (
     // pick attacking card
 
     G.activeCard = card;
-    G.returnstage = Stages.defense;
+    G.returnStage = Stages.defense;
     events.setStage(Stages.pickCombatDefense);
   } else if (GetActiveStage(ctx) == Stages.pickCombatDefense) {
     // pick who is defending
@@ -208,7 +224,11 @@ const pickEntity: Move<CMCGameState> = (
       return INVALID_MOVE;
     }
     G.activeCard = undefined;
-    events.setStage(G.returnstage);
+    if (G.returnStage) {
+      events.setStage(G.returnStage);
+    } else {
+      return INVALID_MOVE;
+    }
   } else if (GetActiveStage(ctx) == Stages.pickAbilityTarget) {
     // ability or spell targeting
   }
@@ -227,11 +247,8 @@ const chooseSlot: Move<CMCGameState> = (
   let success_play: boolean | CMCGameState = false;
   if (G.activeCard && returnStage == Stages.play) {
     //Move card from hand into play
-    console.log(card.name);
     success_play = PlayEntity(G.activeCard, card, playerId, G, ctx);
     if (!success_play) return INVALID_MOVE;
-
-    console.log(card.name);
   }
 
   events.setStage(G.returnStage ? G.returnStage : "error");
