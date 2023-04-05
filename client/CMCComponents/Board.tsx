@@ -78,8 +78,9 @@ export function CMCBoard(props: CMCProps) {
     you = props.playerID;
   }
   let activePlayer = currentPlayer;
-
-  you = activePlayer;
+  if (!props.isMultiplayer) {
+    you = activePlayer;
+  }
 
   let otherPlayer = you == "0" ? "1" : "0";
 
