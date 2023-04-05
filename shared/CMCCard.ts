@@ -3,6 +3,7 @@ import { FaLeaf, FaSearch } from "react-icons/fa";
 import { Alignment, CardType, ClickType, Stages } from "../shared/Constants";
 import {
   Ability,
+  AbilitySpeed,
   TriggeringTrigger,
   TriggerNames,
   TriggerPlayerType,
@@ -15,7 +16,7 @@ interface CMCCardBase {
   type: CardType;
   alignment: Alignment;
   subtype: string;
-
+  cardtext: string;
   cost: {
     mana: {
       V: Number;
@@ -49,6 +50,7 @@ function CreateBasicCard(guid: string = ""): CMCCard {
     playFunction: "DefaultPlay",
     name: "",
     picture: "",
+    cardtext: "",
     type: CardType.EMPTY,
     sac: {
       mana: {
@@ -138,6 +140,7 @@ function CreateDebugCard(): CMCEffectCard {
   card.sac.mana.A = 2;
   card.cost.mana.A = 1;
 
+  card.cardtext = " A basic generator ";
   const debugAbility: Ability = {
     triggerType: TriggerType.AUTOMATIC_STAGE,
     activateCode: "ManaGenerate",
@@ -148,6 +151,9 @@ function CreateDebugCard(): CMCEffectCard {
       color: "A",
       amount: 1,
     },
+    abilityName: "Generate Mana",
+    abilityText: "Adds one Anodyne per turn",
+    abilityCostText: undefined,
   };
   card.abilities = [debugAbility];
   return card;
@@ -160,16 +166,20 @@ function CreateDebugMonsterCard(): CMCMonsterCard {
   card.cost.mana.A = 1;
   card.life = 10;
   card.attack = 10;
+  card.cardtext = " Just a debug slime ";
   const debugAbility: Ability = {
-    triggerType: TriggerType.AUTOMATIC_STAGE,
+    triggerType: TriggerType.ACTIVATED,
     activateCode: "ManaGenerate",
-    triggerCode: "TriggerStage",
+    triggerCode: undefined,
     metadata: {
-      triggername: TriggerNames.START_TURN,
-      triggerstage: "initial",
       color: "A",
       amount: 1,
     },
+
+    speed: AbilitySpeed.A,
+    abilityName: "Generate Mana",
+    abilityText: "Add one anodyne",
+    abilityCostText: "Z",
   };
   card.abilities = [debugAbility];
   return card;
@@ -184,6 +194,7 @@ function CreateDebugPersonaCard(playerid: string): CMCPersonaCard {
   };
   card.drawPerTurn = 1;
   card.startingHand = 1;
+  card.cardtext = " Garden Variety ";
 
   return card;
 }

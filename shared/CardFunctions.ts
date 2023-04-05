@@ -48,20 +48,19 @@ export function ManaGenerate(
   owner: string,
   G: CMCGameState,
   ctx: Ctx
-): CMCGameState {
-  let newG = G;
+): boolean {
   let playerid = OwnerOf(card, G);
-  let player: CMCPlayer = newG.playerData[playerid];
+  let player: CMCPlayer = G.playerData[playerid];
 
   let resource = {
     mana: {},
   };
   resource.mana[ability.metadata.color] = ability.metadata.amount;
 
-  PlayerAddResource(playerid, resource, newG);
+  PlayerAddResource(playerid, resource, G);
 
-  newG.playerData[ctx.currentPlayer] = player;
-  return newG;
+  G.playerData[ctx.currentPlayer] = player;
+  return true;
 }
 
 export function TriggerStage(

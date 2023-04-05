@@ -2,6 +2,8 @@ import { Ctx } from "boardgame.io";
 import { CMCGameState } from "./CardmasterGame";
 import { CMCCard } from "./CMCCard";
 import * as CardFunctions from "./CardFunctions";
+import { OwnerOf } from "./LogicFunctions";
+import { dataToEsm } from "@rollup/pluginutils";
 
 enum TriggerType {
   ACTIVATED = 0,
@@ -12,10 +14,24 @@ enum TriggerType {
   AUTOMATIC_PRECOMBAT,
 }
 
+enum AbilitySpeed {
+  S = -99,
+  A = 1,
+  B = 2,
+  C = 3,
+  D = 4,
+  E = 5,
+  F = 99,
+}
 enum TriggerNames {
   START_TURN = "start_turn",
   END_STAGE = "end_stage",
   END_TURN = "end_turn",
+  ON_DESTROY = "destroy",
+  ON_PLAY = "play",
+  SPELL = "spell",
+  PRECOMBAT = "precombat",
+  POSTCOMBAT = "postcombat",
 }
 interface Ability {
   triggerType: TriggerType;
@@ -24,6 +40,10 @@ interface Ability {
   activateCode?: string;
   costCode?: string;
   metadata: any;
+  speed?: AbilitySpeed;
+  abilityName: string;
+  abilityText: string;
+  abilityCostText?: string;
 }
 
 enum TriggerPlayerType {
@@ -38,6 +58,10 @@ interface TriggeringTrigger {
   turn?: number;
   stage?: string;
 }
+
+const EmptyTriggerData = {
+  name: "",
+};
 
 function Ability_Trigger(
   trigger_data: TriggeringTrigger,
@@ -69,10 +93,10 @@ function handleTrigger(
     if (ability.triggerCode) {
       const triggerFunc: Function = CardFunctions[ability.triggerCode];
       //console.log(CardFunctions);
-      if (triggerFunc(card, ability, trigger_data, owner, G, ctx)) {
+      if (triggerFunc(card, ability, trigger_data, owner, newG, ctx)) {
         if (ability.activateCode) {
           const abilityFunc: Function = CardFunctions[ability.activateCode];
-          newG = abilityFunc(card, ability, trigger_data, owner, G, ctx);
+          abilityFunc(card, ability, trigger_data, owner, newG, ctx);
           //console.log(newG);
         }
       }
@@ -80,6 +104,134 @@ function handleTrigger(
   }
 
   return newG;
+}
+
+function CanActivateAbility(
+  card: CMCCard,
+  ability: Ability,
+  G: CMCGameState,
+  ctx: Ctx,
+
+  target?: CMCCard
+): boolean {
+  const cardowner = OwnerOf(card, G);
+  if (
+    ![TriggerType.ACTIVATED_TARGETED, TriggerType.ACTIVATED].includes(
+      ability.triggerType
+    )
+  ) {
+    return false;
+  }
+
+  // is the trigger target valid
+  if (
+    target &&
+    ability.triggerType == TriggerType.ACTIVATED_TARGETED &&
+    ability.targetCode
+  ) {
+    const targetFunc: Function = CardFunctions[ability.targetCode];
+    if (!targetFunc(card, cardowner, target, G, ctx)) {
+      return false;
+    }
+  }
+
+  // pay if needed
+  if (ability.costCode) {
+    const costFunc: Function = CardFunctions[ability.costCode];
+    // do dry run of cost.  will run the actual one afterwards.
+    if (!costFunc(card, cardowner, G, ctx, false, true)) {
+      return false; // cant afford
+    }
+  }
+  return true;
+}
+function ResolveStack(G, ctx) {
+  SortStack(G, ctx);
+  while (G.abilityStack.length > 0) {
+    const stacked = G.abilityStack.pop();
+    if (
+      !ActivateAbility(
+        stacked.card,
+        stacked.ability,
+        G,
+        ctx,
+        true,
+        stacked.target
+      )
+    ) {
+      console.log("STacked ability was cancelled!!!!");
+    }
+  }
+}
+function ActivateAbility(
+  card: CMCCard,
+  ability: Ability,
+  G: CMCGameState,
+  ctx: Ctx,
+  resolveStack: boolean,
+  target?: CMCCard
+): boolean {
+  const cardowner = OwnerOf(card, G);
+  if (!CanActivateAbility(card, ability, G, ctx)) {
+    console.log("Cannot activate");
+    return false;
+  }
+
+  if (resolveStack || ability.speed == AbilitySpeed.S) {
+    if (ability.activateCode) {
+      const abilityFunc: Function = CardFunctions[ability.activateCode];
+      if (!abilityFunc(card, ability, EmptyTriggerData, cardowner, G, ctx)) {
+        console.log("func failed");
+        return false;
+      }
+    }
+
+    if (ability.costCode) {
+      const costFunc: Function = CardFunctions[ability.costCode];
+      // actually pay mana
+      if (!costFunc(card, cardowner, G, ctx, false, false)) {
+        console.log("cost failed");
+        return false; // cant afford
+      }
+    }
+  } else {
+    if (!AddToStack(card, ability, G, ctx, target)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function AddToStack(
+  card: CMCCard,
+  ability: Ability,
+  G: CMCGameState,
+  ctx: Ctx,
+  target?: CMCCard
+): boolean {
+  if (!ability.speed) {
+    return false;
+  }
+  const stackedAbility: StackedAbility = {
+    card: card,
+    ability: ability,
+    target: target,
+  };
+  G.abilityStack.push(stackedAbility);
+  SortStack(G, ctx);
+  return true;
+}
+
+function SortStack(G: CMCGameState, ctx: Ctx) {
+  G.abilityStack.sort((a, b) =>
+    (a.ability.speed ? a.ability.speed : -99) <
+    (b.ability.speed ? b.ability.speed : -99)
+      ? -1
+      : (a.ability.speed ? a.ability.speed : -99) >
+        (b.ability.speed ? b.ability.speed : -99)
+      ? 1
+      : 0
+  );
 }
 
 function TriggerAuto(name: string, ctx: Ctx, G: CMCGameState): void {
@@ -95,6 +247,12 @@ function TriggerAuto(name: string, ctx: Ctx, G: CMCGameState): void {
     );
   }
 }
+
+interface StackedAbility {
+  card: CMCCard;
+  ability: Ability;
+  target?: CMCCard;
+}
 export {
   Ability,
   Ability_Trigger,
@@ -103,4 +261,9 @@ export {
   TriggerPlayerType,
   TriggerNames,
   TriggerAuto,
+  CanActivateAbility,
+  ActivateAbility,
+  StackedAbility,
+  AbilitySpeed,
+  ResolveStack,
 };

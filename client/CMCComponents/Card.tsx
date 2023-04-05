@@ -21,33 +21,6 @@ function CMCCardVisual({
   player: CMCPlayer;
   big: boolean;
 }) {
-  const cardStyle: CSSProperties = {
-    width: "100px",
-    height: "100px",
-  };
-  const bigCardStyle: CSSProperties = {
-    height: "150px",
-  };
-  const cardStyleActive: CSSProperties = {
-    border: "1px solid black",
-    background: "white",
-    color: "black",
-    ...cardStyle,
-  };
-  const cardStyleEmpty: CSSProperties = {
-    border: "1px solid white",
-    background: "grey",
-    ...cardStyle,
-  };
-
-  const cardStyleClickable: CSSProperties = {
-    boxShadow: "inset 0 0 5pt 5pt green",
-  };
-
-  const cardStyleClicked: CSSProperties = {
-    boxShadow: "inset 0 0 5pt 5pt red",
-  };
-
   const noshow: CSSProperties = {
     display: "none",
   };

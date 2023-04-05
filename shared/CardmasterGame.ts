@@ -14,6 +14,7 @@ import { CMCPlayer, CreateDefaultPlayer } from "./Player";
 import {
   Ability,
   Ability_Trigger,
+  StackedAbility,
   TriggerAuto,
   TriggeringTrigger,
   TriggerNames,
@@ -45,7 +46,9 @@ import {
   cancel,
   passTurn,
   chooseSlot,
+  activateAbility,
 } from "./Moves";
+import { GiConsoleController } from "react-icons/gi";
 
 export interface CMCGameState {
   playerData: {
@@ -80,12 +83,13 @@ export interface CMCGameState {
   };
   activeAbility?: Ability;
   activeCard?: CMCCard;
-  returnStage?: Stages;
+  returnStage: Stages[];
   loser?: string;
   location?: CMCCard;
   didinitialsetup: boolean;
   combat?: CMCCombat;
   resolution?: CMCCombatResults;
+  abilityStack: StackedAbility[];
 }
 
 // Initial game state
@@ -170,9 +174,10 @@ export const CardmasterConflict: Game<CMCGameState> = {
         "0": CreateDefaultPlayer("0"),
         "1": CreateDefaultPlayer("1"),
       },
-      returnStage: Stages.initial,
+      returnStage: [Stages.initial],
       didinitialsetup: false,
       currentmetadata: {},
+
       slots: {
         "0": {
           effects: [
@@ -219,9 +224,11 @@ export const CardmasterConflict: Game<CMCGameState> = {
       secret: {
         decks: decks,
       },
+      abilityStack: [],
     };
   },
 
+  seed: crypto.randomUUID(),
   turn: {
     activePlayers: {
       currentPlayer: Stages.initial,
@@ -235,8 +242,8 @@ export const CardmasterConflict: Game<CMCGameState> = {
         // do turn mana, unless this is the first turn, then do initial mana and hand
         if (ctx.turn == 1 && activePlayer == "0" && !G.didinitialsetup) {
           // sjhuffle decks
-          random.Shuffle(G.secret.decks["0"]);
-          random.Shuffle(G.secret.decks["1"]);
+          G.secret.decks["0"] = random.Shuffle(G.secret.decks["0"]);
+          G.secret.decks["0"] = random.Shuffle(G.secret.decks["1"]);
 
           // go through every card and reset the guids to something random
           for (const playerno in PlayerIDs) {
@@ -287,6 +294,7 @@ export const CardmasterConflict: Game<CMCGameState> = {
     onMove: ({ G, ctx, events, random }) => {
       CheckState(G);
     },
+
     stages: {
       error: {},
       initial: {
@@ -299,18 +307,26 @@ export const CardmasterConflict: Game<CMCGameState> = {
         moves: {
           passStage: passStage,
         }, // automatically does the draw for you
+        next: Stages.sacrifice,
+      },
+      sacrifice: {
+        moves: {
+          passStage: passStage,
+          pickEntity: pickEntity,
+        },
         next: Stages.play,
       },
       play: {
         moves: {
           playCardFromHand: playCardFromHand,
-          //chooseAbility
+          activateAbility: activateAbility,
           passStage: passStage,
         },
         next: Stages.combat,
       },
       combat: {
         moves: {
+          activateAbility: activateAbility,
           //chooseCard
           passStage: passStage,
           pickEntity: pickEntity,
@@ -321,6 +337,7 @@ export const CardmasterConflict: Game<CMCGameState> = {
       },
       defense: {
         moves: {
+          activateAbility: activateAbility,
           //chooseCard
           passStage: passStage,
           pickEntity: pickEntity,
@@ -365,6 +382,7 @@ export const CardmasterConflict: Game<CMCGameState> = {
       },
       respond: {
         moves: {
+          activateAbility: activateAbility,
           pickEntity: pickEntity,
           passStage: passStage,
         },
@@ -403,7 +421,6 @@ export const CardmasterConflict: Game<CMCGameState> = {
           Stages.pickAbilityTarget,
           Stages.pickCombatDefense,
           Stages.pickCombatTarget,
-          Stages.pickPlayer,
           Stages.pickSlot,
         ].includes(GetActiveStage(ctx))
       ) {

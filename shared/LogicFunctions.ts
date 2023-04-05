@@ -18,6 +18,8 @@ import {
   Random,
   RandomAPI,
 } from "boardgame.io/dist/types/src/plugins/random/random";
+import { GetActivePlayer, GetActiveStage } from "./Util";
+import { CanActivateAbility } from "./Abilities";
 
 // adds a card from deck to hand
 function DrawCard(
@@ -304,15 +306,18 @@ function CanClickCard(
 ): boolean {
   // is there an active ability?  If so, check targeting
   if (G.activeAbility) {
-    // picking against slot
+    if (!G.activeCard) {
+      return false;
+    }
 
-    // picking against player
+    if (GetActiveStage(ctx) != Stages.pickAbilityTarget) {
+      return false;
+    }
+    if (!CanActivateAbility(G.activeCard, G.activeAbility, G, ctx, card)) {
+      return false;
+    }
 
-    // picking against entity
-
-    // picking against hand
-
-    return false;
+    return true;
   }
   let cardOwner = OwnerOf(card, G);
   let currentPlayer = ctx.currentPlayer;
@@ -506,6 +511,18 @@ function CanClickCard(
         }
       }
       return true;
+    } else if (stage == Stages.sacrifice) {
+      if (clickType == ClickType.PERSONA || clickType == ClickType.GRAVEYARD) {
+        return false;
+      }
+      if (card.type == CardType.EMPTY) {
+        return false;
+      }
+      if (OwnerOf(card, G) != playerId) {
+        return false;
+      }
+
+      return true;
     }
   } else if ((clickType = ClickType.LOCATION)) {
     return false;
@@ -516,10 +533,8 @@ function CanClickCard(
 
 // reset the selected cards and stages
 function resetActive(G: CMCGameState) {
-  console.log("Restting active from " + G.returnStage);
   G.activeAbility = undefined;
   G.activeCard = undefined;
-  G.returnStage = undefined;
 }
 // reset combat at end of turn
 function resetCombat(G: CMCGameState) {
@@ -542,6 +557,34 @@ function CheckState(G: CMCGameState) {
   }
 }
 
+function Sacrifice(
+  card: CMCCard,
+  G: CMCGameState,
+  ctx: Ctx,
+  random: RandomAPI
+) {
+  if (GetActivePlayer(ctx) != OwnerOf(card, G)) {
+    return false;
+  }
+  if (![CardType.EFFECT, CardType.MONSTER].includes(card.type)) {
+    return false;
+  }
+  PlayerAddResource(OwnerOf(card, G), card.sac, G);
+
+  for (const slotplayer in G.slots) {
+    for (const subplayer in G.slots[slotplayer]) {
+      for (const [index, slotcard] of G.slots[slotplayer][
+        subplayer
+      ].entries()) {
+        if (slotcard.guid == card.guid) {
+          G.slots[slotplayer][subplayer][index].destroyed = true;
+        }
+      }
+    }
+  }
+  CardScan(G, random);
+  return true;
+}
 export {
   OwnerOf,
   CanClickCard,
@@ -558,4 +601,5 @@ export {
   resetActive,
   resetCombat,
   CheckState,
+  Sacrifice,
 };
