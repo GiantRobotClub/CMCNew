@@ -21,6 +21,7 @@ import {
 } from "boardgame.io/dist/types/src/plugins/random/random";
 import { GetActivePlayer, GetActiveStage } from "./Util";
 import { CanActivateAbility } from "./Abilities";
+import { EventsAPI } from "boardgame.io/dist/types/src/plugins/plugin-events";
 
 // adds a card from deck to hand
 function DrawCard(
@@ -204,6 +205,18 @@ function PlaceCard(
   }
 }
 
+function IsInHand(card: CMCCard, playerID: string, G: CMCGameState) {
+  let found = false;
+  let hand: CMCCard[] = G.players[playerID].hand;
+  hand.forEach((crd, idx) => {
+    if (crd.guid == card.guid) {
+      found = true;
+    }
+  });
+
+  return found;
+}
+
 //remove card from hand, always do it after the card goes where it needs to (such as graveyard, play field)
 function RemoveFromHand(
   card: CMCCard,
@@ -214,13 +227,8 @@ function RemoveFromHand(
   let subrowfound = -1;
   let slotplayerfound = "";
 
-  let found = false;
+  let found = IsInHand(card, playerID, G);
   let hand: CMCCard[] = G.players[playerID].hand;
-  hand.forEach((crd, idx) => {
-    if (crd.guid == card.guid) {
-      found = true;
-    }
-  });
 
   if (!found) {
     return false;
@@ -596,6 +604,59 @@ function IsMonster(card: CMCCard): card is CMCMonsterCard {
 function IsPersona(card: CMCCard): card is CMCPersonaCard {
   return (card as CMCPersonaCard).playerID !== undefined;
 }
+
+function CanDiscard(
+  playerID: string,
+  G: CMCGameState,
+  ctx: Ctx,
+  card?: CMCCard
+) {
+  if (G.players[playerID].hand.length <= 0) {
+    return false;
+  }
+  if (card) {
+    return IsInHand(card, playerID, G);
+  }
+  return true;
+}
+
+function ForceDiscard(
+  chooseable: boolean,
+  playerId: string,
+  G: CMCGameState,
+  ctx: Ctx,
+  random: RandomAPI,
+  events: EventsAPI
+) {
+  if (!CanDiscard(playerId, G, ctx)) {
+    return false;
+  }
+  if (!chooseable) {
+    //discard at random
+    const card: CMCCard =
+      G.players[playerId].hand[random.Die(G.players[playerId].hand.length) - 1];
+    return Discard(card, playerId, G, ctx);
+  } else {
+    G.returnStage.push(Stages.resolve);
+    events.setStage(Stages.discardCard);
+  }
+}
+
+function Discard(
+  card: CMCCard,
+  playerId: string,
+  G: CMCGameState,
+  ctx: Ctx
+): boolean {
+  if (!CanDiscard(playerId, G, ctx, card)) {
+    return false;
+  }
+  if (!RemoveFromHand(card, playerId, G)) {
+    return false;
+  }
+  AddToGraveyard(card, G);
+  return true;
+}
 function Sacrifice(
   card: CMCCard,
   G: CMCGameState,
@@ -644,4 +705,8 @@ export {
   AddToGraveyard,
   IsMonster,
   IsPersona,
+  Discard,
+  CanDiscard,
+  ForceDiscard,
+  IsInHand,
 };

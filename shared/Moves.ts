@@ -31,6 +31,8 @@ import {
   PlayEntity,
   resetActive,
   Sacrifice,
+  ForceDiscard,
+  Discard,
 } from "./LogicFunctions";
 import { CMCPlayer } from "./Player";
 import { GetActivePlayer, GetActiveStage, OtherPlayer } from "./Util";
@@ -126,6 +128,13 @@ const passStage: Move<CMCGameState> = ({ G, ctx, events, random }) => {
     ResolveCombat(G, ctx, random);
     // resolve combat and go to resolve step.
     // resolveCombat(G,ctx)
+  } else if (GetActiveStage(ctx) == Stages.resolve) {
+    if (
+      G.playerData[GetActivePlayer(ctx)].persona.maxHand <
+      G.players[GetActivePlayer(ctx)].hand.length
+    ) {
+      ForceDiscard(true, GetActivePlayer(ctx), G, ctx, random, events);
+    }
   } else {
     events.endStage();
   }
@@ -141,9 +150,22 @@ const playCardFromHand: Move<CMCGameState> = (
     console.log("No active player");
     return INVALID_MOVE;
   }
-  if (G.activeCard) {
-    console.log("No active card to play");
+  if (G.activeCard && !(GetActiveStage(ctx) == Stages.discardCard)) {
+    console.log("Alrady have an active card, unless discard");
     return INVALID_MOVE;
+  }
+
+  if (GetActiveStage(ctx) == Stages.discardCard) {
+    if (!Discard(card, playerId, G, ctx)) {
+      return INVALID_MOVE;
+    } else {
+      const stg = G.returnStage.pop();
+      if (!stg) {
+        return INVALID_MOVE;
+      }
+      events.setStage(stg);
+      return;
+    }
   }
   if (card.type == CardType.EFFECT || card.type == CardType.MONSTER) {
     G.activeCard = card;
@@ -259,7 +281,7 @@ const cancel: Move<CMCGameState> = ({ G, ctx, events }, playerId: string) => {
     } else if (
       GetActiveStage(ctx) == Stages.pickCombatDefense ||
       GetActiveStage(ctx) == Stages.pickCombatTarget ||
-      GetActiveStage(ctx) == Stages.pickHandCard ||
+      GetActiveStage(ctx) == Stages.discardCard ||
       GetActiveStage(ctx) == Stages.pickSlot ||
       GetActiveStage(ctx) == Stages.pickAbilityTarget
     ) {

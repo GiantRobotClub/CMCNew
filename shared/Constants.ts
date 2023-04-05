@@ -34,7 +34,7 @@ enum Stages {
   pickCombatTarget = "pickCombatTarget",
   pickAbilityTarget = "pickAbilityTarget",
   pickCombatDefense = "pickCombatDefense",
-  pickHandCard = "pickHandCard",
+  discardCard = "discardCard",
   pickSlot = "pickSlot",
   sacrifice = "sacrifice",
   error = "error",

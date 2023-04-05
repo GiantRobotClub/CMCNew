@@ -400,6 +400,11 @@ export const CardmasterConflict: Game<CMCGameState> = {
           cancel: cancel,
         },
       },
+      discardCard: {
+        moves: {
+          playCardFromHand: playCardFromHand,
+        },
+      },
       respond: {
         moves: {
           activateAbility: activateAbility,

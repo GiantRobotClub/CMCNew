@@ -92,6 +92,7 @@ interface CMCPersonaCard extends CMCCard {
   resourcePerTurn: any;
   startingHand: number;
   drawPerTurn: number;
+  maxHand: number;
   // anything else you can do through ability triggers
 }
 
@@ -128,6 +129,7 @@ function CreatePersonaCard(playerID: string): CMCPersonaCard {
     resourcePerTurn: {},
     startingHand: 1,
     drawPerTurn: 1,
+    maxHand: 1,
 
     ...CreateBasicCard(),
   };
