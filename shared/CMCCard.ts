@@ -72,6 +72,9 @@ function CreateBasicCard(guid: string = ""): CMCCard {
   return card;
 }
 
+interface CMCLocationCard extends CMCCard {
+  owner: string;
+}
 interface CMCEntityCard extends CMCCard {
   destroyed: boolean;
   dizzy: boolean;
@@ -92,6 +95,32 @@ interface CMCPersonaCard extends CMCCard {
   // anything else you can do through ability triggers
 }
 
+interface CMCSpellCard extends CMCCard {}
+
+function CreateSpellCard(): CMCSpellCard {
+  const card: CMCSpellCard = {
+    ...CreateBasicCard(),
+  };
+  card.type = CardType.SPELL;
+  return card;
+}
+
+function CreateLocationCard(playerID: string): CMCLocationCard {
+  const card: CMCLocationCard = {
+    owner: "",
+    ...CreateBasicCard(),
+  };
+
+  card.type = CardType.LOCATION;
+  return card;
+}
+function CreateInitialLocationCard(): CMCLocationCard {
+  const card: CMCLocationCard = CreateLocationCard("");
+  card.name = "Nowhere";
+  card.cardtext = "Nothing";
+
+  return card;
+}
 function CreatePersonaCard(playerID: string): CMCPersonaCard {
   const card: CMCPersonaCard = {
     playerID: playerID,
@@ -199,16 +228,70 @@ function CreateDebugPersonaCard(playerid: string): CMCPersonaCard {
   return card;
 }
 
+function CreateDebugLocationCard(playerid: string): CMCLocationCard {
+  const card: CMCLocationCard = CreateLocationCard("");
+  card.name = "MANA LAND";
+  card.cardtext = "A lot of mana here";
+  const debugAbility: Ability = {
+    triggerType: TriggerType.AUTOMATIC_STAGE,
+    activateCode: "ManaGenerate",
+    triggerCode: "TriggerStage",
+    metadata: {
+      triggername: TriggerNames.START_TURN,
+      triggerstage: "initial",
+      color: "A",
+      amount: 1,
+    },
+    abilityName: "Generate Mana",
+    abilityText: "Adds one Anodyne per turn",
+    abilityCostText: undefined,
+  };
+
+  card.abilities = [debugAbility];
+  card.cost.mana.V = 1;
+  card.cost.mana.A = 1;
+  card.cost.mana.P = 1;
+
+  return card;
+}
+
+function CreateDebugSpellCard(): CMCSpellCard {
+  const card = CreateSpellCard();
+  card.name = "zoop";
+  card.cardtext = "a spell to damage players and monsters";
+  const debugAbility: Ability = {
+    triggerType: TriggerType.ACTIVATED_TARGETED,
+    targetCode: "IsDamagable",
+    activateCode: "DamageTarget",
+    metadata: {
+      amount: 10,
+    },
+    abilityName: "Zoop!!",
+    abilityText: "Deal 10 damage to target player or monster",
+    speed: AbilitySpeed.B,
+  };
+  card.abilities = [debugAbility];
+  card.cost.mana.A = 1;
+  return card;
+}
+
 export {
   CMCCard,
   CMCEffectCard,
   CMCMonsterCard,
   CMCEntityCard,
   CMCPersonaCard,
+  CMCLocationCard,
+  CMCSpellCard,
   CreateEffectCard,
   CreateDebugCard,
   CreatePersonaCard,
   CreateBasicCard,
+  CreateInitialLocationCard,
   CreateDebugMonsterCard,
   CreateDebugPersonaCard,
+  CreateLocationCard,
+  CreateSpellCard,
+  CreateDebugLocationCard,
+  CreateDebugSpellCard,
 };

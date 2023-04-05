@@ -7,8 +7,16 @@ import {
   TriggerPlayerType,
 } from "./Abilities";
 import { CMCGameState } from "./CardmasterGame";
-import { CMCCard } from "./CMCCard";
-import { OwnerOf, PlayerAddResource, PlayerPay } from "./LogicFunctions";
+import { CMCCard, CMCMonsterCard, CMCPersonaCard } from "./CMCCard";
+import { CardType } from "./Constants";
+import {
+  DealDamage,
+  IsMonster,
+  IsPersona,
+  OwnerOf,
+  PlayerAddResource,
+  PlayerPay,
+} from "./LogicFunctions";
 import { CMCPlayer } from "./Player";
 
 // defaultcost checks everything in the player.resources against the card.cost.
@@ -41,13 +49,38 @@ export function DefaultCost(
   return true;
 }
 
+export function IsDamagable(
+  card: CMCCard,
+  cardowner: string,
+  target: CMCCard,
+  G: CMCGameState,
+  ctx: Ctx
+): boolean {
+  // can only damage in field
+  let found: boolean = false;
+  for (const slotplayer in G.slots) {
+    for (const subplayer in G.slots[slotplayer]) {
+      for (const [index, slotcard] of G.slots[slotplayer][
+        subplayer
+      ].entries()) {
+        if (slotcard.guid == target.guid) {
+          found = true;
+        }
+      }
+    }
+  }
+  // is it a damagable type
+  return found && (IsMonster(target) || IsPersona(target));
+}
+
 export function ManaGenerate(
   card: CMCCard,
   ability: Ability,
   trigger: TriggeringTrigger,
   owner: string,
   G: CMCGameState,
-  ctx: Ctx
+  ctx: Ctx,
+  target?: CMCCard
 ): boolean {
   let playerid = OwnerOf(card, G);
   let player: CMCPlayer = G.playerData[playerid];
@@ -85,4 +118,28 @@ export function TriggerStage(
     return false;
   }
   return true;
+}
+
+export function DamageTarget(
+  card: CMCCard,
+  ability: Ability,
+  trigger: TriggeringTrigger,
+  owner: string,
+  G: CMCGameState,
+  ctx: Ctx,
+  target?: CMCCard
+) {
+  if (!target) return false;
+  if (![CardType.PERSONA, CardType.MONSTER].includes(target.type)) {
+    console.log("target is not the right kind of card");
+    console.dir(target);
+    return false;
+  }
+  if (IsMonster(target) || IsPersona(target)) {
+    console.log("Card is monster or target");
+    DealDamage(target, card, ability.metadata.amount, G);
+  } else {
+    console.dir(target);
+    return false;
+  }
 }

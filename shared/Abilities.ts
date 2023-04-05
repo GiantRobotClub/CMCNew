@@ -2,8 +2,9 @@ import { Ctx } from "boardgame.io";
 import { CMCGameState } from "./CardmasterGame";
 import { CMCCard } from "./CMCCard";
 import * as CardFunctions from "./CardFunctions";
-import { OwnerOf } from "./LogicFunctions";
+import { AddToGraveyard, OwnerOf, RemoveFromHand } from "./LogicFunctions";
 import { dataToEsm } from "@rollup/pluginutils";
+import { CardType } from "./Constants";
 
 enum TriggerType {
   ACTIVATED = 0,
@@ -123,6 +124,18 @@ function CanActivateAbility(
     return false;
   }
 
+  // is the card a spell in your hand
+  if (card.type == CardType.SPELL) {
+    let found: boolean = false;
+    G.players[cardowner].hand.forEach((crd) => {
+      if (crd.guid == card.guid) {
+        found = true;
+      }
+    });
+    if (!found) {
+      return false;
+    }
+  }
   // is the trigger target valid
   if (
     target &&
@@ -162,6 +175,7 @@ function ResolveStack(G, ctx) {
       console.log("STacked ability was cancelled!!!!");
     }
   }
+  G.lastAbilityLength = 0;
 }
 function ActivateAbility(
   card: CMCCard,
@@ -180,7 +194,9 @@ function ActivateAbility(
   if (resolveStack || ability.speed == AbilitySpeed.S) {
     if (ability.activateCode) {
       const abilityFunc: Function = CardFunctions[ability.activateCode];
-      if (!abilityFunc(card, ability, EmptyTriggerData, cardowner, G, ctx)) {
+      if (
+        !abilityFunc(card, ability, EmptyTriggerData, cardowner, G, ctx, target)
+      ) {
         console.log("func failed");
         return false;
       }
@@ -194,8 +210,14 @@ function ActivateAbility(
         return false; // cant afford
       }
     }
+    if (card.type == CardType.SPELL) {
+      // put the card in the graveyard and out of your hand
+      AddToGraveyard(card, G);
+      RemoveFromHand(card, cardowner, G);
+    }
   } else {
     if (!AddToStack(card, ability, G, ctx, target)) {
+      console.log("couldnt add to stack");
       return false;
     }
   }
@@ -210,6 +232,7 @@ function AddToStack(
   target?: CMCCard
 ): boolean {
   if (!ability.speed) {
+    console.log("Ability has no speed");
     return false;
   }
   const stackedAbility: StackedAbility = {

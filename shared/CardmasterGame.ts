@@ -3,11 +3,15 @@ import type { Ctx, Game, Move } from "boardgame.io";
 import { Stage, TurnOrder } from "boardgame.io/core";
 import {
   CMCCard,
+  CMCLocationCard,
   CMCMonsterCard,
   CMCPersonaCard,
   CreateBasicCard,
   CreateDebugCard,
+  CreateDebugLocationCard,
   CreateDebugMonsterCard,
+  CreateDebugSpellCard,
+  CreateInitialLocationCard,
 } from "./CMCCard";
 import { CMCPlayer, CreateDefaultPlayer } from "./Player";
 
@@ -85,11 +89,12 @@ export interface CMCGameState {
   activeCard?: CMCCard;
   returnStage: Stages[];
   loser?: string;
-  location?: CMCCard;
+  location: CMCLocationCard;
   didinitialsetup: boolean;
   combat?: CMCCombat;
   resolution?: CMCCombatResults;
   abilityStack: StackedAbility[];
+  lastAbilityLength: number;
 }
 
 // Initial game state
@@ -137,24 +142,35 @@ export const CardmasterConflict: Game<CMCGameState> = {
         CreateDebugMonsterCard(),
         CreateDebugCard(),
         CreateDebugCard(),
-        CreateDebugCard(),
+        CreateDebugSpellCard(),
+        CreateDebugSpellCard(),
+        CreateDebugSpellCard(),
         CreateDebugCard(),
         CreateDebugMonsterCard(),
         CreateDebugMonsterCard(),
         CreateDebugCard(),
+        CreateDebugLocationCard(""),
         CreateDebugMonsterCard(),
         CreateDebugMonsterCard(),
         CreateDebugCard(),
         CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
+        CreateDebugLocationCard(""),
+        CreateDebugLocationCard(""),
+        CreateDebugLocationCard(""),
         CreateDebugMonsterCard(),
 
         CreateDebugMonsterCard(),
         CreateDebugCard(),
         CreateDebugCard(),
         CreateDebugCard(),
+        CreateDebugSpellCard(),
+        CreateDebugSpellCard(),
+        CreateDebugSpellCard(),
+        CreateDebugSpellCard(),
+        CreateDebugSpellCard(),
+        CreateDebugSpellCard(),
+        CreateDebugSpellCard(),
+        CreateDebugSpellCard(),
         CreateDebugCard(),
         CreateDebugMonsterCard(),
         CreateDebugMonsterCard(),
@@ -162,7 +178,9 @@ export const CardmasterConflict: Game<CMCGameState> = {
         CreateDebugMonsterCard(),
         CreateDebugMonsterCard(),
         CreateDebugCard(),
-        CreateDebugCard(),
+        CreateDebugLocationCard(""),
+        CreateDebugLocationCard(""),
+        CreateDebugLocationCard(""),
         CreateDebugCard(),
         CreateDebugCard(),
         CreateDebugCard(),
@@ -170,11 +188,12 @@ export const CardmasterConflict: Game<CMCGameState> = {
       ],
     };
     return {
+      lastAbilityLength: 0,
       playerData: {
         "0": CreateDefaultPlayer("0"),
         "1": CreateDefaultPlayer("1"),
       },
-      returnStage: [Stages.initial],
+      returnStage: [],
       didinitialsetup: false,
       currentmetadata: {},
 
@@ -213,6 +232,7 @@ export const CardmasterConflict: Game<CMCGameState> = {
           ],
         },
       },
+      location: CreateInitialLocationCard(),
       players: {
         "0": {
           hand: [],

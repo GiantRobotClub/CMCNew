@@ -23,7 +23,7 @@ export function CMCBoard(props: CMCProps) {
     if (inspectMode) {
       setInspectMode(false);
     } else {
-      props.moves.cancel();
+      props.moves.cancel(you);
     }
   };
   const inspect = () => {
@@ -119,6 +119,26 @@ export function CMCBoard(props: CMCProps) {
                   props.G.playerData[otherPlayer].persona,
                   you,
                   ClickType.PERSONA,
+                  props.ctx,
+                  props.G
+                )
+              }
+              key={"player" + otherPlayer}
+            />
+          </div>
+          <div className="locationBox">
+            <CMCCardVisual
+              big={true}
+              activeCard={false}
+              player={props.G.playerData[props.G.location.owner]}
+              card={props.G.location}
+              doClick={() => clickCard(props.G.playerData[otherPlayer].persona)}
+              canClick={
+                inspectMode ||
+                CanClickCard(
+                  props.G.location,
+                  you,
+                  ClickType.LOCATION,
                   props.ctx,
                   props.G
                 )

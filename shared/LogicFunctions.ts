@@ -3,6 +3,7 @@ import { CMCGameState } from "./CardmasterGame";
 import {
   CMCCard,
   CMCEntityCard,
+  CMCLocationCard,
   CMCMonsterCard,
   CMCPersonaCard,
   CreateBasicCard,
@@ -87,7 +88,7 @@ function CardScan(G: CMCGameState, random: RandomAPI): void {
         // is it dead
         if (entity.destroyed) {
           // add monster to graveyard
-          G.playerData[OwnerOf(entity, G)].graveyard.push(entity);
+          AddToGraveyard(entity, G);
           //new slot
           G.slots[slotplayer][subplayer][index] = CreateBasicCard(
             GenerateRandomGuid(random)
@@ -98,6 +99,11 @@ function CardScan(G: CMCGameState, random: RandomAPI): void {
   }
 }
 
+function AddToGraveyard(card: CMCCard, G: CMCGameState) {
+  const owner = OwnerOf(card, G);
+  console.log(owner);
+  G.playerData[owner].graveyard.push(card);
+}
 // generate a new guid
 function GenerateRandomGuid(random: RandomAPI) {
   let guid: string = "[";
@@ -159,26 +165,43 @@ function PlaceCard(
   let subplayerfound = "";
   let subrowfound = -1;
   let slotplayerfound = "";
-  for (const slotplayer in G.slots) {
-    for (const subplayer in G.slots[slotplayer]) {
-      for (const [index, subrow] of G.slots[slotplayer][subplayer].entries()) {
-        const foundCard: CMCCard = subrow;
-        if (subrow.guid == slot.guid) {
-          subplayerfound = subplayer;
-          subrowfound = index;
-          slotplayerfound = slotplayer;
+
+  if (card.type == CardType.LOCATION) {
+    console.log("setting location");
+    if (G.location.owner != "") {
+      AddToGraveyard(G.location, G);
+    }
+    G.location = {
+      ...card,
+
+      owner: playerID,
+    };
+
+    return true;
+  } else {
+    for (const slotplayer in G.slots) {
+      for (const subplayer in G.slots[slotplayer]) {
+        for (const [index, subrow] of G.slots[slotplayer][
+          subplayer
+        ].entries()) {
+          const foundCard: CMCCard = subrow;
+          if (subrow.guid == slot.guid) {
+            subplayerfound = subplayer;
+            subrowfound = index;
+            slotplayerfound = slotplayer;
+          }
         }
       }
     }
+
+    if (subrowfound == -1 || subplayerfound == "" || slotplayerfound == "") {
+      return false;
+    }
+
+    G.slots[slotplayerfound][subplayerfound][subrowfound] = card;
+
+    return true;
   }
-
-  if (subrowfound == -1 || subplayerfound == "" || slotplayerfound == "") {
-    return false;
-  }
-
-  G.slots[slotplayerfound][subplayerfound][subrowfound] = card;
-
-  return true;
 }
 
 //remove card from hand, always do it after the card goes where it needs to (such as graveyard, play field)
@@ -202,21 +225,7 @@ function RemoveFromHand(
   if (!found) {
     return false;
   }
-  for (const slotplayer in G.slots) {
-    for (const subplayer in G.slots[slotplayer]) {
-      for (const [index, subrow] of G.slots[slotplayer][subplayer].entries()) {
-        const foundCard: CMCCard = subrow;
-        if (subrow.guid == card.guid) {
-          subplayerfound = subplayer;
-          subrowfound = index;
-          slotplayerfound = slotplayer;
-        }
-      }
-    }
-  }
-  if (subrowfound == -1 || subplayerfound == "" || slotplayerfound == "") {
-    return false;
-  }
+
   console.log("hand:" + G.players[playerID].hand.length);
   G.players[playerID].hand = hand.filter((crd, i) => crd.guid != card.guid);
   return true;
@@ -255,10 +264,12 @@ function PlayEntity(
   if (!success_pay) return false;
 
   if (!PlaceCard(card, slot, playerID, G)) {
+    console.log("Couldnt place card");
     return false;
   }
 
   if (!RemoveFromHand(card, playerID, G)) {
+    console.log("Couldnt remove card");
     return false;
   }
 
@@ -279,20 +290,43 @@ function OwnerOf(card: CMCCard, G: CMCGameState) {
   }
   for (const slotplayer in G.players) {
     const hand: CMCCard[] = G.players[slotplayer].hand;
-    if (hand.includes(card)) {
+    let found: boolean = false;
+    hand.forEach((handcard, _idx) => {
+      if (card.guid == handcard.guid) {
+        found = true;
+        return;
+      }
+    });
+    if (found) {
       return slotplayer;
     }
   }
-  // check graveyard
-
-  // check persona
+  // check persona and graveyard
   for (const playnumber in PlayerIDs) {
-    if (G.playerData[playnumber].persona.guid == card.guid) {
+    const player: CMCPlayer = G.playerData[playnumber];
+    if (player.persona.guid == card.guid) {
+      return playnumber;
+    }
+    let found = false;
+    player.graveyard.forEach((gcard, index) => {
+      if (gcard.guid == card.guid) {
+        found = true;
+      }
+    });
+    if (found) {
       return playnumber;
     }
   }
   // check who played location
+  if (card.type == CardType.LOCATION) {
+    console.dir(card);
 
+    const actualLocation = G.location;
+    console.dir(actualLocation);
+    if (card.guid == actualLocation.guid && actualLocation.owner != "") {
+      return actualLocation.owner;
+    }
+  }
   return "-1";
 }
 
@@ -556,7 +590,12 @@ function CheckState(G: CMCGameState) {
     player.currentHand = G.players[playerid].hand.length;
   }
 }
-
+function IsMonster(card: CMCCard): card is CMCMonsterCard {
+  return (card as CMCMonsterCard).life !== undefined;
+}
+function IsPersona(card: CMCCard): card is CMCPersonaCard {
+  return (card as CMCPersonaCard).playerID !== undefined;
+}
 function Sacrifice(
   card: CMCCard,
   G: CMCGameState,
@@ -602,4 +641,7 @@ export {
   resetCombat,
   CheckState,
   Sacrifice,
+  AddToGraveyard,
+  IsMonster,
+  IsPersona,
 };
