@@ -212,6 +212,7 @@ function ActivateAbility(
     }
     if (card.type == CardType.SPELL) {
       // put the card in the graveyard and out of your hand
+      console.log("Removing from hand");
       AddToGraveyard(card, G);
       RemoveFromHand(card, cardowner, G);
     }

@@ -330,7 +330,13 @@ export function CMCBoard(props: CMCProps) {
                 doClick={() => clickCardFromHand(card)}
                 canClick={
                   inspectMode ||
-                  CanClickCard(card, you, ClickType.HAND, props.ctx, props.G)
+                  CanClickCard(
+                    card,
+                    you,
+                    ClickType.GRAVEYARD,
+                    props.ctx,
+                    props.G
+                  )
                 }
               />
             )

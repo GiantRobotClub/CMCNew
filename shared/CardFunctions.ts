@@ -58,16 +58,21 @@ export function IsDamagable(
 ): boolean {
   // can only damage in field
   let found: boolean = false;
-  for (const slotplayer in G.slots) {
-    for (const subplayer in G.slots[slotplayer]) {
-      for (const [index, slotcard] of G.slots[slotplayer][
-        subplayer
-      ].entries()) {
-        if (slotcard.guid == target.guid) {
-          found = true;
+
+  if (target.type == CardType.MONSTER) {
+    for (const slotplayer in G.slots) {
+      for (const subplayer in G.slots[slotplayer]) {
+        for (const [index, slotcard] of G.slots[slotplayer][
+          subplayer
+        ].entries()) {
+          if (slotcard.guid == target.guid) {
+            found = true;
+          }
         }
       }
     }
+  } else if (target.type == CardType.PERSONA) {
+    return true;
   }
   // is it a damagable type
   return found && (IsMonster(target) || IsPersona(target));
@@ -138,6 +143,7 @@ export function DamageTarget(
   if (IsMonster(target) || IsPersona(target)) {
     console.log("Card is monster or target");
     DealDamage(target, card, ability.metadata.amount, G);
+    return true;
   } else {
     console.dir(target);
     return false;

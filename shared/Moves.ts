@@ -105,7 +105,7 @@ const passStage: Move<CMCGameState> = ({ G, ctx, events, random }) => {
   } else if (GetActiveStage(ctx) == Stages.respond) {
     ResolveStack(G, ctx);
     let returnStage: Stages | undefined = G.returnStage.pop();
-    while (returnStage != Stages.respond) {
+    while (returnStage == Stages.respond) {
       returnStage = G.returnStage.pop();
     }
     if (!returnStage) {
