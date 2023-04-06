@@ -6,14 +6,6 @@ import { Context } from "koa";
 import inflate from "inflation";
 import { request } from "http";
 import { deflate } from "zlib";
-import {
-  CMCCard,
-  CreateDebugCard,
-  CreateDebugLocationCard,
-  CreateDebugMonsterCard,
-  CreateDebugPersonaCard,
-  CreateDebugSpellCard,
-} from "../shared/CMCCard";
 
 const games = [CardmasterConflict];
 const server = Server({

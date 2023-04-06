@@ -1,13 +1,6 @@
 import { PlayerIDs } from "../shared/Constants";
 
-import {
-  CMCCard,
-  GetCardPrototype,
-  CreateDebugMonsterCard,
-  CreateDebugCard,
-  CreateDebugSpellCard,
-  CreateDebugPersonaCard,
-} from "./CMCCard";
+import { CMCCard, GetCardPrototype } from "./CMCCard";
 
 interface PlayerDecks {
   "0": CMCCard[];

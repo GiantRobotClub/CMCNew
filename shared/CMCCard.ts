@@ -170,35 +170,6 @@ function CreateEffectCard(): CMCEffectCard {
   card.type = CardType.EFFECT;
   return card;
 }
-
-/////////////////debugging cards //////////////////
-function CreateDebugCard(): CMCEffectCard {
-  const card: CMCEffectCard = GetCardPrototype("debuggen") as CMCEffectCard;
-  return card;
-}
-
-function CreateDebugMonsterCard(): CMCMonsterCard {
-  const card: CMCMonsterCard = GetCardPrototype("debugslime") as CMCMonsterCard;
-  return card;
-}
-
-function CreateDebugPersonaCard(playerid: string): CMCPersonaCard {
-  const card: CMCPersonaCard = GetCardPrototype(
-    "debugpersona"
-  ) as CMCPersonaCard;
-  return card;
-}
-
-function CreateDebugLocationCard(playerid: string): CMCLocationCard {
-  const card: CMCLocationCard = GetCardPrototype("debugloc") as CMCLocationCard;
-  return card;
-}
-
-function CreateDebugSpellCard(): CMCSpellCard {
-  const card: CMCSpellCard = GetCardPrototype("debugspell");
-  return card;
-}
-
 function GetCardPrototype(name: string): CMCCard {
   return prototypes[name];
 }
@@ -212,15 +183,10 @@ export {
   CMCLocationCard,
   CMCSpellCard,
   CreateEffectCard,
-  CreateDebugCard,
   CreatePersonaCard,
   CreateBasicCard,
   CreateInitialLocationCard,
-  CreateDebugMonsterCard,
-  CreateDebugPersonaCard,
   CreateLocationCard,
   CreateSpellCard,
-  CreateDebugLocationCard,
-  CreateDebugSpellCard,
   GetCardPrototype,
 };

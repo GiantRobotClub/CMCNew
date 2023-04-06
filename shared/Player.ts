@@ -1,7 +1,6 @@
 import {
   CMCCard,
   CMCPersonaCard,
-  CreateDebugPersonaCard,
   CreatePersonaCard,
   GetCardPrototype,
 } from "./CMCCard";
@@ -42,7 +41,7 @@ function CreateDefaultPlayer(playerId: string, decks?: any): CMCPlayer {
     };
     card.playerID = playerId;
   } else {
-    card = CreateDebugPersonaCard(playerId);
+    card = CreatePersonaCard(playerId);
   }
   const player: CMCPlayer = {
     resources: {
