@@ -5,17 +5,8 @@ import crypto from "crypto";
 import {
   CMCCard,
   CMCLocationCard,
-  CMCMonsterCard,
-  CMCPersonaCard,
   CreateBasicCard,
-  CreateDebugCard,
-  CreateDebugDecks,
-  CreateDebugLocationCard,
-  CreateDebugMonsterCard,
-  CreateDebugSpellCard,
   CreateInitialLocationCard,
-  ParseDecks,
-  PlayerDecks,
 } from "./CMCCard";
 import { CMCPlayer, CreateDefaultPlayer } from "./Player";
 
@@ -57,6 +48,7 @@ import {
   activateAbility,
 } from "./Moves";
 import { GiConsoleController } from "react-icons/gi";
+import { CreateDebugSetupData, ParseDecks, PlayerDecks } from "./Decks";
 
 export interface CMCGameState {
   playerData: {
@@ -110,15 +102,15 @@ export const CardmasterConflict: Game<CMCGameState> = {
       "1": [],
     };
 
-    if (setupData) {
-      decks = ParseDecks(setupData.decks);
-    } else {
-      decks = CreateDebugDecks();
+    if (!setupData) {
+      setupData = CreateDebugSetupData();
+      console.log(setupData.decks);
     }
+    decks = ParseDecks(setupData.decks);
 
     const playerData = {
-      "0": CreateDefaultPlayer("0", decks),
-      "1": CreateDefaultPlayer("1", decks),
+      "0": CreateDefaultPlayer("0", setupData.decks),
+      "1": CreateDefaultPlayer("1", setupData.decks),
     };
 
     return {

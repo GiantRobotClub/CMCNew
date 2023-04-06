@@ -1,5 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { FaLeaf, FaSearch } from "react-icons/fa";
+import { prototypes } from "../shared/data/cards.json";
 import {
   Alignment,
   CardType,
@@ -172,176 +173,34 @@ function CreateEffectCard(): CMCEffectCard {
 
 /////////////////debugging cards //////////////////
 function CreateDebugCard(): CMCEffectCard {
-  const card: CMCEffectCard = CreateEffectCard();
-  card.name = "GENERATOR";
-  card.sac.mana.A = 2;
-  card.cost.mana.A = 1;
-
-  card.cardtext = " A basic generator ";
-  const debugAbility: Ability = {
-    triggerType: TriggerType.AUTOMATIC_STAGE,
-    activateCode: "ManaGenerate",
-    triggerCode: "TriggerStage",
-    metadata: {
-      triggername: TriggerNames.START_TURN,
-      triggerstage: "initial",
-      color: "A",
-      amount: 1,
-    },
-    abilityName: "Generate Mana",
-    abilityText: "Adds one Anodyne per turn",
-    abilityCostText: undefined,
-  };
-  card.abilities = [debugAbility];
+  const card: CMCEffectCard = GetCardPrototype("debuggen") as CMCEffectCard;
   return card;
 }
 
 function CreateDebugMonsterCard(): CMCMonsterCard {
-  const card: CMCMonsterCard = CreateMonsterCard();
-  card.name = "SLIME";
-  card.sac.mana.A = 2;
-  card.cost.mana.A = 1;
-  card.life = 10;
-  card.attack = 10;
-  card.cardtext = " Just a debug slime ";
-  const debugAbility: Ability = {
-    triggerType: TriggerType.ACTIVATED,
-    activateCode: "ManaGenerate",
-    triggerCode: undefined,
-    metadata: {
-      color: "A",
-      amount: 1,
-    },
-
-    speed: AbilitySpeed.A,
-    abilityName: "Generate Mana",
-    abilityText: "Add one anodyne",
-    abilityCostText: "Z",
-  };
-  card.abilities = [debugAbility];
+  const card: CMCMonsterCard = GetCardPrototype("debugslime") as CMCMonsterCard;
   return card;
 }
 
 function CreateDebugPersonaCard(playerid: string): CMCPersonaCard {
-  const card: CMCPersonaCard = CreatePersonaCard(playerid);
-  card.resourcePerTurn = { mana: { V: 1, A: 1, P: 1 } };
-  card.startingResource = {
-    mana: { V: 1, A: 1, P: 1 },
-    intrinsic: { health: 100 },
-  };
-  card.drawPerTurn = 1;
-  card.startingHand = 1;
-  card.cardtext = " Garden Variety ";
-
+  const card: CMCPersonaCard = GetCardPrototype(
+    "debugpersona"
+  ) as CMCPersonaCard;
   return card;
 }
 
 function CreateDebugLocationCard(playerid: string): CMCLocationCard {
-  const card: CMCLocationCard = CreateLocationCard("");
-  card.name = "MANA LAND";
-  card.cardtext = "A lot of mana here";
-  const debugAbility: Ability = {
-    triggerType: TriggerType.AUTOMATIC_STAGE,
-    activateCode: "ManaGenerate",
-    triggerCode: "TriggerStage",
-    metadata: {
-      triggername: TriggerNames.START_TURN,
-      triggerstage: "initial",
-      color: "A",
-      amount: 1,
-    },
-    abilityName: "Generate Mana",
-    abilityText: "Adds one Anodyne per turn",
-    abilityCostText: undefined,
-  };
-
-  card.abilities = [debugAbility];
-  card.cost.mana.V = 1;
-  card.cost.mana.A = 1;
-  card.cost.mana.P = 1;
-
+  const card: CMCLocationCard = GetCardPrototype("debugloc") as CMCLocationCard;
   return card;
 }
 
 function CreateDebugSpellCard(): CMCSpellCard {
-  const card = CreateSpellCard();
-  card.name = "zoop";
-  card.cardtext = "a spell to damage players and monsters";
-  const debugAbility: Ability = {
-    triggerType: TriggerType.ACTIVATED_TARGETED,
-    targetCode: "IsDamagable",
-    activateCode: "DamageTarget",
-    metadata: {
-      amount: 10,
-    },
-    abilityName: "Zoop!!",
-    abilityText: "Deal 10 damage to target player or monster",
-    speed: AbilitySpeed.B,
-  };
-  card.abilities = [debugAbility];
-  card.cost.mana.A = 1;
+  const card: CMCSpellCard = GetCardPrototype("debugspell");
   return card;
 }
 
 function GetCardPrototype(name: string): CMCCard {
-  const prototypes = {
-    debugpersona: CreateDebugPersonaCard(""),
-    debugslime: CreateDebugMonsterCard(),
-    debugspell: CreateDebugSpellCard(),
-    debugloc: CreateDebugLocationCard(""),
-    debuggen: CreateDebugCard(),
-  };
-
   return prototypes[name];
-}
-interface PlayerDecks {
-  "0": CMCCard[];
-  "1": CMCCard[];
-}
-function ParseDecks(decksJson: any): any {
-  let decks: PlayerDecks = {
-    "0": [],
-    "1": [],
-  };
-  PlayerIDs.forEach((id) => {
-    const newDeck: CMCCard[] = [];
-    decksJson[id].cards.forEach(function (card: any) {
-      for (let i = 0; i < card.count; i++) {
-        newDeck.push(GetCardPrototype(card.id));
-      }
-    });
-
-    decks[id] = newDeck;
-  });
-  return decks;
-}
-
-function CreateDebugDecks() {
-  const decks: PlayerDecks = {
-    "0": [
-      CreateDebugMonsterCard(),
-      CreateDebugCard(),
-      CreateDebugCard(),
-      CreateDebugCard(),
-      CreateDebugCard(),
-      CreateDebugMonsterCard(),
-      CreateDebugMonsterCard(),
-      CreateDebugCard(),
-    ],
-    "1": [
-      CreateDebugMonsterCard(),
-      CreateDebugCard(),
-      CreateDebugCard(),
-      CreateDebugSpellCard(),
-      CreateDebugSpellCard(),
-      CreateDebugSpellCard(),
-      CreateDebugCard(),
-      CreateDebugMonsterCard(),
-      CreateDebugMonsterCard(),
-      CreateDebugCard(),
-    ],
-  };
-  return decks;
 }
 
 export {
@@ -352,9 +211,6 @@ export {
   CMCPersonaCard,
   CMCLocationCard,
   CMCSpellCard,
-  PlayerDecks,
-  ParseDecks,
-  CreateDebugDecks,
   CreateEffectCard,
   CreateDebugCard,
   CreatePersonaCard,

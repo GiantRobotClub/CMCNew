@@ -1,0 +1,218 @@
+{
+    "prototypes": {
+    "debuggen":
+      {
+        "dizzy": false,
+        "status": {},
+        "destroyed": false,
+        "alignment": 0,
+        "guid": "TEMPORARY",
+        "subtype": "",
+        "costFunction": "DefaultCost",
+        "playFunction": "DefaultPlay",
+        "name": "GENERATOR",
+        "picture": "",
+        "cardtext": " A basic generator ",
+        "type": 3,
+        "sac": {
+          "mana": {
+            "V": 0,
+            "A": 2,
+            "P": 0
+          }
+        },
+        "cost": {
+          "mana": {
+            "V": 0,
+            "A": 1,
+            "P": 0
+          }
+        },
+        "abilities": [
+          {
+            "triggerType": 2,
+            "activateCode": "ManaGenerate",
+            "triggerCode": "TriggerStage",
+            "metadata": {
+              "triggername": "start_turn",
+              "triggerstage": "initial",
+              "color": "A",
+              "amount": 1
+            },
+            "abilityName": "Generate Mana",
+            "abilityText": "Adds one Anodyne per turn"
+          }
+        ]
+      },
+      "debugloc": {
+        "owner": "",
+        "alignment": 0,
+        "guid": "TEMPORARY",
+        "subtype": "",
+        "costFunction": "DefaultCost",
+        "playFunction": "DefaultPlay",
+        "name": "MANA LAND",
+        "picture": "",
+        "cardtext": "A lot of mana here",
+        "type": 5,
+        "sac": {
+          "mana": {
+            "V": 0,
+            "A": 0,
+            "P": 0
+          }
+        },
+        "cost": {
+          "mana": {
+            "V": 1,
+            "A": 1,
+            "P": 1
+          }
+        },
+        "abilities": [
+          {
+            "triggerType": 2,
+            "activateCode": "ManaGenerate",
+            "triggerCode": "TriggerStage",
+            "metadata": {
+              "triggername": "start_turn",
+              "triggerstage": "initial",
+              "color": "A",
+              "amount": 1
+            },
+            "abilityName": "Generate Mana",
+            "abilityText": "Adds one Anodyne per turn"
+          }
+        ]
+      },
+      "debugslime" : {
+        "life": 10,
+        "attack": 10,
+        "dizzy": false,
+        "status": {},
+        "destroyed": false,
+        "alignment": 0,
+        "guid": "TEMPORARY",
+        "subtype": "",
+        "costFunction": "DefaultCost",
+        "playFunction": "DefaultPlay",
+        "name": "SLIME",
+        "picture": "",
+        "cardtext": " Just a debug slime ",
+        "type": 2,
+        "sac": {
+          "mana": {
+            "V": 0,
+            "A": 2,
+            "P": 0
+          }
+        },
+        "cost": {
+          "mana": {
+            "V": 0,
+            "A": 1,
+            "P": 0
+          }
+        },
+        "abilities": [
+          {
+            "triggerType": 0,
+            "activateCode": "ManaGenerate",
+            "metadata": {
+              "color": "A",
+              "amount": 1
+            },
+            "speed": 1,
+            "abilityName": "Generate Mana",
+            "abilityText": "Add one anodyne",
+            "abilityCostText": "Z"
+          }
+        ]
+      },
+      "debugpersona":{
+        "playerID": "0",
+        "startingResource": {
+          "mana": {
+            "V": 1,
+            "A": 1,
+            "P": 1
+          },
+          "intrinsic": {
+            "health": 100
+          }
+        },
+        "resourcePerTurn": {
+          "mana": {
+            "V": 1,
+            "A": 1,
+            "P": 1
+          }
+        },
+        "startingHand": 1,
+        "drawPerTurn": 1,
+        "maxHand": 1,
+        "alignment": 0,
+        "guid": "TEMPORARY",
+        "subtype": "",
+        "costFunction": "DefaultCost",
+        "playFunction": "DefaultPlay",
+        "name": "",
+        "picture": "",
+        "cardtext": " Garden Variety ",
+        "type": 6,
+        "sac": {
+          "mana": {
+            "V": 0,
+            "A": 0,
+            "P": 0
+          }
+        },
+        "cost": {
+          "mana": {
+            "V": 0,
+            "A": 0,
+            "P": 0
+          }
+        },
+        "abilities": []
+      },
+      "debugspell":{
+        "alignment": 0,
+        "guid": "TEMPORARY",
+        "subtype": "",
+        "costFunction": "DefaultCost",
+        "playFunction": "DefaultPlay",
+        "name": "zoop",
+        "picture": "",
+        "cardtext": "a spell to damage players and monsters",
+        "type": 4,
+        "sac": {
+          "mana": {
+            "V": 0,
+            "A": 0,
+            "P": 0
+          }
+        },
+        "cost": {
+          "mana": {
+            "V": 0,
+            "A": 1,
+            "P": 0
+          }
+        },
+        "abilities": [
+          {
+            "triggerType": 1,
+            "targetCode": "IsDamagable",
+            "activateCode": "DamageTarget",
+            "metadata": {
+              "amount": 10
+            },
+            "abilityName": "Zoop!!",
+            "abilityText": "Deal 10 damage to target player or monster",
+            "speed": 2
+          }
+        ]
+      }
+    }
+  }
