@@ -124,10 +124,11 @@ const passStage: Move<CMCGameState> = ({ G, ctx, events, random }) => {
       events.setStage(Stages.defense);
     }
   } else if (GetActiveStage(ctx) == Stages.defense) {
-    events.setActivePlayers({ currentPlayer: Stages.resolve });
     ResolveCombat(G, ctx, random);
-    // resolve combat and go to resolve step.
-    // resolveCombat(G,ctx)
+    console.log("resolving combat......");
+    events.setActivePlayers({ currentPlayer: Stages.resolve });
+    console.log("Setting active plyaer...");
+    events.endStage();
   } else if (GetActiveStage(ctx) == Stages.resolve) {
     if (
       G.playerData[GetActivePlayer(ctx)].persona.maxHand <

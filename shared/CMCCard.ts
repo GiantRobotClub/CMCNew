@@ -44,7 +44,7 @@ interface CMCCard extends CMCCardBase {
 function CreateBasicCard(guid: string = ""): CMCCard {
   const card: CMCCard = {
     alignment: Alignment.NONE,
-    guid: guid ? guid : crypto.randomUUID(),
+    guid: guid ? guid : "TEMPORARY",
     subtype: "",
     costFunction: "DefaultCost",
     playFunction: "DefaultPlay",

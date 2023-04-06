@@ -1,6 +1,7 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import type { Ctx, Game, Move } from "boardgame.io";
 import { Stage, TurnOrder } from "boardgame.io/core";
+import crypto from "crypto";
 import {
   CMCCard,
   CMCLocationCard,
@@ -248,7 +249,7 @@ export const CardmasterConflict: Game<CMCGameState> = {
     };
   },
 
-  seed: crypto.randomUUID(),
+  seed: Date.now().toString(),
   turn: {
     activePlayers: {
       currentPlayer: Stages.initial,

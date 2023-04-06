@@ -4,16 +4,19 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "concurrently --kill-others \"npm run server\" \"vite\"",
+    "server": "npx vite-node server/server.ts",
+    "build": "tsc && vite build ",
     "preview": "vite preview"
   },
   "dependencies": {
     "boardgame.io": "^0.50.2",
+    "concurrently": "^8.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
     "react-router-dom": "^6.9.0",
+    "vite-node": "^0.29.8",
     "vite-plugin-svgr": "^2.4.0"
   },
   "devDependencies": {

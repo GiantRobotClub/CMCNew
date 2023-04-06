@@ -5,6 +5,7 @@ import Default from "./Default";
 import Cmc from "./Cmc";
 import DualClient from "./Game";
 import CPUClient from "./VsCPU";
+import MultiClient from "./multi";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" element={<Default />} />
         <Route path="/play" element={<Cmc />} />
         <Route path="/playcpu" element={<CPUClient />} />
+        <Route path="/multi/:id" element={<MultiClient />} />
         <Route path="/public" />
       </Routes>
     </Router>

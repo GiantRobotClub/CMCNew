@@ -74,16 +74,8 @@ export function CMCBoard(props: CMCProps) {
   };
   let currentPlayer = props.ctx.currentPlayer;
   let you = currentPlayer;
-  if (props.isMultiplayer && props.playerID != null) {
-    you = props.playerID;
-  }
+
   let activePlayer = currentPlayer;
-  if (!props.isMultiplayer) {
-    you = activePlayer;
-  }
-
-  let otherPlayer = you == "0" ? "1" : "0";
-
   if (props.ctx.activePlayers) {
     if ("0" in props.ctx.activePlayers) {
       activePlayer = "0";
@@ -91,6 +83,14 @@ export function CMCBoard(props: CMCProps) {
       activePlayer = "1";
     }
   }
+
+  if (props.isMultiplayer && props.playerID != null) {
+    you = props.playerID;
+  } else {
+    you = activePlayer;
+  }
+
+  let otherPlayer = you == "0" ? "1" : "0";
 
   return (
     <div>
@@ -100,7 +100,7 @@ export function CMCBoard(props: CMCProps) {
           ? props.ctx.activePlayers[props.ctx.currentPlayer]
           : ""}
         <br />
-        player: {props.ctx.currentPlayer}
+        player: {props.ctx.currentPlayer} you: {you}
         <br />
         inspect: {inspectMode ? "yes" : "no"}
         <br />
@@ -295,30 +295,28 @@ export function CMCBoard(props: CMCProps) {
       </div>
       <div className="handcontainer">
         <div className="hand" style={flexStyle}>
-          {state.players[props.ctx.currentPlayer].hand.map(
-            (card: CMCCard, index: number) => (
-              <CMCCardVisual
-                big={false}
-                player={props.G.playerData[you]}
-                card={card}
-                activeCard={
-                  props.G.activeCard ? props.G.activeCard == card : false
-                }
-                key={props.ctx.currentPlayer + "h" + index + "test"}
-                doClick={() => clickCardFromHand(card)}
-                canClick={
-                  inspectMode ||
-                  CanClickCard(card, you, ClickType.HAND, props.ctx, props.G)
-                }
-              />
-            )
-          )}
+          {state.players[you].hand.map((card: CMCCard, index: number) => (
+            <CMCCardVisual
+              big={false}
+              player={props.G.playerData[you]}
+              card={card}
+              activeCard={
+                props.G.activeCard ? props.G.activeCard == card : false
+              }
+              key={you + "h" + index + "test"}
+              doClick={() => clickCardFromHand(card)}
+              canClick={
+                inspectMode ||
+                CanClickCard(card, you, ClickType.HAND, props.ctx, props.G)
+              }
+            />
+          ))}
         </div>
       </div>
 
       <div className="gravecontainer">
         <div className="graveyard" style={flexStyle}>
-          {state.playerData[props.ctx.currentPlayer].graveyard.map(
+          {state.playerData[you].graveyard.map(
             (card: CMCCard, index: number) => (
               <CMCCardVisual
                 big={false}
@@ -327,7 +325,7 @@ export function CMCBoard(props: CMCProps) {
                 activeCard={
                   props.G.activeCard ? props.G.activeCard == card : false
                 }
-                key={props.ctx.currentPlayer + "h" + index + "test"}
+                key={you + "h" + index + "test"}
                 doClick={() => clickCardFromHand(card)}
                 canClick={
                   inspectMode ||
