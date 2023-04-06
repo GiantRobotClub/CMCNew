@@ -1,4 +1,9 @@
-import { CMCCard, CMCPersonaCard, CreateDebugPersonaCard } from "./CMCCard";
+import {
+  CMCCard,
+  CMCPersonaCard,
+  CreateDebugPersonaCard,
+  GetCardPrototype,
+} from "./CMCCard";
 
 interface CMCPlayer {
   resources: {
@@ -26,7 +31,14 @@ interface CMCPlayer {
   graveyard: CMCCard[];
 }
 
-function CreateDefaultPlayer(playerId: string): CMCPlayer {
+function CreateDefaultPlayer(playerId: string, decks?: any): CMCPlayer {
+  let card: CMCPersonaCard;
+  if (decks) {
+    card = GetCardPrototype(decks[playerId].persona) as CMCPersonaCard;
+    card.playerID = playerId;
+  } else {
+    card = CreateDebugPersonaCard(playerId);
+  }
   const player: CMCPlayer = {
     resources: {
       power: {
@@ -48,7 +60,7 @@ function CreateDefaultPlayer(playerId: string): CMCPlayer {
     decksize: 100,
     name: "CARDMASTER" + playerId,
     id: playerId,
-    persona: CreateDebugPersonaCard(playerId),
+    persona: card,
     graveyard: [],
   };
   return player;

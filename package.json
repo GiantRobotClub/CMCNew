@@ -4,15 +4,19 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently --kill-others \"npm run server\" \"vite\"",
+    "dev": "concurrently -n server,vite --kill-others \"npm run server\" \"vite\"",
     "server": "npx vite-node server/server.ts",
     "build": "tsc && vite build ",
-    "preview": "vite preview"
+    "preview": "concurrently -n server,vite --kill-others \"npm run server\" \"vite preview\""
   },
   "dependencies": {
+    "@types/koa-bodyparser": "^4.3.10",
     "better-sqlite3": "^8.2.0",
     "boardgame.io": "^0.50.2",
     "concurrently": "^8.0.1",
+    "inflation": "^2.0.0",
+    "koa-better-body": "^3.3.9",
+    "koa-body": "^6.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",

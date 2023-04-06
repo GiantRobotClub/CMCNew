@@ -1,6 +1,12 @@
 import { Ctx } from "boardgame.io";
 import { FaLeaf, FaSearch } from "react-icons/fa";
-import { Alignment, CardType, ClickType, Stages } from "../shared/Constants";
+import {
+  Alignment,
+  CardType,
+  ClickType,
+  PlayerIDs,
+  Stages,
+} from "../shared/Constants";
 import {
   Ability,
   AbilitySpeed,
@@ -277,6 +283,67 @@ function CreateDebugSpellCard(): CMCSpellCard {
   return card;
 }
 
+function GetCardPrototype(name: string): CMCCard {
+  const prototypes = {
+    debugpersona: CreateDebugPersonaCard(""),
+    debugslime: CreateDebugMonsterCard(),
+    debugspell: CreateDebugSpellCard(),
+    debugloc: CreateDebugLocationCard(""),
+    debuggen: CreateDebugCard(),
+  };
+
+  return prototypes[name];
+}
+interface PlayerDecks {
+  "0": CMCCard[];
+  "1": CMCCard[];
+}
+function ParseDecks(decksJson: any): any {
+  let decks: PlayerDecks = {
+    "0": [],
+    "1": [],
+  };
+  PlayerIDs.forEach((id) => {
+    const newDeck: CMCCard[] = [];
+    decksJson[id].cards.forEach(function (card: any) {
+      for (let i = 0; i < card.count; i++) {
+        newDeck.push(GetCardPrototype(card.id));
+      }
+    });
+
+    decks[id] = newDeck;
+  });
+  return decks;
+}
+
+function CreateDebugDecks() {
+  const decks: PlayerDecks = {
+    "0": [
+      CreateDebugMonsterCard(),
+      CreateDebugCard(),
+      CreateDebugCard(),
+      CreateDebugCard(),
+      CreateDebugCard(),
+      CreateDebugMonsterCard(),
+      CreateDebugMonsterCard(),
+      CreateDebugCard(),
+    ],
+    "1": [
+      CreateDebugMonsterCard(),
+      CreateDebugCard(),
+      CreateDebugCard(),
+      CreateDebugSpellCard(),
+      CreateDebugSpellCard(),
+      CreateDebugSpellCard(),
+      CreateDebugCard(),
+      CreateDebugMonsterCard(),
+      CreateDebugMonsterCard(),
+      CreateDebugCard(),
+    ],
+  };
+  return decks;
+}
+
 export {
   CMCCard,
   CMCEffectCard,
@@ -285,6 +352,9 @@ export {
   CMCPersonaCard,
   CMCLocationCard,
   CMCSpellCard,
+  PlayerDecks,
+  ParseDecks,
+  CreateDebugDecks,
   CreateEffectCard,
   CreateDebugCard,
   CreatePersonaCard,
@@ -296,4 +366,5 @@ export {
   CreateSpellCard,
   CreateDebugLocationCard,
   CreateDebugSpellCard,
+  GetCardPrototype,
 };

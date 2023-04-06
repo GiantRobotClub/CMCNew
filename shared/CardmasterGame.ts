@@ -9,10 +9,13 @@ import {
   CMCPersonaCard,
   CreateBasicCard,
   CreateDebugCard,
+  CreateDebugDecks,
   CreateDebugLocationCard,
   CreateDebugMonsterCard,
   CreateDebugSpellCard,
   CreateInitialLocationCard,
+  ParseDecks,
+  PlayerDecks,
 } from "./CMCCard";
 import { CMCPlayer, CreateDefaultPlayer } from "./Player";
 
@@ -102,98 +105,25 @@ export interface CMCGameState {
 export const CardmasterConflict: Game<CMCGameState> = {
   setup: ({ ctx }, setupData): CMCGameState => {
     // decks can be done through the game creation api, but here we will set up a default deck
-
-    const decks = {
-      "0": [
-        CreateDebugMonsterCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugMonsterCard(),
-        CreateDebugMonsterCard(),
-        CreateDebugCard(),
-        CreateDebugMonsterCard(),
-        CreateDebugMonsterCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugMonsterCard(),
-
-        CreateDebugMonsterCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugMonsterCard(),
-        CreateDebugMonsterCard(),
-        CreateDebugCard(),
-        CreateDebugMonsterCard(),
-        CreateDebugMonsterCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugMonsterCard(),
-      ],
-      "1": [
-        CreateDebugMonsterCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugSpellCard(),
-        CreateDebugSpellCard(),
-        CreateDebugSpellCard(),
-        CreateDebugCard(),
-        CreateDebugMonsterCard(),
-        CreateDebugMonsterCard(),
-        CreateDebugCard(),
-        CreateDebugLocationCard(""),
-        CreateDebugMonsterCard(),
-        CreateDebugMonsterCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugLocationCard(""),
-        CreateDebugLocationCard(""),
-        CreateDebugLocationCard(""),
-        CreateDebugMonsterCard(),
-
-        CreateDebugMonsterCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugSpellCard(),
-        CreateDebugSpellCard(),
-        CreateDebugSpellCard(),
-        CreateDebugSpellCard(),
-        CreateDebugSpellCard(),
-        CreateDebugSpellCard(),
-        CreateDebugSpellCard(),
-        CreateDebugSpellCard(),
-        CreateDebugCard(),
-        CreateDebugMonsterCard(),
-        CreateDebugMonsterCard(),
-        CreateDebugCard(),
-        CreateDebugMonsterCard(),
-        CreateDebugMonsterCard(),
-        CreateDebugCard(),
-        CreateDebugLocationCard(""),
-        CreateDebugLocationCard(""),
-        CreateDebugLocationCard(""),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugCard(),
-        CreateDebugMonsterCard(),
-      ],
+    let decks: PlayerDecks = {
+      "0": [],
+      "1": [],
     };
+
+    if (setupData) {
+      decks = ParseDecks(setupData.decks);
+    } else {
+      decks = CreateDebugDecks();
+    }
+
+    const playerData = {
+      "0": CreateDefaultPlayer("0", decks),
+      "1": CreateDefaultPlayer("1", decks),
+    };
+
     return {
       lastAbilityLength: 0,
-      playerData: {
-        "0": CreateDefaultPlayer("0"),
-        "1": CreateDefaultPlayer("1"),
-      },
+      playerData: playerData,
       returnStage: [],
       didinitialsetup: false,
       currentmetadata: {},
