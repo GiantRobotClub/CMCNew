@@ -20,6 +20,7 @@ const LobbyReact = () => {
     <div>
       <div style={{ background: "grey" }}>
         <Lobby
+          refreshInterval={10000}
           gameServer={`http://${window.location.hostname}:3000/gameserver/`}
           lobbyServer={`http://${window.location.hostname}:3000/gameserver/`}
           gameComponents={[{ game: CardmasterConflict, board: CMCBoard }]}
