@@ -8,8 +8,15 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      //   "/api": "http://localhost:" + SERVER_PORT,
-      //   "/gameserver": "http://localhost:" + GAME_PORT,
+      "/api/": {
+        target: "http://localhost:8000/",
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+      "/gameserver/": {
+        target: "http://localhost:8000/",
+        rewrite: (path) => path.replace(/^\/gameserver/, ""),
+      },
+      "/games": "http://localhost:8000/games",
     },
   },
 });

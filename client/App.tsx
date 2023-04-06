@@ -6,6 +6,8 @@ import Cmc from "./Cmc";
 import DualClient from "./Game";
 import CPUClient from "./VsCPU";
 import MultiClient from "./multi";
+import LobbyReact from "./LobbyReact";
+import LobbyCustom from "./Lobby";
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <Route path="/play" element={<Cmc />} />
         <Route path="/playcpu" element={<CPUClient />} />
         <Route path="/multi/:id" element={<MultiClient />} />
+        <Route path="/lobby" element={<LobbyCustom />} />
+        <Route path="/lobbyreact" element={<LobbyReact />} />
         <Route path="/public" />
       </Routes>
     </Router>

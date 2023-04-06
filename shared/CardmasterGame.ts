@@ -248,7 +248,7 @@ export const CardmasterConflict: Game<CMCGameState> = {
       abilityStack: [],
     };
   },
-
+  name: "CardmasterConflictR",
   seed: Date.now().toString(),
   turn: {
     activePlayers: {

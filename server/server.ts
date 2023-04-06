@@ -1,5 +1,6 @@
 import { Server, Origins } from "boardgame.io/server";
 import { CardmasterConflict } from "../shared/CardmasterGame";
+import { getDeck } from "./getdeck";
 
 const server = Server({
   games: [CardmasterConflict],
@@ -11,3 +12,6 @@ const server = Server({
 });
 
 server.run(8000, () => console.log("server running"));
+
+server.router.get("/gameserver/deck/:id", getDeck);
+server.router.get("/api/foo/:id", getDeck);
