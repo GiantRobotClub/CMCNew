@@ -1,7 +1,4 @@
-DROP TABLE  IF EXISTS deck;
-DROP TABLE IF EXISTS deck_card;
-DROP TABLE IF EXISTS owned_card;
-DROP TABLE IF EXISTS player;
+
 CREATE TABLE IF NOT EXISTS deck (
     deckid text PRIMARY KEY UNIQUE NOT NULL,
     ownerid text,
