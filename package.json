@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently -n server,vite --kill-others \"npm run server\" \"vite\"",
-    "server": "npx vite-node server/server.ts",
+    "server": "DEBUG=koa* npx nodemon --exec npx vite-node server/server.ts",
     "build": "tsc && vite build ",
     "preview": "concurrently -n server,vite --kill-others \"npm run server\" \"vite preview\""
   },
@@ -17,6 +17,8 @@
     "inflation": "^2.0.0",
     "koa-better-body": "^3.3.9",
     "koa-body": "^6.0.1",
+    "otplib": "^12.0.1",
+    "qrcode": "^1.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
@@ -26,6 +28,7 @@
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.4",
+    "@types/koa__router": "^12.0.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@vitejs/plugin-react": "^3.1.0",

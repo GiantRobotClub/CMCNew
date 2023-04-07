@@ -23,5 +23,7 @@ CREATE TABLE IF NOT EXISTS owned_card (
 ;
 CREATE TABLE IF NOT EXISTS player (
     playerid text PRIMARY KEY UNIQUE NOT NULL,
-    username text
+    username text UNIQUE NOT NULL,
+    visualname text,
+    authenticationcode text
 );

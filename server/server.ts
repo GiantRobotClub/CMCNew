@@ -1,9 +1,13 @@
+/// <reference types="koa__router" />
 import { Server, Origins } from "boardgame.io/server";
+import { Server as ServerTypes } from "boardgame.io/src/types";
 import { CardmasterConflict } from "../shared/CardmasterGame";
 import { getDeck } from "./getdeck";
 import { Context } from "koa";
-import Manage from "./manage";
+import { Manage } from "./manage";
+import { Middleware } from "@koa/router";
 
+import Koa from "koa";
 const games = [CardmasterConflict];
 const server = Server({
   games: games,
@@ -14,6 +18,7 @@ const server = Server({
   ],
 });
 
+// @ts-ignore // there's something wierd with the typings but this is the only way it works
 server.router.use("/manage", Manage.routes(), Manage.allowedMethods());
 
 server.router.use(

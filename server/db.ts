@@ -5,6 +5,8 @@ import { nanoid } from "nanoid";
 interface DbPlayer {
   playerid: string;
   username: string;
+  visualname: string;
+  authenticationcode: string;
 }
 
 interface DbDeck {
@@ -54,6 +56,15 @@ function GetPlayer(playerId: string): DbPlayer | undefined {
   return player;
 }
 
+function GetDeckList(playerid: string): DbDeck[] {
+  const database = db();
+  const stmt = database.prepare(
+    "SELECT deckid, ownerid, deckicon, persona, deckname from deck where ownerid=(?)"
+  );
+  const rows = stmt.all(playerid);
+  const deck: DbDeck[] = rows as DbDeck[];
+  return deck;
+}
 function GetDeck(deckid: string): DbDeck | undefined {
   const database = db();
   const stmt = database.prepare(
@@ -133,14 +144,26 @@ function CreateDeck(deck: DbFullDeck) {
   });
 }
 
+function GetPlayerIdFromName(name: string): string {
+  const database = db();
+  const stmt = database.prepare(
+    "SELECT playerid from player where username=(?)"
+  );
+  const row: any = stmt.get(name);
+  if (!row) {
+    return "";
+  }
+
+  return row.playerid;
+}
 function CreatePlayer(
   player: DbPlayer,
   startingcards: DbOwnedCard[],
   deck: DbFullDeck
-): boolean {
+): DbPlayer | undefined {
   const check = GetPlayer(player.playerid);
   if (check !== undefined) {
-    return false;
+    return undefined;
   }
   const stmt = database.prepare(
     "INSERT into player (playerid,username) values (?, ?)"
@@ -155,7 +178,7 @@ function CreatePlayer(
     cardstmt.run(player.playerid, card.cardid, card.amount);
   });
   CreateDeck(deck);
-  return true;
+  return player;
 }
 
 function LoadJsonDeck(premade: string): DbFullDeck | undefined {
@@ -193,4 +216,6 @@ export {
   DbFullDeck,
   DbOwnedCard,
   DbPlayer,
+  GetDeckList,
+  GetPlayerIdFromName,
 };

@@ -1,28 +1,37 @@
 import { useState } from "react";
 import "./App.css";
 import React from "react";
-
+import { useNavigate } from "react-router-dom";
+import qrcode from "qrcode";
 function Default() {
-  const [count, setCount] = useState(0);
+  const [name, setName] = useState(0);
+  const navigate = useNavigate();
+  function handleSubmit(event) {
+    // create or load user
 
+    // get user id
+
+    // add to session
+
+    navigate("/home");
+  }
+  let qr = "";
+  qrcode.toDataURL(
+    "otpauth://totp/CMC:9mT5PLt2xNxWEgqKCOy9p?secret=FUTGKJJQKNCR6LJR&period=30&digits=6&algorithm=SHA1&issuer=CMC",
+    (err, imgurl) => {
+      qr = imgurl;
+    }
+  );
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank"></a>
-        <a href="https://reactjs.org" target="_blank"></a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <img src={qr} />
+      <form onSubmit={handleSubmit}>
+        <label>
+          your name:
+          <input type="text" name="name" />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
     </div>
   );
 }
