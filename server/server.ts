@@ -1,11 +1,8 @@
 import { Server, Origins } from "boardgame.io/server";
 import { CardmasterConflict } from "../shared/CardmasterGame";
 import { getDeck } from "./getdeck";
-import koaBody from "koa-body";
 import { Context } from "koa";
-import inflate from "inflation";
-import { request } from "http";
-import { deflate } from "zlib";
+import Manage from "./manage";
 
 const games = [CardmasterConflict];
 const server = Server({
@@ -17,8 +14,7 @@ const server = Server({
   ],
 });
 
-server.router.get("/deck/:id", getDeck);
-server.router.get("/deck/", getDeck);
+server.router.use("/manage", Manage.routes(), Manage.allowedMethods());
 
 server.router.use(
   "/games/:name/create",

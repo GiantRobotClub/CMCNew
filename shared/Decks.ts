@@ -14,7 +14,7 @@ function ParseDecks(decksJson: any): any {
   PlayerIDs.forEach((id) => {
     const newDeck: CMCCard[] = [];
     decksJson[id].cards.forEach(function (card: any) {
-      for (let i = 0; i < card.count; i++) {
+      for (let i = 0; i < card.amount; i++) {
         newDeck.push(GetCardPrototype(card.id));
       }
     });
@@ -30,25 +30,25 @@ function CreateDebugSetupData() {
       "0": {
         persona: "debugpersona",
         cards: [
-          { id: "debugslime", count: 10 },
+          { id: "debugslime", amount: 10 },
 
-          { id: "debugspell", count: 10 },
+          { id: "debugspell", amount: 10 },
 
-          { id: "debugloc", count: 10 },
+          { id: "debugloc", amount: 10 },
 
-          { id: "debuggen", count: 10 },
+          { id: "debuggen", amount: 10 },
         ],
       },
       "1": {
         persona: "debugpersona",
         cards: [
-          { id: "debugslime", count: 10 },
+          { id: "debugslime", amount: 10 },
 
-          { id: "debugspell", count: 10 },
+          { id: "debugspell", amount: 10 },
 
-          { id: "debugloc", count: 10 },
+          { id: "debugloc", amount: 10 },
 
-          { id: "debuggen", count: 10 },
+          { id: "debuggen", couamountnt: 10 },
         ],
       },
     },

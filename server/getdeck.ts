@@ -10,13 +10,13 @@ export function getDeck(id: string) {
   const deck = {
     persona: "debugpersona",
     cards: [
-      { id: "debugslime", count: 10 },
+      { id: "debugslime", amount: 10 },
 
-      { id: "debugspell", count: 10 },
+      { id: "debugspell", amount: 10 },
 
-      { id: "debugloc", count: 10 },
+      { id: "debugloc", amount: 10 },
 
-      { id: "debuggen", count: 10 },
+      { id: "debuggen", amount: 10 },
     ],
   };
   return deck;

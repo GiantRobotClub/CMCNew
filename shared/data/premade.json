@@ -1,0 +1,18 @@
+{
+  "premadeDecks": {
+    "debug": {
+      "deckname": "Debug Deck",
+      "persona": "debugpersona",
+      "deckicon": "default",
+      "cards": [
+        { "cardid": "debugslime", "amount": 10 },
+
+        { "cardid": "debugspell", "amount": 10 },
+
+        { "cardid": "debugloc", "amount": 10 },
+
+        { "cardid": "debuggen", "amount": 10 }
+      ]
+    }
+  }
+}
