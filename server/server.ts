@@ -7,7 +7,7 @@ import { Context } from "koa";
 import { Manage } from "./manage";
 import { Middleware } from "@koa/router";
 
-import Koa from "koa";
+import session from "koa-session";
 const games = [CardmasterConflict];
 const server = Server({
   games: games,
@@ -18,6 +18,13 @@ const server = Server({
   ],
 });
 
+const SESSION_CONFIG = {
+  key: "cmc-session",
+  rolling: true,
+  renew: true,
+};
+server.app.keys = ["this is the key for see em see"];
+server.app.use(session(SESSION_CONFIG, server.app));
 // @ts-ignore // there's something wierd with the typings but this is the only way it works
 server.router.use("/manage", Manage.routes(), Manage.allowedMethods());
 
@@ -54,7 +61,5 @@ server.router.use(
     next();
   }
 );
-
-//replace the module
 
 server.run(8000, () => console.log("server running!!"));

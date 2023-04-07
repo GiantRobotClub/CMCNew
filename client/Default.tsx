@@ -4,31 +4,42 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import qrcode from "qrcode";
 function Default() {
-  const [name, setName] = useState(0);
+  const [name, setName] = useState("");
+  const [isLog, setIsLog] = useState(false);
   const navigate = useNavigate();
-  function handleSubmit(event) {
-    // create or load user
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    //authenticate.
+    setIsLog(true);
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formElements = form.elements as typeof form.elements & {
+      username: { value: string };
+      authcode: { value: string };
+    };
 
-    // get user id
-
-    // add to session
-
-    navigate("/home");
+    const username = formElements.username.value;
+    const authcode = formElements.authcode.value;
+    fetch("/api/manage/player/login/" + username + "/" + authcode)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          setName(username);
+          navigate("/home");
+          setIsLog(false);
+        }
+      });
   }
-  let qr = "";
-  qrcode.toDataURL(
-    "otpauth://totp/CMC:9mT5PLt2xNxWEgqKCOy9p?secret=FUTGKJJQKNCR6LJR&period=30&digits=6&algorithm=SHA1&issuer=CMC",
-    (err, imgurl) => {
-      qr = imgurl;
-    }
-  );
+
   return (
     <div className="App">
-      <img src={qr} />
       <form onSubmit={handleSubmit}>
         <label>
           your name:
-          <input type="text" name="name" />
+          <input type="text" name="username" />
+        </label>
+        <label>
+          authenticator code:
+          <input type="text" name="authcode" />
         </label>
         <input type="submit" value="Submit" />
       </form>

@@ -25,5 +25,6 @@ CREATE TABLE IF NOT EXISTS player (
     playerid text PRIMARY KEY UNIQUE NOT NULL,
     username text UNIQUE NOT NULL,
     visualname text,
-    authenticationcode text
+    authenticationcode text,
+    selecteddeck text
 );

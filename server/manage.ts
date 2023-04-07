@@ -14,7 +14,11 @@ import {
   LoadJsonDeck,
 } from "./db";
 import { nanoid } from "nanoid";
+import { CgTapSingle } from "react-icons/cg";
 export const Manage = new Router<any, Server.AppCtx>();
+import session from "koa-session";
+
+//replace the module
 
 Manage.get("/test", (ctx, next) => {
   const playerid = nanoid();
@@ -46,6 +50,7 @@ Manage.get("/test", (ctx, next) => {
       username: "testymastexr",
       visualname: "",
       authenticationcode: secret,
+      selecteddeck: deckid,
     },
     startowned,
     starterdeck
@@ -86,14 +91,47 @@ Manage.get("/player/getbyid/:id", (ctx, next) => {
   ctx.body = { player: player };
 });
 
+Manage.get("/player/getsession", (ctx, next) => {
+  const player = ctx.session.player || undefined;
+  if (player !== undefined) {
+    ctx.body = { playerid: ctx.session.player.playerid };
+  } else ctx.body = { playerid: "" };
+});
+//is it safe? I dunno
+Manage.get("/player/login/:name/:authcode", (ctx, next) => {
+  const playerid = GetPlayerIdFromName(ctx.params.name);
+  if (playerid == "") throw "Player not found";
+  const player = GetPlayer(playerid);
+  if (player === undefined) throw "Player not found from ID";
+  const success = authenticator.check(
+    ctx.params.authcode,
+    player.authenticationcode
+  );
+  if (!success) {
+    throw (
+      "Invalid authenticator code " +
+      ctx.params.authcode +
+      " for secret " +
+      player.authenticationcode
+    );
+  }
+  ctx.session.player = player;
+  ctx.body = {
+    success: success,
+    player: player,
+  };
+});
+
 Manage.get("/player/create/:name/:deck", (ctx, next) => {
   const playerid = nanoid();
   const deckid = nanoid();
+  const secret = authenticator.generateSecret();
   const dbPlayer: DbPlayer = {
     playerid: playerid,
     username: ctx.params.name,
     visualname: ctx.params.name,
-    authenticationcode: nanoid(), // gotta figure this out
+    authenticationcode: secret,
+    selecteddeck: deckid,
   };
 
   let starterdeck = LoadJsonDeck(ctx.params.deck);
@@ -114,5 +152,10 @@ Manage.get("/player/create/:name/:deck", (ctx, next) => {
   });
 
   const player = CreatePlayer(dbPlayer, startowned, starterdeck);
-  ctx.body = { player: player };
+  if (player === undefined) throw "Player was undefined";
+
+  ctx.body = {
+    player: player,
+    keyuri: authenticator.keyuri(player.username, "CMC", secret),
+  };
 });

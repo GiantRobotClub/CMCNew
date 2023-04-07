@@ -7,6 +7,7 @@ interface DbPlayer {
   username: string;
   visualname: string;
   authenticationcode: string;
+  selecteddeck: string;
 }
 
 interface DbDeck {
@@ -46,7 +47,7 @@ function db(): Database {
 function GetPlayer(playerId: string): DbPlayer | undefined {
   const database = db();
   const stmt = database.prepare(
-    "SELECT playerid, username from player where playerid=(?)"
+    "SELECT playerid, username,visualname, authenticationcode, selecteddeck from player where playerid=(?)"
   );
   const row = stmt.get(playerId);
   if (!row) {
@@ -166,9 +167,15 @@ function CreatePlayer(
     return undefined;
   }
   const stmt = database.prepare(
-    "INSERT into player (playerid,username) values (?, ?)"
+    "INSERT into player (playerid,username,visualname, authenticationcode,selecteddeck) values (?, ?,?,?,?)"
   );
-  stmt.run(player.playerid, player.username);
+  stmt.run(
+    player.playerid,
+    player.username,
+    player.visualname,
+    player.authenticationcode,
+    player.selecteddeck
+  );
 
   // create a deck for that user
   startingcards.forEach((card) => {

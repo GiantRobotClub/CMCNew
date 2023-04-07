@@ -8,6 +8,8 @@ import CPUClient from "./VsCPU";
 import MultiClient from "./multi";
 import LobbyReact from "./LobbyReact";
 import LobbyCustom from "./Lobby";
+import CreatePlayer from "./CreatePlayer";
+import Home from "./Home";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
         <Route path="/lobby" element={<LobbyCustom />} />
         <Route path="/lobbyreact" element={<LobbyReact />} />
         <Route path="/public" />
+        <Route path="/player/create" element={<CreatePlayer />} />
+        <Route path="/home" element={<Home />} />
       </Routes>
     </Router>
   );
