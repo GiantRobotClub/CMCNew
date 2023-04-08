@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import qrcode from "qrcode";
 function Default() {
   const [name, setName] = useState("");
@@ -32,6 +32,7 @@ function Default() {
 
   return (
     <div className="App">
+      <Link to="/player/create">Create new</Link>
       <form onSubmit={handleSubmit}>
         <label>
           your name:

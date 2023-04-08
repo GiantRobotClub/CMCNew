@@ -120,8 +120,8 @@ const passStage: Move<CMCGameState> = ({ G, ctx, events, random }) => {
       events.setStage(Stages.resolve);
     } else {
       // else, go to defense stage.
+      events.endStage();
       events.setActivePlayers({ others: Stages.defense });
-      events.setStage(Stages.defense);
     }
   } else if (GetActiveStage(ctx) == Stages.defense) {
     ResolveCombat(G, ctx, random);

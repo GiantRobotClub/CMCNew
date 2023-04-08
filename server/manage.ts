@@ -92,6 +92,10 @@ Manage.get("/player/getbyid/:id", (ctx, next) => {
 });
 
 Manage.get("/player/getsession", (ctx, next) => {
+  if (ctx.session === null) {
+    ctx.body = { playerid: "" };
+    return;
+  }
   const player = ctx.session.player || undefined;
   if (player !== undefined) {
     ctx.body = { playerid: ctx.session.player.playerid };
@@ -114,6 +118,10 @@ Manage.get("/player/login/:name/:authcode", (ctx, next) => {
       " for secret " +
       player.authenticationcode
     );
+  }
+  if (ctx.session === null) {
+    ctx.body = { success: false };
+    return;
   }
   ctx.session.player = player;
   ctx.body = {

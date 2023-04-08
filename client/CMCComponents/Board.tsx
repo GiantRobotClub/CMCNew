@@ -7,6 +7,7 @@ import { CardType, ClickType } from "../../shared/Constants";
 import { CMCCard, CreateBasicCard } from "../../shared/CMCCard";
 import CmcCardDetails from "./BigCard";
 import { Ability, StackedAbility } from "../../shared/Abilities";
+import { OtherPlayer } from "../../shared/Util";
 interface CMCProps extends BoardProps<CMCGameState> {
   // Additional custom properties for your component
 }
@@ -95,9 +96,11 @@ export function CMCBoard(props: CMCProps) {
   return (
     <div>
       <div className="debug">
-        stage:{" "}
+        stage:
         {props.ctx.activePlayers
-          ? props.ctx.activePlayers[props.ctx.currentPlayer]
+          ? props.ctx.activePlayers[you]
+            ? props.ctx.activePlayers[you]
+            : props.ctx.activePlayers[OtherPlayer(you)]
           : ""}
         <br />
         player: {props.ctx.currentPlayer} you: {you}

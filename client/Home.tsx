@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Home() {
   const [LoggedIn, setLoggedIn] = useState(false);
@@ -20,7 +20,25 @@ function Home() {
 
   return (
     <div>
-      {LoggedIn ? "Logged in as id " : ""} - {PlayerID}
+      <div>
+        {" "}
+        {LoggedIn ? "Logged in as id " : ""} - {PlayerID}{" "}
+      </div>
+      <div>
+        <Link to="/Lobby">Multiplayer</Link>
+      </div>
+      <div>
+        <Link to="/playcpu">Single Player</Link>
+      </div>
+      <div>
+        <Link to="/Game">Test local</Link>
+      </div>
+      <div>
+        <Link to="/multi/0">Test as player 0</Link>
+      </div>
+      <div>
+        <Link to="/multi/1">Test as player 1</Link>
+      </div>
     </div>
   );
 }
