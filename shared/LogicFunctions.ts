@@ -586,10 +586,15 @@ function resetCombat(G: CMCGameState) {
 
 // update player data with secret info such as deck size
 function CheckState(G: CMCGameState) {
+  if (!G.gameStarted) {
+    console.log("Game not started yet.");
+    return;
+  }
   for (const playerid in PlayerIDs) {
     // check player health
     const player: CMCPlayer = G.playerData[playerid];
     if (player.resources.intrinsic.health <= 0) {
+      console.log("player lost due to health");
       G.loser = playerid;
     }
     // set player deck values for visual reasons

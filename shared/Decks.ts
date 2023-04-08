@@ -1,6 +1,8 @@
+import { DbDeckCard, DbFullDeck } from "../server/DbTypes";
 import { PlayerIDs } from "../shared/Constants";
 
 import { CMCCard, GetCardPrototype } from "./CMCCard";
+import { CMCGameState } from "./CardmasterGame";
 
 interface PlayerDecks {
   "0": CMCCard[];
@@ -22,6 +24,16 @@ function ParseDecks(decksJson: any): any {
     decks[id] = newDeck;
   });
   return decks;
+}
+
+function ParseDbDeck(playerid: string, deck: DbFullDeck, G: CMCGameState) {
+  const newDeck: CMCCard[] = [];
+  deck.cards.forEach(function (card: DbDeckCard) {
+    for (let i = 0; i < card.amount; i++) {
+      newDeck.push(GetCardPrototype(card.cardid));
+    }
+  });
+  G.secret.decks[playerid] = newDeck;
 }
 
 function CreateDebugSetupData() {
@@ -56,4 +68,4 @@ function CreateDebugSetupData() {
   return setupData;
 }
 
-export { PlayerDecks, ParseDecks, CreateDebugSetupData };
+export { PlayerDecks, ParseDecks, CreateDebugSetupData, ParseDbDeck };

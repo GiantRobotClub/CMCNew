@@ -3,9 +3,6 @@ import type { Server, Server as ServerTypes } from "boardgame.io";
 import { authenticator } from "@otplib/preset-default";
 import {
   CreatePlayer,
-  DbDeckCard,
-  DbOwnedCard,
-  DbPlayer,
   GetDeckList,
   GetFullDeck,
   GetOwnedCards,
@@ -13,6 +10,7 @@ import {
   GetPlayerIdFromName,
   LoadJsonDeck,
 } from "./db";
+import { DbDeckCard, DbOwnedCard, DbPlayer } from "./DbTypes";
 import { nanoid } from "nanoid";
 import { CgTapSingle } from "react-icons/cg";
 export const Manage = new Router<any, Server.AppCtx>();

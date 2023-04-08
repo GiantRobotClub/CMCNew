@@ -72,6 +72,7 @@ const passStage: Move<CMCGameState> = ({ G, ctx, events, random }) => {
     const okay = DrawCard(activePlayer, player.persona.drawPerTurn, G);
 
     if (!okay) {
+      console.log("player lost due to draw out at beginning of stage");
       G.loser = activePlayer;
     }
 

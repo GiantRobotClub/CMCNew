@@ -8,14 +8,39 @@ import { CMCCard, CreateBasicCard } from "../../shared/CMCCard";
 import CmcCardDetails from "./BigCard";
 import { Ability, StackedAbility } from "../../shared/Abilities";
 import { OtherPlayer } from "../../shared/Util";
+import { FilteredMetadata } from "boardgame.io";
 interface CMCProps extends BoardProps<CMCGameState> {
   // Additional custom properties for your component
 }
 
 export function CMCBoard(props: CMCProps) {
+  const [GameStarted, setGameStarted] = useState(false);
+  const [Waiting, setWaiting] = useState(false);
+
+  if (props.G.wait == false && !GameStarted) {
+    setGameStarted(true);
+  }
+  if (!Waiting) {
+    if (!GameStarted && props.matchData !== undefined) {
+      // send the decks up as a move
+      const matchdata: FilteredMetadata = props.matchData;
+      console.log("MATCH DATA");
+      console.dir(matchdata);
+      props.moves.ready(
+        props.playerID,
+        matchdata[props.playerID || "0"].data.dbPlayerId
+      );
+      setWaiting(true);
+    }
+  }
+
   const [inspectMode, setInspectMode] = useState(false);
   const [inspectCard, setInspectCard] = useState(CreateBasicCard());
   const [clickableInspect, setclickableInspect] = useState(false);
+  if (!GameStarted) {
+    return <div>waiting for players</div>;
+  }
+
   const state: CMCGameState = props.G;
 
   const endTurn = () => props.moves.passTurn();

@@ -1,38 +1,13 @@
+import premadeDecks from "../shared/data/premade.json";
 import DatabaseConstructor, { Database } from "better-sqlite3";
 import fs from "fs";
-import premadeDecks from "../shared/data/premade.json";
-import { nanoid } from "nanoid";
-interface DbPlayer {
-  playerid: string;
-  username: string;
-  visualname: string;
-  authenticationcode: string;
-  selecteddeck: string;
-}
-
-interface DbDeck {
-  deckid: string;
-  ownerid: string;
-  deckname: string;
-  deckicon: string;
-  persona: string;
-}
-interface DbDeckCard {
-  deckid: string;
-  cardid: string;
-  amount: number;
-}
-
-interface DbOwnedCard {
-  playerid: string;
-  cardid: string;
-  amount: number;
-}
-
-interface DbFullDeck {
-  deck: DbDeck;
-  cards: DbDeckCard[];
-}
+import {
+  DbDeck,
+  DbFullDeck,
+  DbOwnedCard,
+  DbPlayer,
+  DbDeckCard,
+} from "./DbTypes";
 
 let database: Database;
 function db(): Database {
@@ -45,6 +20,7 @@ function db(): Database {
 }
 
 function GetPlayer(playerId: string): DbPlayer | undefined {
+  console.log("loading player by id " + playerId);
   const database = db();
   const stmt = database.prepare(
     "SELECT playerid, username,visualname, authenticationcode, selecteddeck from player where playerid=(?)"
@@ -218,11 +194,6 @@ export {
   GetOwnedCards,
   GetFullDeck,
   LoadJsonDeck,
-  DbDeckCard,
-  DbDeck,
-  DbFullDeck,
-  DbOwnedCard,
-  DbPlayer,
   GetDeckList,
   GetPlayerIdFromName,
 };

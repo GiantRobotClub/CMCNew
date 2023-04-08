@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { LobbyClient, LobbyClientError } from "boardgame.io/client";
 import { Link, matchRoutes } from "react-router-dom";
 import { LobbyAPI } from "boardgame.io/src/types";
-import { DbPlayer } from "../server/db";
+import { DbPlayer } from "../server/DbTypes";
 import { useNavigate } from "react-router-dom";
 import { GiCoinsPile } from "react-icons/gi";
 const baseplayer: DbPlayer = {
@@ -67,6 +67,9 @@ const LobbyCustom = () => {
         playerID: pid,
         playerName: Player.username,
         player: Player,
+        data: {
+          dbPlayerId: Player.playerid,
+        },
       })
       .then((playerCredentials) => {
         // todo: save credentials to the cookie temporarily
@@ -82,9 +85,13 @@ const LobbyCustom = () => {
       });
   }
   async function CreateMatch() {
+    console.log("Creating match with setup data");
     lobbyClient
       .createMatch("cmcr", {
         numPlayers: 2,
+        setupData: {
+          isMulti: true,
+        },
       })
       .then((matchid) => {
         console.log(
@@ -95,6 +102,9 @@ const LobbyCustom = () => {
             playerID: "0",
             playerName: Player.username,
             player: Player,
+            data: {
+              dbPlayerId: Player.playerid,
+            },
           })
           .then((playerCredentials) => {
             console.log("Go to play screen for the match");
@@ -144,7 +154,7 @@ const LobbyCustom = () => {
                 <div key={player.id}>
                   name: {player.name} pid: {player.id}
                   connected:
-                  {player.isConnected ? "yes" : "no"} pdata: {player.data}
+                  {player.isConnected ? "yes" : "no"}
                   {!player.name ? (
                     <Link
                       onClick={() => {
@@ -155,13 +165,7 @@ const LobbyCustom = () => {
                       Join
                     </Link>
                   ) : player.name == Player.username ? (
-                    <Link
-                      to={
-                        "/play/" + match.matchID + "/" + player.id + "/tempnone"
-                      }
-                    >
-                      Go to match
-                    </Link>
+                    ""
                   ) : (
                     <Link to={"/play/" + match.matchID + "/-1/none"}>
                       Spectate

@@ -8,7 +8,7 @@ import {
   CreateBasicCard,
   CreateInitialLocationCard,
 } from "./CMCCard";
-import { CMCPlayer, CreateDefaultPlayer } from "./Player";
+import { CMCPlayer, CreateDefaultPlayer, ParseDbPlayer } from "./Player";
 
 import {
   Ability,
@@ -48,13 +48,24 @@ import {
   activateAbility,
 } from "./Moves";
 import { GiConsoleController } from "react-icons/gi";
-import { CreateDebugSetupData, ParseDecks, PlayerDecks } from "./Decks";
+import {
+  CreateDebugSetupData,
+  ParseDbDeck,
+  ParseDecks,
+  PlayerDecks,
+} from "./Decks";
+import { isModuleDeclaration } from "typescript";
+import { DbFullDeck, DbPlayer } from "../server/DbTypes";
+import { GetPlayer } from "../server/DbWrapper";
+import { GetFullDeck } from "../server/DbWrapper";
+import { Events } from "boardgame.io/src/plugins/events/events";
 
 export interface CMCGameState {
   playerData: {
     "0": CMCPlayer;
     "1": CMCPlayer;
   };
+  ready: number;
   currentmetadata: any;
   slots: {
     "0": {
@@ -81,6 +92,7 @@ export interface CMCGameState {
       "1": CMCCard[];
     };
   };
+  gameStarted: boolean;
   activeAbility?: Ability;
   activeCard?: CMCCard;
   returnStage: Stages[];
@@ -91,6 +103,7 @@ export interface CMCGameState {
   resolution?: CMCCombatResults;
   abilityStack: StackedAbility[];
   lastAbilityLength: number;
+  wait: boolean;
 }
 
 // Initial game state
@@ -101,24 +114,43 @@ export const CardmasterConflict: Game<CMCGameState> = {
       "0": [],
       "1": [],
     };
-
+    let gameStarted = false;
+    let playerData: any;
+    let isMulti = false;
+    console.dir(setupData);
+    if (!setupData || setupData.multi == false) {
+      setupData = CreateDebugSetupData();
+      decks = ParseDecks(CreateDebugSetupData());
+      playerData = {
+        "0": CreateDefaultPlayer("0", setupData.decks),
+        "1": CreateDefaultPlayer("1", setupData.decks),
+      };
+    } else {
+      isMulti = true;
+      // put in blank info, then set decks later whne game starts.
+      playerData = {
+        "0": CreateDefaultPlayer("0"),
+        "1": CreateDefaultPlayer("1"),
+      };
+    }
+    /*
     if (!setupData) {
       setupData = CreateDebugSetupData();
       console.log(setupData.decks);
     }
     decks = ParseDecks(setupData.decks);
 
-    const playerData = {
-      "0": CreateDefaultPlayer("0", setupData.decks),
-      "1": CreateDefaultPlayer("1", setupData.decks),
-    };
-
+   
+*/
     return {
+      ready: 0,
+      wait: isMulti,
       lastAbilityLength: 0,
       playerData: playerData,
       returnStage: [],
       didinitialsetup: false,
       currentmetadata: {},
+      gameStarted: gameStarted,
 
       slots: {
         "0": {
@@ -172,172 +204,227 @@ export const CardmasterConflict: Game<CMCGameState> = {
   },
   name: "cmcr",
   seed: Date.now().toString(),
-  turn: {
-    activePlayers: {
-      currentPlayer: Stages.initial,
+  phases: {
+    Before: {
+      onBegin: ({ G, ctx, events }) => {},
+      start: true,
+      next: "Game",
+      turn: {
+        activePlayers: { all: Stage.NULL },
+        minMoves: 1,
+        maxMoves: 1,
+      },
+      moves: {
+        // move performed by a multiplayer client automatically to load decks/etc.
+        ready: (
+          { G, ctx, events },
+
+          gameplayerid: string,
+          dbplayerid: string
+        ) => {
+          // we are only going to do this in multiplayer games, so it's safe to load decks here.  i think.
+          const player: DbPlayer | undefined = GetPlayer(dbplayerid);
+          if (player == undefined) {
+            // game is in an error state :( we need a way to handle these.
+            console.log("COULDNT LOAD PLAYER");
+            return INVALID_MOVE;
+          }
+          const deck: DbFullDeck | undefined = GetFullDeck(player.selecteddeck);
+          if (deck == undefined) {
+            console.log("COULDNT LOAD DECK");
+            return INVALID_MOVE;
+          }
+          console.log("Deck:");
+          console.dir(deck.deck);
+          // parse out your deck
+          const deckholder = {};
+          deckholder[gameplayerid] = deck.deck;
+          ParseDbPlayer(G, gameplayerid, deck, player);
+
+          ParseDbDeck(gameplayerid, deck, G);
+
+          console.log("PLAYER HAS JOINED : " + player.username);
+          G.ready += 1;
+          if (G.ready == 2) {
+            G.wait = false;
+            G.gameStarted = true;
+            //time to start the game
+            events.endPhase();
+          }
+        },
+      },
     },
-    order: TurnOrder.CUSTOM(PlayerIDs), // anyone else is a spectator
-    onBegin: ({ G, ctx, events, random }) => {
-      if (ctx.activePlayers !== null) {
-        TriggerAuto(TriggerNames.START_TURN, ctx, G);
+    Game: {
+      onBegin: ({ G, ctx, events, random }) => {
+        console.log("Beginning first turn!!!!");
 
-        const activePlayer = GetActivePlayer(ctx);
-        // do turn mana, unless this is the first turn, then do initial mana and hand
-        if (ctx.turn == 1 && activePlayer == "0" && !G.didinitialsetup) {
-          // sjhuffle decks
-          G.secret.decks["0"] = random.Shuffle(G.secret.decks["0"]);
-          G.secret.decks["0"] = random.Shuffle(G.secret.decks["1"]);
+        // sjhuffle decks
+        G.secret.decks["0"] = random.Shuffle(G.secret.decks["0"]);
+        G.secret.decks["0"] = random.Shuffle(G.secret.decks["1"]);
 
-          // go through every card and reset the guids to something random
-          for (const playerno in PlayerIDs) {
-            for (const card in G.secret.decks[playerno]) {
-              G.secret.decks[playerno][card].guid = GenerateRandomGuid(random);
-            }
-            G.playerData[playerno].persona.guid = GenerateRandomGuid(random);
+        // go through every card and reset the guids to something random
+        for (const playerno in PlayerIDs) {
+          for (const card in G.secret.decks[playerno]) {
+            G.secret.decks[playerno][card].guid = GenerateRandomGuid(random);
           }
-
-          for (const slotplayer in G.slots) {
-            for (const subplayer in G.slots[slotplayer]) {
-              for (const [index, card] of G.slots[slotplayer][
-                subplayer
-              ].entries()) {
-                G.slots[slotplayer][subplayer][index].guid =
-                  GenerateRandomGuid(random);
-              }
-            }
-          }
-
-          G.didinitialsetup = true;
-          // this is the beginning of the game
-          for (const playerno in PlayerIDs) {
-            const player: CMCPlayer = G.playerData[playerno];
-            const okay = DrawCard(playerno, player.persona.startingHand, G);
-            if (!okay) {
-              G.loser = playerno;
-            }
-            PlayerAddResource(playerno, player.persona.startingResource, G);
-          }
-        } else {
-          const player: CMCPlayer = G.playerData[activePlayer];
-
-          PlayerAddResource(activePlayer, player.persona.resourcePerTurn, G);
+          G.playerData[playerno].persona.guid = GenerateRandomGuid(random);
         }
-      }
-      CheckState(G);
-    },
-    onEnd: ({ G, ctx, events, random }) => {
-      if (ctx.activePlayers !== null) {
-        TriggerAuto(TriggerNames.END_STAGE, ctx, G);
-        TriggerAuto(TriggerNames.END_TURN, ctx, G);
-      }
 
-      resetCombat(G);
-      return G;
-    },
-    onMove: ({ G, ctx, events, random }) => {
-      CheckState(G);
-    },
+        for (const slotplayer in G.slots) {
+          for (const subplayer in G.slots[slotplayer]) {
+            for (const [index, card] of G.slots[slotplayer][
+              subplayer
+            ].entries()) {
+              G.slots[slotplayer][subplayer][index].guid =
+                GenerateRandomGuid(random);
+            }
+          }
+        }
 
-    stages: {
-      error: {},
-      initial: {
-        moves: {
-          passStage: passStage,
-        },
-        next: Stages.draw,
+        G.didinitialsetup = true;
+        // this is the beginning of the game
+        for (const playerno in PlayerIDs) {
+          const player: CMCPlayer = G.playerData[playerno];
+          const okay = DrawCard(playerno, player.persona.startingHand, G);
+          if (!okay) {
+            console.log("player lost due to draw out during inital setup");
+            G.loser = playerno;
+          }
+          PlayerAddResource(playerno, player.persona.startingResource, G);
+        }
       },
-      draw: {
-        moves: {
-          passStage: passStage,
-        }, // automatically does the draw for you
-        next: Stages.sacrifice,
-      },
-      sacrifice: {
-        moves: {
-          passStage: passStage,
-          pickEntity: pickEntity,
+      turn: {
+        activePlayers: {
+          currentPlayer: Stages.initial,
         },
-        next: Stages.play,
-      },
-      play: {
-        moves: {
-          playCardFromHand: playCardFromHand,
-          activateAbility: activateAbility,
-          passStage: passStage,
-        },
-        next: Stages.combat,
-      },
-      combat: {
-        moves: {
-          activateAbility: activateAbility,
-          //chooseCard
-          passStage: passStage,
-          pickEntity: pickEntity,
-          cancel: cancel,
-        },
+        order: TurnOrder.CUSTOM(PlayerIDs), // anyone else is a spectator
+        onBegin: ({ G, ctx, events, random }) => {
+          if (ctx.activePlayers !== null) {
+            TriggerAuto(TriggerNames.START_TURN, ctx, G);
 
-        next: Stages.defense,
-      },
-      defense: {
-        moves: {
-          activateAbility: activateAbility,
-          //chooseCard
-          passStage: passStage,
-          pickEntity: pickEntity,
-          cancel: cancel,
+            const activePlayer = GetActivePlayer(ctx);
+            // do turn mana, unless this is the first turn, then do initial mana and hand
+
+            const player: CMCPlayer = G.playerData[activePlayer];
+
+            PlayerAddResource(activePlayer, player.persona.resourcePerTurn, G);
+          }
+          CheckState(G);
+        },
+        onEnd: ({ G, ctx, events, random }) => {
+          if (ctx.activePlayers !== null) {
+            TriggerAuto(TriggerNames.END_STAGE, ctx, G);
+            TriggerAuto(TriggerNames.END_TURN, ctx, G);
+          }
+
+          resetCombat(G);
+          return G;
+        },
+        onMove: ({ G, ctx, events, random }) => {
+          CheckState(G);
         },
 
-        next: Stages.resolve,
-      },
-      resolve: {
-        moves: {
-          passTurn: passTurn,
-        },
-        next: Stages.draw,
-      },
+        stages: {
+          error: {},
+          initial: {
+            moves: {
+              passStage: passStage,
+            },
+            next: Stages.draw,
+          },
+          draw: {
+            moves: {
+              passStage: passStage,
+            }, // automatically does the draw for you
+            next: Stages.sacrifice,
+          },
+          sacrifice: {
+            moves: {
+              passStage: passStage,
+              pickEntity: pickEntity,
+            },
+            next: Stages.play,
+          },
+          play: {
+            moves: {
+              playCardFromHand: playCardFromHand,
+              activateAbility: activateAbility,
+              passStage: passStage,
+            },
+            next: Stages.combat,
+          },
+          combat: {
+            moves: {
+              activateAbility: activateAbility,
+              //chooseCard
+              passStage: passStage,
+              pickEntity: pickEntity,
+              cancel: cancel,
+            },
 
-      pickSlot: {
-        moves: {
-          chooseSlot: chooseSlot,
-          cancel: cancel,
-        },
-      },
+            next: Stages.defense,
+          },
+          defense: {
+            moves: {
+              activateAbility: activateAbility,
+              //chooseCard
+              passStage: passStage,
+              pickEntity: pickEntity,
+              cancel: cancel,
+            },
 
-      // states depending on player actions
+            next: Stages.resolve,
+          },
+          resolve: {
+            moves: {
+              passTurn: passTurn,
+            },
+            next: Stages.draw,
+          },
 
-      pickCombatTarget: {
-        moves: {
-          pickEntity: pickEntity,
-          cancel: cancel,
-        },
-      },
-      pickCombatDefense: {
-        moves: {
-          pickEntity: pickEntity,
-          cancel: cancel,
-        },
-      },
-      pickAbilityTarget: {
-        moves: {
-          pickEntity: pickEntity,
-          cancel: cancel,
-        },
-      },
-      discardCard: {
-        moves: {
-          playCardFromHand: playCardFromHand,
-        },
-      },
-      respond: {
-        moves: {
-          activateAbility: activateAbility,
-          pickEntity: pickEntity,
-          passStage: passStage,
+          pickSlot: {
+            moves: {
+              chooseSlot: chooseSlot,
+              cancel: cancel,
+            },
+          },
+
+          // states depending on player actions
+
+          pickCombatTarget: {
+            moves: {
+              pickEntity: pickEntity,
+              cancel: cancel,
+            },
+          },
+          pickCombatDefense: {
+            moves: {
+              pickEntity: pickEntity,
+              cancel: cancel,
+            },
+          },
+          pickAbilityTarget: {
+            moves: {
+              pickEntity: pickEntity,
+              cancel: cancel,
+            },
+          },
+          discardCard: {
+            moves: {
+              playCardFromHand: playCardFromHand,
+            },
+          },
+          respond: {
+            moves: {
+              activateAbility: activateAbility,
+              pickEntity: pickEntity,
+              passStage: passStage,
+            },
+          },
         },
       },
     },
   },
-
   moves: {
     passTurn: passTurn,
   },

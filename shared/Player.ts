@@ -1,9 +1,11 @@
+import { DbFullDeck, DbPlayer } from "../server/DbTypes";
 import {
   CMCCard,
   CMCPersonaCard,
   CreatePersonaCard,
   GetCardPrototype,
 } from "./CMCCard";
+import { CMCGameState } from "./CardmasterGame";
 
 interface CMCPlayer {
   resources: {
@@ -30,7 +32,25 @@ interface CMCPlayer {
 
   graveyard: CMCCard[];
 }
+function ParseDbPlayer(
+  G: CMCGameState,
+  gameplayerid: string,
+  deck: DbFullDeck,
+  player: DbPlayer
+) {
+  const newplayer: CMCPlayer = CreateDefaultPlayer(gameplayerid);
+  console.dir(player);
+  newplayer.name = player.username;
+  const newcard = GetCardPrototype(deck.deck.persona) as CMCPersonaCard;
+  let card: CMCPersonaCard = {
+    ...newcard,
+    playerID: gameplayerid,
+  };
 
+  G.playerData[gameplayerid] = newplayer;
+
+  G.playerData[gameplayerid].persona = card;
+}
 function CreateDefaultPlayer(playerId: string, decks?: any): CMCPlayer {
   let card: CMCPersonaCard;
   if (decks) {
@@ -70,4 +90,4 @@ function CreateDefaultPlayer(playerId: string, decks?: any): CMCPlayer {
   return player;
 }
 
-export { CMCPlayer, CreateDefaultPlayer };
+export { CMCPlayer, CreateDefaultPlayer, ParseDbPlayer };
