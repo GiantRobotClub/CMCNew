@@ -2,7 +2,7 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  width:100%;
+  width: 100%;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -13,8 +13,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-  font-size: 2svh
-  
+  font-size: 2svh;
 }
 
 a {
@@ -42,7 +41,7 @@ h1 {
 button {
   border-radius: 0.4em;
   border: 1px solid transparent;
-  padding:1px;
+  padding: 1px;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
@@ -69,175 +68,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-
-}
-
-.costline{
-  text-align:left;
-}
-.sacline {
-  text-align:right;
-}
-
-.costV {
-  color: rgb(238, 120, 105);
-
-}
-.costP {
-  color: purple
-}
-
-.costA {
-  color: green
-}
-
-.resV {
-  color: rgb(238, 120, 105);
-
-}
-.resP {
-  color: purple
-}
-
-.resA {
-  color: green
-}
-
-.respower {
-  color: yellow;
-  text-shadow: 1px 1px black
-}
-.reshealth { 
-  color: red
-}
-
-.playerdeck {
-  border: 1px solid black;
-  color: grey
-}
-
-.playerresources {
-  display:flex
-}
-
-
-.cardStyle {
-  width: 7em;
-  height: 7em;
-  flex-shrink:0;
-  padding: 0; margin: 0;
-}
-
-
-.bigCardStyle {
-  height: 10em;
-  width: 7.5em;
-  font-size: 90%;
-}
-
-.cardStyleActive {
-  border: 1px solid black;
-  background-color: white;
-  color: black
-}
-
-.cardStyleEmpty {
-  
-  border: 1px solid white;
-  background: grey;
-}
-.cardStyleClickable {
-  box-shadow: inset 0 0 2pt 2pt green;
-  color: black
-  
-}
-.cardStyleClickable:hover {
-  box-shadow: inset 0 0 3pt 3pt green;
-  background-color:grey
-}
-.cardStyleClicked {
-  background-color:rgb(255, 214, 208)
-}
-
-
-.cmcBoard {
-  display: flex;
-   height: 28em;
-   width: 44em;
-}
-
-.playerBox {
-  height: 100%;
-  background-color:green;
-  width: 7em
-}
-
-.playerCardBox {
-  height: 32%;
-  width: 7em;
-}
-
-.cardrow {
-  height: 7em
-}
-
-.handcontainer {
-  height:10em;
-  width:44em;
-  overflow-x: scroll;
-  overflow-y: hide;
-}
-.gravecontainer {
-  height:5em;
-  width:44em;
-  overflow-x: scroll;
-  overflow-y: hide;
-}
-
-
-.detailCardContainer {
-  height: 28em;
-  width: 14em;
-}
-.detailCard {
-  height: 21em;
-  width: 14em;
-  
-  border: 1px solid black;
-  background-color: white;
-  color: black;
-  border-radius: 8px;
-}
-
-.detailCard .textbox {
-  border:1px solid black;
-  background: lightblue;
-  font-style: italic;
-}
-
-.detailCard .ability {
-  border:1px solid black;
-  background: lightblue;
-  text-align:left;
-  position:relative;
-  width: 14em;
-}
-.detailCard .abilityHasButton {
-  width: 9em;
-}
-.detailCard button {
-  position:absolute;
-  right:0px;
-  top:0px;
-  height:100%;
-  width:4em;
-}
-.abilitytray {
-  width:14em;
-  height:7em;
-  border: 1px solid black;
-  background: grey;
-}
-.graveyard {
-  font-size:0.5em
 }

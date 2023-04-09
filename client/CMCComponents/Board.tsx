@@ -5,7 +5,7 @@ import type { BoardProps } from "boardgame.io/react";
 import { CanClickCard, OwnerOf } from "../../shared/LogicFunctions";
 import { CardType, ClickType } from "../../shared/Constants";
 import { CMCCard, CreateBasicCard } from "../../shared/CMCCard";
-import CmcCardDetails from "./BigCard";
+import CmcCardDetailAbility from "./Abilities";
 import { Ability, StackedAbility } from "../../shared/Abilities";
 import { OtherPlayer } from "../../shared/Util";
 import { FilteredMetadata } from "boardgame.io";
@@ -21,7 +21,11 @@ export function CMCBoard(props: CMCProps) {
     setGameStarted(true);
   }
   if (!Waiting) {
-    if (!GameStarted && props.matchData !== undefined) {
+    if (
+      !GameStarted &&
+      props.matchData !== undefined &&
+      props.matchData[props.playerID || "0"].data !== undefined
+    ) {
       // send the decks up as a move
       const matchdata: FilteredMetadata = props.matchData;
       console.log("MATCH DATA");
@@ -142,6 +146,7 @@ export function CMCBoard(props: CMCProps) {
               player={props.G.playerData[otherPlayer]}
               card={props.G.playerData[otherPlayer].persona}
               doClick={() => clickCard(props.G.playerData[otherPlayer].persona)}
+              clickability={false}
               canClick={
                 inspectMode ||
                 CanClickCard(
@@ -161,7 +166,7 @@ export function CMCBoard(props: CMCProps) {
               activeCard={false}
               player={props.G.playerData[props.G.location.owner]}
               card={props.G.location}
-              doClick={() => clickCard(props.G.playerData[otherPlayer].persona)}
+              doClick={() => clickCard(props.G.location)}
               canClick={
                 inspectMode ||
                 CanClickCard(
@@ -280,14 +285,19 @@ export function CMCBoard(props: CMCProps) {
         </div>
         <div className="detailCardContainer">
           <div className="inspectCard">
-            <CmcCardDetails
+            <CMCCardVisual
               card={inspectCard}
-              playerId={you}
+              lookingplayer={you}
               clickability={clickableInspect}
-              ownerId={OwnerOf(inspectCard, props.G)}
+              owner={OwnerOf(inspectCard, props.G)}
+              detail={true}
               doClick={(ability: Ability) =>
                 clickInspectedAbility(inspectCard, ability)
               }
+              canClick={false}
+              big={true}
+              activeCard={false}
+              player={props.G.playerData[OwnerOf(inspectCard, props.G)]}
             />
             <div className="abilitytray">
               {props.G.abilityStack.map(

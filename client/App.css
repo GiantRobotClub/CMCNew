@@ -1,42 +1,565 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  width: 100%;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  font-size: 2svh;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  margin: auto;
+  width: 100%;
+  flex-grow: 1;
+  justify-content: center;
+  display: flex;
+}
+.App {
+}
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+button {
+  border-radius: 0.4em;
+  border: 1px solid transparent;
+  padding: 1px;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+button:hover {
+  border-color: #646cff;
 }
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+button:focus,
+button:focus-visible {
+  outline: 1em auto -webkit-focus-ring-color;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
   }
-  to {
-    transform: rotate(360deg);
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
   }
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
 .card {
-  padding: 2em;
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
 
-.read-the-docs {
-  color: #888;
+.cardStyle.color-anodyne {
+  background-image: linear-gradient(
+      rgba(155, 155, 155, 0.5),
+      rgba(155, 155, 155, 0.5)
+    ),
+    url("/assets/anodyne.jpg");
+  background-size: contain;
+}
+
+.sacline svg {
+  vertical-align: sub;
+}
+.card {
+  position: relative;
+}
+.costline svg {
+  vertical-align: sub;
+}
+.littlecard .attackline .totallife {
+  font-size: 0.7em;
+}
+
+.littlecard .cardarea {
+  height: 100%;
+}
+.littlecard .playerdata {
+}
+.littlecard {
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  color: black;
+  border-radius: 0.5em;
+
+  overflow: hidden;
+}
+
+.littlecard .playerdata {
+  display: none;
+}
+.littlecard .manaline {
+  width: 100%;
+  text-align: justified;
+  margin-top: 0px;
+  padding-bottom: 0.1em;
+  padding-top: 0em;
+  display: flex;
+  height: 0.7em;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+.littlecard .costline {
+  flex-grow: 1;
+  padding-left: 0.2em;
+  font-size: 0.6em;
+  text-align: left;
+  height: 0.7em;
+  vertical-align: middle;
+}
+.littlecard .cardbox {
+  display: none;
+}
+.littlecard .attackline {
+  display: flex;
+  width: 100%;
+  text-align: justified;
+  margin-bottom: 0px;
+  padding-bottom: 0.1em;
+  padding-top: 0em;
+  font-size: 0.7em;
+  height: 1.3em;
+  justify-content: right;
+  position: relative;
+  bottom: 0.5em;
+}
+.littlecard .bottomline {
+  height: 1.2em;
+}
+.littlecard .attackline .attack {
+  color: rebeccapurple;
+  margin-right: 0.2em;
+
+  border-radius: 0.3em;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+.littlecard .playerline {
+  display: none;
+}
+.littlecard .attackline .life {
+  color: orangered;
+
+  border-radius: 0.3em;
+  margin-right: 0.2em;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+.littlecard .sacline {
+  padding-right: 0.2em;
+  flex-grow: 1;
+  font-size: 0.6em;
+  text-align: right;
+  height: 0.7em;
+  vertical-align: middle;
+}
+
+.littlecard .cardpic {
+  border: 1px solid grey;
+  width: 6.5em;
+  margin: auto;
+  height: 4.4em;
+  overflow: hidden;
+  text-align: bottom;
+}
+
+.littlecard .cardpic img {
+  width: 100%;
+  bottom: 0;
+}
+.littlecard div {
+  z-index: 5;
+}
+.littlecard.type-persona .cardpic {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  height: 100%;
+  width: 100%;
+  z-index: -100;
+}
+.littlecard.type-persona .cardpic img {
+  width: 100%;
+  height: 100%;
+  display: absolute;
+  left: 0;
+  top: 0;
+}
+.littlecard .nameline {
+  font-size: 0.7em;
+  padding: 0;
+}
+.littlecard .nameline .cardname {
+  color: white;
+  border-radius: 0.3em;
+  background-color: rgba(3, 3, 3, 0.75);
+}
+
+.littlecard .playerline {
+  visibility: hidden;
+}
+
+.littlecard .cardbox {
+  visibility: hidden;
+}
+
+.bigCardStyle .attackline .totallife {
+  font-size: 0.7em;
+}
+
+.bigCardStyle .cardarea {
+  height: 100%;
+}
+
+.bigCardStyle {
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  color: black;
+  border-radius: 0.5em;
+
+  overflow: hidden;
+}
+.bigCardStyle.type-persona .cardbox {
+  display: none;
+}
+.bigCardStyle .cardbox {
+  display: block;
+  width: 6.5em;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid grey;
+  width: 6.5em;
+  margin: auto;
+  height: 2.4em;
+  overflow: hidden;
+  text-align: bottom;
+}
+.bigCardStyle .cardbox .cardtext {
+  font-style: italic;
+  font-size: 0.8em;
+}
+
+.bigCardStyle.type-location .cardbox {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+.bigCardStyle .playerdata {
+  background-color: rgba(255, 255, 255, 0.75);
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-flow: column;
+  border-radius: 0.5em;
+}
+.bigCardStyle .playerdata svg {
+  vertical-align: sub;
+  display: inline-block;
+}
+.bigCardStyle .playerresources {
+  text-align: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.bigCardStyle .playerdeck {
+  text-align: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.bigCardStyle .manaline {
+  width: 100%;
+  text-align: justified;
+  margin-top: 0px;
+  padding-bottom: 0.1em;
+  padding-top: 0em;
+  display: flex;
+  height: 0.7em;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+.bigCardStyle .costline {
+  flex-grow: 1;
+  padding-left: 0.2em;
+  font-size: 0.6em;
+  text-align: left;
+  height: 0.7em;
+  vertical-align: middle;
+}
+.bigCardStyle .attackline {
+  display: flex;
+  width: 100%;
+  text-align: justified;
+  margin-bottom: 0px;
+  padding-bottom: 0.1em;
+  padding-top: 0em;
+  font-size: 0.7em;
+  height: 1.2em;
+  justify-content: right;
+}
+.bigCardStyle .bottomline {
+  height: 1.2em;
+}
+.bigCardStyle .attackline .attack {
+  color: rebeccapurple;
+  margin-right: 0.2em;
+
+  border-radius: 0.3em;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+.bigCardStyle .attackline .life {
+  color: orangered;
+
+  border-radius: 0.3em;
+  margin-right: 0.2em;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+.bigCardStyle .sacline {
+  padding-right: 0.2em;
+  flex-grow: 1;
+  font-size: 0.6em;
+  text-align: right;
+  height: 0.7em;
+  vertical-align: middle;
+}
+
+.bigCardStyle .cardpic {
+  border: 1px solid grey;
+  width: 6.5em;
+  margin: auto;
+  height: 4.4em;
+  overflow: hidden;
+  text-align: bottom;
+}
+
+.bigCardStyle .cardpic img {
+  width: 100%;
+  bottom: 0;
+}
+.bigCardStyle div {
+  z-index: 5;
+}
+.bigCardStyle.type-persona .cardpic {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  height: 100%;
+  width: 100%;
+  z-index: -100;
+}
+.bigCardStyle.type-persona .cardpic img {
+  width: 100%;
+  height: 100%;
+  display: absolute;
+  left: 0;
+  top: 0;
+}
+
+.bigCardStyle.type-location .cardpic {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  height: 100%;
+  width: 100%;
+  z-index: -100;
+}
+.bigCardStyle.type-location .cardpic img {
+  width: 100%;
+  height: 100%;
+  display: absolute;
+  left: 0;
+  top: 0;
+}
+.bigCardStyle.type-persona .manaline {
+  visibility: hidden;
+  display: none;
+}
+.bigCardStyle .nameline {
+  font-size: 0.7em;
+  padding: 0;
+}
+.bigCardStyle .nameline .cardname {
+  color: white;
+  border-radius: 0.3em;
+  background-color: rgba(3, 3, 3, 0.75);
+}
+
+.bigCardStyle .playerline {
+  width: 100%;
+  text-align: justified;
+  margin-top: 0px;
+  padding-bottom: 0.1em;
+  padding-top: 0em;
+  display: flex;
+  height: 0.7em;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+.bigCardStyle .playerline .playername {
+  padding-right: 0.2em;
+  flex-grow: 1;
+  font-size: 0.6em;
+  text-align: center;
+  height: 0.7em;
+  vertical-align: middle;
+}
+
+.costV {
+  color: rgb(238, 120, 105);
+}
+.costP {
+  color: purple;
+}
+
+.costA {
+  color: green;
+}
+
+.resV {
+  color: rgb(238, 120, 105);
+}
+.resP {
+  color: purple;
+}
+
+.resA {
+  color: green;
+}
+
+.respower {
+  color: yellow;
+  text-shadow: 1px 1px black;
+}
+.reshealth {
+  color: red;
+}
+
+.playerresources {
+  display: flex;
+}
+
+.cardStyle {
+  width: 7em;
+  height: 7em;
+  flex-shrink: 0;
+  padding: 0;
+  margin: 0;
+  vertical-align: top;
+}
+
+.bigCardStyle {
+  height: 10em;
+  width: 7.5em;
+  font-size: 90%;
+}
+
+.cardStyleActive {
+  border: 1px solid black;
+  background-color: white;
+  color: black;
+}
+
+.cardStyleEmpty {
+  border: 1px solid white;
+  background: linear-gradient(
+    rgba(125, 125, 125, 0.5),
+    rgba(200, 200, 200, 0.5)
+  );
+}
+.cardStyleClickable {
+  box-shadow: inset 0 0 2pt 2pt green;
+  color: black;
+}
+.cardStyleClickable:hover {
+  box-shadow: inset 0 0 3pt 3pt green;
+  background-color: grey;
+}
+.cardStyleClicked {
+  background-color: rgb(255, 214, 208);
+}
+
+.cmcBoard {
+  display: flex;
+  height: 28em;
+  width: 44em;
+}
+
+.playerBox {
+  height: 100%;
+  background-color: green;
+  width: 7em;
+}
+
+.playerCardBox {
+  height: 32%;
+  width: 7em;
+}
+
+.cardrow {
+  height: 7em;
+}
+
+.handcontainer {
+  height: 10em;
+  width: 44em;
+  overflow-x: scroll;
+  overflow-y: hide;
+}
+.gravecontainer {
+  height: 5em;
+  width: 44em;
+  overflow-x: scroll;
+  overflow-y: hide;
+}
+
+.abilitytray {
+  width: 14em;
+  height: 7em;
+  border: 1px solid black;
+  background: grey;
+}
+.graveyard {
+  font-size: 0.5em;
 }

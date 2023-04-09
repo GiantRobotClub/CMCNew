@@ -1,11 +1,12 @@
 import React, { CSSProperties } from "react";
 import { blank_object } from "svelte/internal";
-import { CMCCard, CMCMonsterCard } from "../../shared/CMCCard";
+import { CMCCard, CMCMonsterCard, CMCPersonaCard } from "../../shared/CMCCard";
 
-import { CardType } from "../../shared/Constants";
+import { Alignment, CardType } from "../../shared/Constants";
 import { CMCPlayer } from "../../shared/Player";
 import icons from "./Icons";
-
+import { GiBroadsword, GiHealthNormal } from "react-icons/gi";
+import CmcCardDetailAbility from "./Abilities";
 function CMCCardVisual({
   card,
   canClick,
@@ -13,6 +14,10 @@ function CMCCardVisual({
   activeCard = false,
   player,
   big = false,
+  clickability = false,
+  detail = false,
+  lookingplayer,
+  owner,
 }: {
   card: CMCCard;
   canClick: boolean;
@@ -20,10 +25,42 @@ function CMCCardVisual({
   activeCard: boolean;
   player: CMCPlayer;
   big: boolean;
+  clickability?: boolean;
+  detail?: boolean;
+  lookingplayer?: string;
+  owner?: string;
 }) {
+  const showabilities: boolean = detail ?? false;
+  const showabilitybutton: boolean = clickability ?? false;
   const noshow: CSSProperties = {
     display: "none",
   };
+  const cardalignment = card.alignment;
+
+  let alignstyle = "color-none";
+  switch (card.alignment) {
+    case Alignment.ANODYNE:
+      alignstyle = "color-anodyne";
+      break;
+    case Alignment.PROFANE:
+      alignstyle = "color-profane";
+      break;
+    case Alignment.VENERATED:
+      alignstyle = "color-venerated";
+      break;
+    case Alignment.GOLDEN:
+      alignstyle = "color-golden";
+      break;
+    case Alignment.VA:
+      alignstyle = "color-venerated-anodyne";
+      break;
+    case Alignment.AP:
+      alignstyle = "color-anodyne-profane";
+      break;
+    case Alignment.PV:
+      alignstyle = "color-profane-venerated";
+      break;
+  }
 
   const cardObject: CMCCard = card;
   let costLine = <div style={noshow}></div>;
@@ -31,6 +68,28 @@ function CMCCardVisual({
   let sacLine = <div style={noshow}></div>;
   let playerLine = <div style={noshow}></div>;
   let playerData = <div style={noshow}></div>;
+  let cardtypestyle = "type-empty";
+
+  switch (card.type) {
+    case CardType.EFFECT:
+      cardtypestyle = "type-effect";
+      break;
+    case CardType.MONSTER:
+      cardtypestyle = "type-monster";
+      break;
+    case CardType.SPELL:
+      cardtypestyle = "type-spell";
+      break;
+    case CardType.PERSONA:
+      cardtypestyle = "type-persona";
+      break;
+    case CardType.LOCATION:
+      cardtypestyle = "type-location";
+      break;
+    case CardType.DUMMY:
+      cardtypestyle = "type-dummy";
+      break;
+  }
   if (card.type == CardType.EMPTY) {
     return (
       <button
@@ -41,7 +100,7 @@ function CMCCardVisual({
           "cardStyle " +
           (canClick ? " cardStyleClickable" : "") +
           " cardStyleEmpty" +
-          (big ? " bigCardStyle" : "")
+          (big ? " bigCardStyle" : " littlecard")
         }
       >
         <div></div>
@@ -50,28 +109,26 @@ function CMCCardVisual({
   }
   if (card.type != CardType.PERSONA) {
     costLine = (
-      <div className="manaline">
-        <div className="costline">
-          {Object.keys(cardObject.cost).map((type) => {
-            return Object.keys(cardObject.cost[type]).map((key) => {
-              if (!cardObject.cost[type][key])
-                return (
-                  <span
-                    className="empty"
-                    key={type + key + cardObject.guid}
-                  ></span>
-                );
-              const costkey = "cost" + key;
-              const costamount = cardObject.cost[type][key];
+      <div className="costline">
+        {Object.keys(cardObject.cost).map((type) => {
+          return Object.keys(cardObject.cost[type]).map((key) => {
+            if (!cardObject.cost[type][key])
               return (
-                <span className={costkey} key={costkey + cardObject.guid}>
-                  {icons[key]}
-                  {costamount}
-                </span>
+                <span
+                  className="empty"
+                  key={type + key + cardObject.guid}
+                ></span>
               );
-            });
-          })}
-        </div>
+            const costkey = "cost" + key;
+            const costamount = cardObject.cost[type][key];
+            return (
+              <span className={costkey} key={costkey + cardObject.guid}>
+                {icons[key]}
+                {costamount}
+              </span>
+            );
+          });
+        })}
       </div>
     );
   }
@@ -103,47 +160,142 @@ function CMCCardVisual({
   if (card.type == CardType.MONSTER) {
     attackLine = (
       <div className="attackline">
-        <div id="attack">{(cardObject as CMCMonsterCard).attack}</div>
-        <div id="life">{(cardObject as CMCMonsterCard).life}</div>
+        <div className="attack">
+          <GiBroadsword className="cardicon sword" />
+          {(cardObject as CMCMonsterCard).attack}
+        </div>
+        <div className="life">
+          <GiHealthNormal className="cardicon health" />
+          <span className="curlife">{(cardObject as CMCMonsterCard).life}</span>
+          <span className="totallife">
+            /{(cardObject as CMCMonsterCard).life}
+          </span>
+        </div>
       </div>
     );
   }
   if (card.type == CardType.PERSONA) {
-    playerLine = <div className="playerline">{player.name}</div>;
-    playerData = (
-      <div className="playerdata">
-        <div className="playerresources">
-          {Object.keys(player.resources).map((type) => {
-            return Object.keys(player.resources[type]).map((key) => {
-              if (
-                !player.resources[type].hasOwnProperty(key) ||
-                (player.resources[type][key] <= 0 && type != "mana")
-              )
-                return (
-                  <span
-                    className="empty"
-                    key={type + key + cardObject.guid}
-                  ></span>
-                );
-              const costkey = "res" + key;
-              const costamount = player.resources[type][key];
-              return (
-                <div className={costkey} key={costkey + cardObject.guid}>
-                  {icons[key]}
-                  {costamount}
-                </div>
-              );
-            });
-          })}
-        </div>
-        <div className="playerdeck">
-          {icons.hand}
-          {player.currentHand} {icons.card}
-          {player.currentDeck}
-          {icons.graveyard} {player.currentGrave}
-        </div>
+    playerLine = (
+      <div className="playerline">
+        <div className="playername">{player.name}</div>
       </div>
     );
+    if (detail) {
+      const personacard = cardObject as CMCPersonaCard;
+      playerData = (
+        <div className="playerdata">
+          <div className="resourcebox">
+            <div className="resourceheader">start:</div>
+            <div className="playerresources">
+              {Object.keys(personacard.startingResource).map((type) => {
+                return Object.keys(personacard.startingResource[type]).map(
+                  (key) => {
+                    if (
+                      !personacard.startingResource[type].hasOwnProperty(key) ||
+                      (personacard.startingResource[type][key] <= 0 &&
+                        type != "mana")
+                    )
+                      return (
+                        <span
+                          className="empty"
+                          key={type + key + cardObject.guid}
+                        ></span>
+                      );
+                    const costkey = "res" + key;
+                    const costamount = personacard.startingResource[type][key];
+                    return (
+                      <div className={costkey} key={costkey + cardObject.guid}>
+                        {icons[key]}
+                        {costamount}
+                      </div>
+                    );
+                  }
+                );
+              })}
+              <div className="player-hand-count">
+                {icons.hand}
+                {personacard.startingHand}/{personacard.maxHand}
+              </div>
+            </div>
+          </div>
+          <div className="spacer"></div>
+          <div className="resourcebox">
+            <div className="resourceheader">turn:</div>
+            <div className="playerresources">
+              {Object.keys(personacard.resourcePerTurn).map((type) => {
+                return Object.keys(personacard.startingResource[type]).map(
+                  (key) => {
+                    if (
+                      !personacard.resourcePerTurn[type].hasOwnProperty(key) ||
+                      (personacard.resourcePerTurn[type][key] <= 0 &&
+                        type != "mana")
+                    )
+                      return (
+                        <span
+                          className="empty"
+                          key={type + key + cardObject.guid}
+                        ></span>
+                      );
+                    const costkey = "res" + key;
+                    const costamount = personacard.resourcePerTurn[type][key];
+                    return (
+                      <div className={costkey} key={costkey + cardObject.guid}>
+                        {icons[key]}
+                        {costamount}
+                      </div>
+                    );
+                  }
+                );
+              })}
+              <div className="player-hand-count">
+                {icons.hand}
+                {personacard.drawPerTurn}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      playerData = (
+        <div className="playerdata">
+          <div className="playerresources">
+            {Object.keys(player.resources).map((type) => {
+              return Object.keys(player.resources[type]).map((key) => {
+                if (
+                  !player.resources[type].hasOwnProperty(key) ||
+                  (player.resources[type][key] <= 0 && type != "mana")
+                )
+                  return (
+                    <span
+                      className="empty"
+                      key={type + key + cardObject.guid}
+                    ></span>
+                  );
+                const costkey = "res" + key;
+                const costamount = player.resources[type][key];
+                return (
+                  <div className={costkey} key={costkey + cardObject.guid}>
+                    {icons[key]}
+                    {costamount}
+                  </div>
+                );
+              });
+            })}
+          </div>
+          <div className="playerdeck">
+            <div className="player-hand-count">
+              {icons.hand}
+              {player.currentHand}
+            </div>{" "}
+            <div className="player-deck-count"> {icons.card}</div>
+            {player.currentDeck}
+            <div className="player-graveyard-count">
+              {icons.graveyard} {player.currentGrave}
+            </div>
+          </div>
+        </div>
+      );
+    }
   }
   return (
     <button
@@ -152,21 +304,45 @@ function CMCCardVisual({
       disabled={!canClick}
       className={
         "cardStyle " +
+        alignstyle +
         " cardStyleActive" +
         (canClick ? " cardStyleClickable" : "") +
         (activeCard ? " cardStyleClicked" : "") +
-        (big ? " bigCardStyle" : "")
+        (big ? " bigCardStyle" : " littlecard") +
+        " " +
+        (showabilities ? " detailCard " : "") +
+        cardtypestyle
       }
     >
-      <div>
-        {costLine}
-        {sacLine}
-        {playerLine}
-        <div className="nameline">{cardObject.name}</div>
-        <div className="cardpic">
-          <img src={cardObject.picture} />
+      <div className="card">
+        <div className="manaline">
+          {costLine}
+          {sacLine}
         </div>
-        {attackLine}
+        {playerLine}
+        <div className="nameline">
+          <div className="cardname">{cardObject.name}</div>
+        </div>
+        <div className="cardpic">
+          <img src={"assets/cards/" + cardObject.picture} />
+        </div>
+        <div className="cardbox">
+          <div className="cardtext">{card.cardtext}</div>
+        </div>
+        {showabilities ? (
+          <div className="abilities">
+            <CmcCardDetailAbility
+              card={card}
+              playerId={lookingplayer ?? ""}
+              clickability={showabilitybutton}
+              ownerId={owner ?? ""}
+              doClick={doClick}
+            />
+          </div>
+        ) : (
+          ""
+        )}
+        <div className="bottomline">{attackLine}</div>
         {playerData}
       </div>
     </button>

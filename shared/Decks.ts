@@ -9,6 +9,7 @@ interface PlayerDecks {
   "1": CMCCard[];
 }
 function ParseDecks(decksJson: any): any {
+  console.dir(decksJson);
   let decks: PlayerDecks = {
     "0": [],
     "1": [],
@@ -60,7 +61,7 @@ function CreateDebugSetupData() {
 
           { id: "debugloc", amount: 10 },
 
-          { id: "debuggen", couamountnt: 10 },
+          { id: "debuggen", amount: 10 },
         ],
       },
     },

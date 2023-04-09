@@ -1,5 +1,6 @@
 import React from "react";
 import "./App.css";
+import "./bigcard.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Default from "./Default";
 import Cmc from "./Cmc";
@@ -9,6 +10,7 @@ import MultiClient from "./multi";
 import LobbyCustom from "./Lobby";
 import CreatePlayer from "./CreatePlayer";
 import Home from "./Home";
+import Test from "./Test";
 
 function App() {
   return (
@@ -23,6 +25,7 @@ function App() {
         <Route path="/public" />
         <Route path="/player/create" element={<CreatePlayer />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/test" element={<Test />} />
       </Routes>
     </Router>
   );

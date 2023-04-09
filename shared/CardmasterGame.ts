@@ -108,7 +108,7 @@ export interface CMCGameState {
 
 // Initial game state
 export const CardmasterConflict: Game<CMCGameState> = {
-  setup: ({ ctx }, setupData): CMCGameState => {
+  setup: ({ ctx, events }, setupData): CMCGameState => {
     // decks can be done through the game creation api, but here we will set up a default deck
     let decks: PlayerDecks = {
       "0": [],
@@ -119,8 +119,9 @@ export const CardmasterConflict: Game<CMCGameState> = {
     let isMulti = false;
     console.dir(setupData);
     if (!setupData || setupData.multi == false) {
+      isMulti = false;
       setupData = CreateDebugSetupData();
-      decks = ParseDecks(CreateDebugSetupData());
+      decks = ParseDecks(CreateDebugSetupData().decks);
       playerData = {
         "0": CreateDefaultPlayer("0", setupData.decks),
         "1": CreateDefaultPlayer("1", setupData.decks),
@@ -206,7 +207,11 @@ export const CardmasterConflict: Game<CMCGameState> = {
   seed: Date.now().toString(),
   phases: {
     Before: {
-      onBegin: ({ G, ctx, events }) => {},
+      onBegin: ({ G, ctx, events }) => {
+        if (!G.wait) {
+          events.endPhase();
+        }
+      },
       start: true,
       next: "Game",
       turn: {

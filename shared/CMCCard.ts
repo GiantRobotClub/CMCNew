@@ -18,6 +18,7 @@ import {
 } from "./Abilities";
 
 interface CMCCardBase {
+  expansion: string;
   guid: string;
   name: string;
   type: CardType;
@@ -50,6 +51,7 @@ interface CMCCard extends CMCCardBase {
 
 function CreateBasicCard(guid: string = ""): CMCCard {
   const card: CMCCard = {
+    expansion: "base",
     alignment: Alignment.NONE,
     guid: guid ? guid : "TEMPORARY",
     subtype: "",
@@ -123,9 +125,10 @@ function CreateLocationCard(playerID: string): CMCLocationCard {
   return card;
 }
 function CreateInitialLocationCard(): CMCLocationCard {
-  const card: CMCLocationCard = CreateLocationCard("");
-  card.name = "Nowhere";
-  card.cardtext = "Nothing";
+  const card: CMCLocationCard = {
+    ...CreateLocationCard(""),
+    ...GetCardPrototype("emptyloc"),
+  };
 
   return card;
 }

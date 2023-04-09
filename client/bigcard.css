@@ -1,0 +1,350 @@
+.detailCard .attackline .totallife {
+  font-size: 0.7em;
+}
+
+.detailCard .cardarea {
+  height: 100%;
+}
+
+.detailCard * {
+  font-size: 1em;
+}
+.detailCard * * {
+  font-size: 1em;
+}
+.detailCard * * {
+  font-size: 1em;
+}
+.detailCard.type-persona .cardbox {
+  display: block;
+  width: 90%;
+  position: relative;
+  top: 58%;
+  margin: auto;
+  height: 2.4em;
+}
+.detailCard .cardbox {
+  display: block;
+  width: 90%;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid grey;
+  margin: auto;
+  height: 2.4em;
+  overflow: hidden;
+  text-align: bottom;
+  font-size: 0.6em;
+}
+.detailCard .cardbox .cardtext {
+  font-style: italic;
+  font-size: 0.8em;
+}
+
+.detailCard.type-location .cardbox {
+  width: 90%;
+  position: relative;
+  top: 70%;
+  margin: auto;
+  height: 2.4em;
+}
+.detailCard .playerdata {
+  background-color: rgba(255, 255, 255, 0.75);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-flow: row;
+  border-radius: 0.5em;
+  font-size: 0.45em;
+}
+.detailCard .playerdata svg {
+  vertical-align: sub;
+  display: inline-block;
+}
+.detailCard .spacer {
+  border: 1px solid grey;
+}
+.detailCard .playerresources {
+  text-align: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.detailCard .playerdeck {
+  text-align: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.detailCard .manaline {
+  width: 100%;
+  text-align: justified;
+  margin-top: 0px;
+  padding-bottom: 0.1em;
+  padding-top: 0em;
+  display: flex;
+  height: 0.7em;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+.detailCard .costline {
+  flex-grow: 1;
+  padding-left: 0.2em;
+  font-size: 0.6em;
+  text-align: left;
+  height: 0.7em;
+  vertical-align: middle;
+}
+.detailCard .attackline {
+  display: flex;
+  width: 100%;
+  text-align: justified;
+  margin-bottom: 0px;
+  padding-bottom: 0.1em;
+  padding-top: 0em;
+  font-size: 0.7em;
+  height: 1.2em;
+  justify-content: right;
+}
+.detailCard .bottomline {
+  height: 1.2em;
+}
+.detailCard .attackline .attack {
+  color: rebeccapurple;
+  margin-right: 0.2em;
+
+  border-radius: 0.3em;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+.detailCard .attackline .life {
+  color: orangered;
+
+  border-radius: 0.3em;
+  margin-right: 0.2em;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+.detailCard .sacline {
+  padding-right: 0.2em;
+  flex-grow: 1;
+  font-size: 0.6em;
+  text-align: right;
+  height: 0.7em;
+  vertical-align: middle;
+}
+
+.detailCard .cardpic {
+  border: 1px solid grey;
+  width: 6.5em;
+  margin: auto;
+  height: 4.4em;
+  overflow: hidden;
+  text-align: bottom;
+}
+
+.detailCard .cardpic img {
+  width: 100%;
+  bottom: 0;
+}
+.detailCard div {
+  z-index: 5;
+  font-size: 1em;
+}
+.detailCard.type-persona .cardpic {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  height: 100%;
+  width: 100%;
+  z-index: -100;
+}
+.detailCard.type-persona .cardpic img {
+  width: 100%;
+  height: 100%;
+  display: absolute;
+  left: 0;
+  top: 0;
+}
+
+.detailCard.type-location .cardpic {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  height: 100%;
+  width: 100%;
+  z-index: -100;
+}
+.detailCard.type-location .cardpic img {
+  width: 100%;
+  height: 100%;
+  display: absolute;
+  left: 0;
+  top: 0;
+}
+.detailCard.type-persona .manaline {
+  visibility: hidden;
+  display: none;
+}
+.detailCard .nameline {
+  font-size: 0.7em;
+  padding: 0;
+}
+.detailCard .nameline .cardname {
+  color: white;
+  border-radius: 0.3em;
+  background-color: rgba(3, 3, 3, 0.75);
+}
+
+.detailCard .playerline {
+  width: 100%;
+  text-align: justified;
+  margin-top: 0px;
+  padding-bottom: 0.1em;
+  padding-top: 0em;
+  display: flex;
+  height: 0.7em;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+.detailCard .playerline .playername {
+  padding-right: 0.2em;
+  flex-grow: 1;
+  font-size: 0.6em;
+  text-align: center;
+  height: 0.7em;
+  vertical-align: middle;
+}
+.detailCard {
+  height: 11em;
+  width: 7.5em;
+  padding: 0;
+  margin: 0;
+  color: black;
+  border-radius: 0.7em;
+  font-size: 1.9em;
+
+  border: 1px solid black;
+  color: black;
+  overflow: hidden;
+}
+
+.cardStyleActive {
+  border: 1px solid black;
+  background-color: white;
+  color: black;
+}
+
+.cardStyleEmpty {
+  border: 1px solid white;
+  background: linear-gradient(
+    rgba(125, 125, 125, 0.5),
+    rgba(200, 200, 200, 0.5)
+  );
+}
+.cardStyleClickable {
+  box-shadow: inset 0 0 2pt 2pt green;
+  color: black;
+}
+.cardStyleClickable:hover {
+  box-shadow: inset 0 0 3pt 3pt green;
+  background-color: grey;
+}
+.cardStyleClicked {
+  background-color: rgb(255, 214, 208);
+}
+
+.detailCardContainer {
+  height: 28em;
+  width: 14em;
+}
+
+.detailCard .textbox {
+  border: 1px solid black;
+  background: lightblue;
+  font-style: italic;
+}
+
+.detailCard .ability {
+  border: 1px solid black;
+  background: lightblue;
+  text-align: left;
+  position: relative;
+  font-size: 0.5em;
+  width: 100%;
+}
+.detailCard .abilityHasButton {
+  width: 9em;
+}
+.detailCard button {
+  position: absolute;
+  right: 0.5em;
+  top: 0.1em;
+  height: 90%;
+  width: 2em;
+  border-radius: 1em;
+}
+.abilitytray {
+  width: 14em;
+  height: 7em;
+  border: 1px solid black;
+  background: grey;
+}
+.graveyard {
+  font-size: 0.5em;
+}
+.detailCard .abilityset {
+  overflow: hidden;
+  overflow-y: auto;
+  width: 100%;
+  height: 2.3em;
+}
+
+.detailCard .abilities {
+  display: block;
+}
+.detailCard.type-location .abilityset {
+  overflow: hidden;
+  overflow-y: auto;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  top: 2em;
+}
+
+.detailCard.type-location .abilities {
+  height: 2.4em;
+  height: 4em;
+  display: flex;
+  align-items: flex-end;
+}
+
+.detailCard.type-location .abilitycontainer {
+  width: 100%;
+}
+.detailCard.type-location .abilities .ability {
+  width: 100%;
+}
+
+.detailCard.type-persona .abilityset {
+  overflow: hidden;
+  overflow-y: auto;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  top: 2em;
+}
+
+.detailCard.type-persona .abilities {
+  height: 2.4em;
+  height: 4em;
+  display: flex;
+  align-items: flex-end;
+}
+
+.detailCard.type-persona .abilitycontainer {
+  width: 100%;
+}
+.detailCard.type-persona .abilities .ability {
+  width: 100%;
+}
