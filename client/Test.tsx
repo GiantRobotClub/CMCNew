@@ -55,12 +55,16 @@ const Test = () => {
     <div className="smallcards">
       {cardids.map((cardid) => {
         return (
-          <CmcCardDetailAbility
+          <CMCCardVisual
             card={GetCardPrototype(cardid)}
+            canClick={false}
             doClick={undefined}
+            activeCard={false}
+            player={DummyPlayer}
             clickability={true}
-            ownerId="0"
-            playerId="0"
+            big={true}
+            detail={true}
+            owner="0"
           />
         );
       })}

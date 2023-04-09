@@ -30,7 +30,7 @@ function CMCCardVisual({
   lookingplayer?: string;
   owner?: string;
 }) {
-  const showabilities: boolean = detail ?? false;
+  const isDetail: boolean = detail ?? false;
   const showabilitybutton: boolean = clickability ?? false;
   const noshow: CSSProperties = {
     display: "none",
@@ -70,21 +70,33 @@ function CMCCardVisual({
   let playerData = <div style={noshow}></div>;
   let cardtypestyle = "type-empty";
 
+  let summontext = "";
+  let genericsubtype = "";
   switch (card.type) {
     case CardType.EFFECT:
       cardtypestyle = "type-effect";
+      summontext = "Construct";
+      genericsubtype = "effect";
       break;
     case CardType.MONSTER:
       cardtypestyle = "type-monster";
+      summontext = "Summon";
+      genericsubtype = "monster";
       break;
     case CardType.SPELL:
       cardtypestyle = "type-spell";
+      summontext = "Cast";
+      genericsubtype = "spell";
       break;
     case CardType.PERSONA:
       cardtypestyle = "type-persona";
+      summontext = "Embody";
+      genericsubtype = "Persona";
       break;
     case CardType.LOCATION:
       cardtypestyle = "type-location";
+      summontext = "Move to";
+      genericsubtype = "location";
       break;
     case CardType.DUMMY:
       cardtypestyle = "type-dummy";
@@ -100,7 +112,8 @@ function CMCCardVisual({
           "cardStyle " +
           (canClick ? " cardStyleClickable" : "") +
           " cardStyleEmpty" +
-          (big ? " bigCardStyle" : " littlecard")
+          (big ? " bigCardStyle" : " littlecard") +
+          (isDetail ? " detailCard " : "")
         }
       >
         <div></div>
@@ -297,6 +310,7 @@ function CMCCardVisual({
       );
     }
   }
+
   return (
     <button
       key={cardObject.guid}
@@ -310,7 +324,7 @@ function CMCCardVisual({
         (activeCard ? " cardStyleClicked" : "") +
         (big ? " bigCardStyle" : " littlecard") +
         " " +
-        (showabilities ? " detailCard " : "") +
+        (isDetail ? " detailCard " : "") +
         cardtypestyle
       }
     >
@@ -326,10 +340,18 @@ function CMCCardVisual({
         <div className="cardpic">
           <img src={"assets/cards/" + cardObject.picture} />
         </div>
+        {isDetail ? (
+          <div className="cardsubtype">
+            <label>{summontext}</label>
+            <div className="subtype">{card.subtype || genericsubtype}</div>
+          </div>
+        ) : (
+          ""
+        )}
         <div className="cardbox">
           <div className="cardtext">{card.cardtext}</div>
         </div>
-        {showabilities ? (
+        {isDetail ? (
           <div className="abilities">
             <CmcCardDetailAbility
               card={card}

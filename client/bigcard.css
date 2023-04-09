@@ -19,9 +19,12 @@
   display: block;
   width: 90%;
   position: relative;
-  top: 58%;
+  top: 57%;
   margin: auto;
   height: 2.4em;
+}
+.detailCard.type-persona .cardsubtype {
+  top: 57%;
 }
 .detailCard .cardbox {
   display: block;
@@ -45,6 +48,10 @@
   top: 70%;
   margin: auto;
   height: 2.4em;
+}
+.detailCard.type-location .cardsubtype {
+  position: relative;
+  top: 70%;
 }
 .detailCard .playerdata {
   background-color: rgba(255, 255, 255, 0.75);
@@ -235,7 +242,7 @@
   color: black;
 }
 
-.cardStyleEmpty {
+.detailCard.cardStyleEmpty {
   border: 1px solid white;
   background: linear-gradient(
     rgba(125, 125, 125, 0.5),
@@ -274,7 +281,12 @@
   width: 100%;
 }
 .detailCard .abilityHasButton {
-  width: 9em;
+  padding-left: 0.2em;
+
+  flex-grow: 1;
+}
+.detailCard .abilityText {
+  font-size: 0.8em;
 }
 .detailCard button {
   position: absolute;
@@ -297,12 +309,9 @@
   overflow: hidden;
   overflow-y: auto;
   width: 100%;
-  height: 2.3em;
+  height: 2.2em;
 }
 
-.detailCard .abilities {
-  display: block;
-}
 .detailCard.type-location .abilityset {
   overflow: hidden;
   overflow-y: auto;
@@ -312,18 +321,17 @@
   top: 2em;
 }
 
-.detailCard.type-location .abilities {
-  height: 2.4em;
-  height: 4em;
-  display: flex;
-  align-items: flex-end;
-}
-
 .detailCard.type-location .abilitycontainer {
   width: 100%;
 }
 .detailCard.type-location .abilities .ability {
   width: 100%;
+}
+.detailCard .abilityName {
+  font-size: 0.9em;
+  font-weight: bold;
+  font-style: italic;
+  padding-left: 0.3em;
 }
 
 .detailCard.type-persona .abilityset {
@@ -335,11 +343,11 @@
   top: 2em;
 }
 
-.detailCard.type-persona .abilities {
+.detailCard.type-location .abilities {
   height: 2.4em;
-  height: 4em;
+  height: 3em;
   display: flex;
-  align-items: flex-end;
+  align-items: self-end;
 }
 
 .detailCard.type-persona .abilitycontainer {
@@ -347,4 +355,36 @@
 }
 .detailCard.type-persona .abilities .ability {
   width: 100%;
+}
+
+.detailCard.color-anodyne {
+  background-image: linear-gradient(
+      rgba(155, 155, 155, 0.5),
+      rgba(155, 155, 155, 0.5)
+    ),
+    url("/assets/anodyne.jpg");
+  background-size: cover;
+}
+
+.cardsubtype {
+  background: rgba(255, 255, 255, 0.5);
+  left: 5%;
+  border-radius: 1em;
+  position: relative;
+  width: 90%;
+  display: flex;
+  font-size: 0.4em;
+  font-weight: bold;
+  height: 0.3em;
+  text-align: center;
+  padding: auto;
+  vertical-align: top;
+  line-height: 0.2em;
+}
+.cardsubtype label {
+  font-size: 0.4em;
+}
+.cardsubtype .subtype {
+  font-size: 0.4em;
+  padding-left: 0.2em;
 }

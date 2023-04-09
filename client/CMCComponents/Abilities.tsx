@@ -47,9 +47,13 @@ function CmcCardDetailAbility({
             <div className="abilityName">{ability.abilityName}</div>
 
             <div
-              className={"abilityText" + showbutton ? " abilityHasButton" : ""}
+              className={
+                "abilityText " + (showbutton ? " abilityHasButton" : "")
+              }
             >
-              {showbutton ? ability.abilityCostText + ":" : ""}
+              {showbutton && ability.abilityCostText
+                ? ability.abilityCostText + ":"
+                : ""}
 
               {ability.abilityText}
             </div>
