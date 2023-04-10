@@ -4,7 +4,12 @@ import { current } from "immer";
 import { instanceOf } from "prop-types";
 import { FaCcMastercard } from "react-icons/fa";
 import { CMCGameState } from "./CardmasterGame";
-import { CMCCard, CMCMonsterCard, CMCPersonaCard } from "./CMCCard";
+import {
+  CMCCard,
+  CMCMonsterCard,
+  CMCPersonaCard,
+  GetModifiedStatCard,
+} from "./CMCCard";
 import { CardType } from "./Constants";
 import { CardScan, DamageResult, DealDamage } from "./LogicFunctions";
 
@@ -70,7 +75,7 @@ function ResolveCombat(G: CMCGameState, ctx: Ctx, random: RandomAPI) {
       resisted: 0,
       overage: 0,
     };
-
+    const modatk = GetModifiedStatCard(resolution.attacker) as CMCMonsterCard;
     // phase zero, trigger
     // check if card is dead yet
     if (resolution.attacker.destroyed) {
@@ -85,11 +90,11 @@ function ResolveCombat(G: CMCGameState, ctx: Ctx, random: RandomAPI) {
 
       // check card state
       //  defender->attacker damage
-
+      const moddef = GetModifiedStatCard(resolution.defender) as CMCMonsterCard;
       let dresult: DamageResult = DealDamage(
         resolution.attacker,
         resolution.defender,
-        resolution.defender.attack,
+        moddef.attack,
         G
       );
       resolvedatk.damage = dresult.damage;
@@ -101,11 +106,10 @@ function ResolveCombat(G: CMCGameState, ctx: Ctx, random: RandomAPI) {
 
       //todo
       // attacker->defender damage if not already done
-
       dresult = DealDamage(
         resolution.defender,
         resolution.attacker,
-        resolution.attacker.attack,
+        modatk.attack,
         G
       );
 
@@ -123,14 +127,14 @@ function ResolveCombat(G: CMCGameState, ctx: Ctx, random: RandomAPI) {
         playerDamage = resolveddef.overage;
       }
     } else {
-      playerDamage = resolution.attacker.attack;
+      playerDamage = modatk.attack;
     }
     // player damage
     if (playerDamage > 0) {
       let dresult = DealDamage(
         resolution.defender,
         resolution.attacker,
-        resolution.attacker.attack,
+        modatk.attack,
         G
       );
     }

@@ -7,6 +7,7 @@ import {
   CMCMonsterCard,
   CMCPersonaCard,
   CreateBasicCard,
+  GetModifiedStatCard,
 } from "./CMCCard";
 import { ClickType, CardType, Stages, PlayerIDs } from "./Constants";
 
@@ -664,7 +665,8 @@ function Sacrifice(
   if (![CardType.EFFECT, CardType.MONSTER].includes(card.type)) {
     return false;
   }
-  PlayerAddResource(OwnerOf(card, G), card.sac, G);
+  const modcard = GetModifiedStatCard(card);
+  PlayerAddResource(OwnerOf(card, G), modcard.sac, G);
 
   for (const slotplayer in G.slots) {
     for (const subplayer in G.slots[slotplayer]) {

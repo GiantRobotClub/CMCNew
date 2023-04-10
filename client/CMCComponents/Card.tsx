@@ -1,6 +1,11 @@
 import React, { CSSProperties } from "react";
 import { blank_object } from "svelte/internal";
-import { CMCCard, CMCMonsterCard, CMCPersonaCard } from "../../shared/CMCCard";
+import {
+  CMCCard,
+  CMCMonsterCard,
+  CMCPersonaCard,
+  GetModifiedStatCard,
+} from "../../shared/CMCCard";
 
 import { Alignment, CardType } from "../../shared/Constants";
 import { CMCPlayer } from "../../shared/Player";
@@ -62,7 +67,7 @@ function CMCCardVisual({
       break;
   }
 
-  const cardObject: CMCCard = card;
+  const cardObject: CMCCard = GetModifiedStatCard(card);
   let costLine = <div style={noshow}></div>;
   let attackLine = <div style={noshow}></div>;
   let sacLine = <div style={noshow}></div>;

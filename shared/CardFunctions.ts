@@ -7,7 +7,12 @@ import {
   TriggerPlayerType,
 } from "./Abilities";
 import { CMCGameState } from "./CardmasterGame";
-import { CMCCard, CMCMonsterCard, CMCPersonaCard } from "./CMCCard";
+import {
+  CMCCard,
+  CMCMonsterCard,
+  CMCPersonaCard,
+  GetModifiedStatCard,
+} from "./CMCCard";
 import { CardType } from "./Constants";
 import {
   DealDamage,
@@ -32,9 +37,10 @@ export function DefaultCost(
   if (!fullplayer) {
     return false;
   }
-  for (const check in card.cost) {
-    for (const sub in card.cost[check]) {
-      if (fullplayer.resources[check][sub] < card.cost[check][sub]) {
+  const modcard = GetModifiedStatCard(card);
+  for (const check in modcard.cost) {
+    for (const sub in modcard.cost[check]) {
+      if (fullplayer.resources[check][sub] < modcard.cost[check][sub]) {
         return false;
       }
     }
@@ -42,7 +48,7 @@ export function DefaultCost(
 
   // if we are actually calling to check
   if (!dry) {
-    if (!PlayerPay(playertocheck, card.cost, G)) {
+    if (!PlayerPay(playertocheck, modcard.cost, G)) {
       return false;
     }
   }

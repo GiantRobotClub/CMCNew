@@ -1,4 +1,4 @@
-import React, { CSSProperties, useState } from "react";
+import React, { CSSProperties, useState, MouseEvent } from "react";
 import CMCCardVisual from "./Card";
 import { CMCGameState } from "../../shared/CardmasterGame";
 import type { BoardProps } from "boardgame.io/react";
@@ -98,6 +98,10 @@ export function CMCBoard(props: CMCProps) {
     }
   };
 
+  const hoverOnCard = (e: MouseEvent<HTMLDivElement>) => {
+    const element = e.target as HTMLDivElement;
+  };
+
   const flexStyle: CSSProperties = {
     display: "flex",
   };
@@ -120,7 +124,7 @@ export function CMCBoard(props: CMCProps) {
   }
 
   let otherPlayer = you == "0" ? "1" : "0";
-
+  const hovercard = CreateBasicCard();
   return (
     <div>
       <div className="debug">
@@ -318,7 +322,7 @@ export function CMCBoard(props: CMCProps) {
           </div>
         </div>
       </div>
-      <div>
+      <div className="controlbtns">
         {!props.isMultiplayer || activePlayer == you ? (
           <div>
             <button onClick={() => endTurn()}>END</button>
@@ -331,7 +335,9 @@ export function CMCBoard(props: CMCProps) {
         )}
       </div>
       <div className="handcontainer">
+        <div className="handspacer"></div>
         <div className="hand" style={flexStyle}>
+          <div className="handspacerx"></div>
           {state.players[you].hand.map((card: CMCCard, index: number) => (
             <CMCCardVisual
               big={false}
@@ -378,6 +384,17 @@ export function CMCBoard(props: CMCProps) {
             )
           )}
         </div>
+      </div>
+      <div className="hoverbigcard" id="hoverbigcard">
+        <CMCCardVisual
+          big={true}
+          activeCard={false}
+          player={props.G.playerData[OwnerOf(hovercard, props.G)]}
+          card={hovercard}
+          doClick={() => {}}
+          canClick={false}
+          key={"player" + otherPlayer}
+        />
       </div>
     </div>
   );

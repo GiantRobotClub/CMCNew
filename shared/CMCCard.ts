@@ -16,7 +16,12 @@ import {
   TriggerPlayerType,
   TriggerType,
 } from "./Abilities";
+import { GiConsoleController } from "react-icons/gi";
 
+interface StatMod {
+  sourceGuid: string;
+  mods: [{}];
+}
 interface CMCCardBase {
   expansion: string;
   guid: string;
@@ -25,6 +30,8 @@ interface CMCCardBase {
   alignment: Alignment;
   subtype: string;
   cardtext: string;
+  statmods?: StatMod[]; // applies to getters
+  original?: CMCCard;
   cost: {
     mana: {
       V: Number;
@@ -174,7 +181,43 @@ function CreateEffectCard(): CMCEffectCard {
   return card;
 }
 function GetCardPrototype(name: string): CMCCard {
-  return prototypes[name];
+  const newprototype = window.structuredClone(prototypes[name]);
+
+  newprototype.original = prototypes[name];
+
+  return newprototype;
+}
+
+function ApplyStat(mod: {}, orig: {}): any {
+  const modified: {} = orig;
+  Object.entries(mod).forEach(([index, submod]) => {
+    if (typeof submod === "number") {
+      modified[index] = submod + orig[index];
+    } else if (typeof submod === "object" && submod !== null) {
+      modified[index] = ApplyStat(submod, orig[index]);
+    }
+  });
+
+  return modified;
+}
+
+function GetModifiedStatCard(card: CMCCard): CMCCard {
+  let newCard: CMCCard = window.structuredClone(card);
+  if (newCard.original) {
+    newCard = newCard.original;
+  }
+  if (!("statmods" in card) || card.statmods === undefined || !card.statmods) {
+    return card;
+  }
+  card.statmods.forEach((mod) => {
+    mod.mods.forEach((modding) => {
+      // apply stats
+      newCard = ApplyStat(modding, newCard);
+    });
+  });
+  newCard.statmods = undefined;
+  console.dir(newCard.cost);
+  return newCard;
 }
 
 export {
@@ -192,4 +235,5 @@ export {
   CreateLocationCard,
   CreateSpellCard,
   GetCardPrototype,
+  GetModifiedStatCard,
 };

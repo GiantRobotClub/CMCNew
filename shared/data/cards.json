@@ -157,6 +157,20 @@
       "picture": "slime.jpg",
       "cardtext": " Just a debug slime ",
       "type": 2,
+      "statmods": [
+        {
+          "source": "test2",
+          "mods": [
+            {
+              "cost": {
+                "mana": {
+                  "V": 1
+                }
+              }
+            }
+          ]
+        }
+      ],
       "sac": {
         "mana": {
           "V": 0,

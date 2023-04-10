@@ -513,15 +513,20 @@ button:focus-visible {
   box-shadow: inset 0 0 2pt 2pt rgb(148, 224, 148),
     inset 0 0 2pt 2pt rgb(148, 224, 148), inset 0 0 2pt 2pt rgb(148, 224, 148);
   color: black;
+  transform: scale(1.2);
+  z-index: 50;
 }
 .cardStyleClickable:hover {
   box-shadow: inset 0 0 3pt 3pt rgb(175, 255, 175),
     inset 0 0 3pt 3pt rgb(175, 255, 175), inset 0 0 3pt 3pt rgb(175, 255, 175);
   background-color: grey;
+  transform: scale(1.4);
+  z-index: 100;
 }
 .cardStyleClicked {
   background-color: rgb(255, 214, 208);
   filter: sepia(50%) hue-rotate(-100deg) saturate(100%);
+  transform: scale(0.9);
 }
 
 .cardStyleClickable.bigCardStyle.type-location img {
@@ -571,13 +576,22 @@ button:focus-visible {
   height: 10em;
   width: 44em;
   overflow-x: scroll;
-  overflow-y: hide;
+  overflow-y: visible;
+  z-index: 50;
 }
 .gravecontainer {
   height: 5em;
   width: 44em;
   overflow-x: scroll;
-  overflow-y: hide;
+  overflow-x: scroll;
+  overflow-y: visible;
+  z-index: 50;
+}
+.handspacer {
+  height: 1em;
+}
+.handspacerx {
+  width: 1em;
 }
 
 .abilitytray {
@@ -588,4 +602,7 @@ button:focus-visible {
 }
 .graveyard {
   font-size: 0.5em;
+}
+.controlbtns {
+  z-index: -1;
 }
