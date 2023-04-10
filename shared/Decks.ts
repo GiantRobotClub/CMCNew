@@ -9,7 +9,6 @@ interface PlayerDecks {
   "1": CMCCard[];
 }
 function ParseDecks(decksJson: any): any {
-  console.dir(decksJson);
   let decks: PlayerDecks = {
     "0": [],
     "1": [],

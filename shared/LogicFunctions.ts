@@ -102,7 +102,7 @@ function CardScan(G: CMCGameState, random: RandomAPI): void {
 
 function AddToGraveyard(card: CMCCard, G: CMCGameState) {
   const owner = OwnerOf(card, G);
-  console.log(owner);
+
   G.playerData[owner].graveyard.push(card);
 }
 // generate a new guid
@@ -168,7 +168,6 @@ function PlaceCard(
   let slotplayerfound = "";
 
   if (card.type == CardType.LOCATION) {
-    console.log("setting location");
     if (G.location.owner != "") {
       AddToGraveyard(G.location, G);
     }
@@ -234,7 +233,6 @@ function RemoveFromHand(
     return false;
   }
 
-  console.log("hand:" + G.players[playerID].hand.length);
   G.players[playerID].hand = hand.filter((crd, i) => crd.guid != card.guid);
   return true;
 }
@@ -247,7 +245,6 @@ function PlayEntity(
   G: CMCGameState,
   ctx: Ctx
 ): CMCGameState | boolean {
-  console.log(card.guid);
   let found = false;
   let hand: CMCCard[] = G.players[playerID].hand;
   hand.forEach((crd, idx) => {
@@ -268,16 +265,13 @@ function PlayEntity(
     false
   );
 
-  console.log(success_pay);
   if (!success_pay) return false;
 
   if (!PlaceCard(card, slot, playerID, G)) {
-    console.log("Couldnt place card");
     return false;
   }
 
   if (!RemoveFromHand(card, playerID, G)) {
-    console.log("Couldnt remove card");
     return false;
   }
 
@@ -327,10 +321,7 @@ function OwnerOf(card: CMCCard, G: CMCGameState) {
   }
   // check who played location
   if (card.type == CardType.LOCATION) {
-    console.dir(card);
-
     const actualLocation = G.location;
-    console.dir(actualLocation);
     if (card.guid == actualLocation.guid && actualLocation.owner != "") {
       return actualLocation.owner;
     }
@@ -499,7 +490,6 @@ function CanClickCard(
       // is the monster attacking?
       for (const combatant of G.combat.targets) {
         if (combatant.attacker.guid == monster.guid) {
-          console.log("Monster is locked");
           if (combatant.locked) {
             // monster is locked on it's current target
             return false;

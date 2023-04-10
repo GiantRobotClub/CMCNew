@@ -56,7 +56,6 @@ function ResolveCombat(G: CMCGameState, ctx: Ctx, random: RandomAPI) {
   };
 
   for (const resolution of combat.targets) {
-    console.dir(current(resolution));
     const resolvedatk: CMCCombatantResult = {
       card: resolution.attacker,
       destroyed: false,
@@ -82,7 +81,6 @@ function ResolveCombat(G: CMCGameState, ctx: Ctx, random: RandomAPI) {
       resolution.defender.type == CardType.MONSTER &&
       "attack" in resolution.defender
     ) {
-      console.dir(current(resolution.defender));
       // attacker->defender damage for agility
 
       // check card state
@@ -99,7 +97,6 @@ function ResolveCombat(G: CMCGameState, ctx: Ctx, random: RandomAPI) {
       resolvedatk.overage = dresult.overage;
       resolvedatk.resisted = 0;
 
-      console.dir(dresult);
       // check card state for reflexes
 
       //todo
@@ -111,8 +108,6 @@ function ResolveCombat(G: CMCGameState, ctx: Ctx, random: RandomAPI) {
         resolution.attacker.attack,
         G
       );
-
-      console.dir(dresult);
 
       resolveddef.damage = dresult.damage;
       resolveddef.destroyed = resolution.defender.life <= 0;
@@ -175,12 +170,15 @@ function SetCombatAttacker(
   }
 
   // is the attacker already attacking?
-  // is the defender already defending?
+  // is the defender already defending? unless it's a persona
   for (const existingattacker of G.combat.targets) {
     if (attacker.guid == existingattacker.attacker.guid) {
       return false;
     }
-    if (defender.guid == existingattacker.defender.guid) {
+    if (
+      defender.guid == existingattacker.defender.guid &&
+      defender.type != CardType.PERSONA
+    ) {
       return false;
     }
   }

@@ -22,7 +22,7 @@ const SESSION_CONFIG = {
 };
 server.app.keys = ["cmcr"];
 server.app.on("error", (err, ctx) => {
-  console.dir(err);
+  console.error(err);
 });
 // @ts-ignore
 server.app.use(session(SESSION_CONFIG, server.app));

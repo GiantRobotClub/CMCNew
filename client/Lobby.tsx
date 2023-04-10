@@ -24,14 +24,11 @@ const LobbyCustom = () => {
 
   // check session, redirect to login if needed.
   useEffect(() => {
-    fetch("/api/games")
-      .then((response) => response.json())
-      .then(console.dir);
+    fetch("/api/games").then((response) => response.json());
     setisLoading(true);
     fetch("/api/manage/player/getsession")
       .then((response) => response.json())
       .then((data) => {
-        console.dir(data);
         if (data.playerid !== "") {
           setPlayerID(data.playerid);
           console.log("dta is : " + data);
@@ -118,7 +115,7 @@ const LobbyCustom = () => {
       })
       .catch((error) => {
         const err: LobbyClientError = error as LobbyClientError;
-        console.dir(err);
+        console.error(err);
       });
   }
 

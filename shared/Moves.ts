@@ -48,11 +48,10 @@ const passStage: Move<CMCGameState> = ({ G, ctx, events, random }) => {
   resetActive(G);
   TriggerAuto(TriggerNames.END_STAGE, ctx, G);
   const activePlayer = GetActivePlayer(ctx);
-  console.log("check:" + GetActiveStage(ctx));
 
   // is there a modified stack? if so go to the response stage.
-  if (G.abilityStack.length > G.lastAbilityLength) {
-    G.lastAbilityLength = G.abilityStack.length;
+  if (G.abilityStack.length > G.lastAbilityStack.length) {
+    G.lastAbilityStack = G.abilityStack;
     G.returnStage.push(GetActiveStage(ctx));
 
     const arg: ActivePlayersArg = {
@@ -126,9 +125,7 @@ const passStage: Move<CMCGameState> = ({ G, ctx, events, random }) => {
     }
   } else if (GetActiveStage(ctx) == Stages.defense) {
     ResolveCombat(G, ctx, random);
-    console.log("resolving combat......");
     events.setActivePlayers({ currentPlayer: Stages.resolve });
-    console.log("Setting active plyaer...");
     events.endStage();
   } else if (GetActiveStage(ctx) == Stages.resolve) {
     if (
@@ -149,11 +146,10 @@ const playCardFromHand: Move<CMCGameState> = (
   playerId: string
 ) => {
   if (!ctx.activePlayers) {
-    console.log("No active player");
+    console.error("No active player");
     return INVALID_MOVE;
   }
   if (G.activeCard && !(GetActiveStage(ctx) == Stages.discardCard)) {
-    console.log("Alrady have an active card, unless discard");
     return INVALID_MOVE;
   }
 
@@ -175,37 +171,29 @@ const playCardFromHand: Move<CMCGameState> = (
     events.setStage(Stages.pickSlot);
   } else if (card.type == CardType.SPELL) {
     if (card.abilities.length != 1) {
-      console.log("Card has too many or too few abilities to be a spell");
       return INVALID_MOVE;
     }
     const ability: Ability = card.abilities[0];
     if (ability.triggerType == TriggerType.ACTIVATED_TARGETED) {
       // move to pick target
-      console.log("Is targeted");
 
       G.returnStage.push(GetActiveStage(ctx));
       events.setStage(Stages.pickAbilityTarget);
       G.activeAbility = ability;
       G.activeCard = card;
     } else if (ability.triggerType == TriggerType.ACTIVATED) {
-      console.log("Is not targeted");
-
       if (!CanActivateAbility(card, ability, G, ctx, undefined)) {
-        console.log("can activate is false");
         return INVALID_MOVE;
       }
       if (!ActivateAbility(card, ability, G, ctx, false, undefined)) {
-        console.log("activate is false");
         return INVALID_MOVE;
       }
     } else {
-      console.dir(ability);
       return INVALID_MOVE;
     }
   } else if (card.type == CardType.LOCATION) {
     let success_play = PlayEntity(card, G.location, playerId, G, ctx);
     if (!success_play) {
-      console.log("Couldnt play location");
       return INVALID_MOVE;
     }
   }
@@ -226,34 +214,43 @@ const activateAbility: Move<CMCGameState> = (
     G.activeCard = card;
   } else if (ability.triggerType == TriggerType.ACTIVATED) {
     if (!CanActivateAbility(card, ability, G, ctx, undefined)) {
-      console.log("canactivate is false");
       return INVALID_MOVE;
     }
     if (!ActivateAbility(card, ability, G, ctx, false, undefined)) {
-      console.log("ctivate is false");
       return INVALID_MOVE;
     }
   } else {
-    console.dir(ability);
     return INVALID_MOVE;
   }
 };
 
 // cancel your current selection and go back to the top level selection mode
 const cancel: Move<CMCGameState> = ({ G, ctx, events }, playerId: string) => {
-  console.log("Got here");
   if (!ctx.activePlayers || !ctx.activePlayers[playerId]) {
-    console.log("no active player stage for " + playerId);
     return INVALID_MOVE;
   }
 
-  console.log("Returning to previous stage");
-  if (
+  if (GetActiveStage(ctx) == Stages.play && G.abilityStack.length > 0) {
+    // clear ability stack
+    if (G.abilityStack.length > G.lastAbilityStack.length) {
+      // return to previous ability stack
+      G.abilityStack = G.lastAbilityStack;
+      G.lastAbilityStack = [];
+      resetActive(G);
+      return;
+    } else {
+      return INVALID_MOVE;
+    }
+  } else if (
     GetActiveStage(ctx) == Stages.combat ||
     GetActiveStage(ctx) == Stages.pickCombatTarget
   ) {
     // reset combat
     G.combat = StartCombatPhase();
+    if (Stages.pickCombatTarget && G.returnStage.length == 0) {
+      console.error("This is a bad state, getting out of it");
+      events.setStage(Stages.combat);
+    }
   } else if (
     GetActiveStage(ctx) == Stages.defense ||
     GetActiveStage(ctx) == Stages.pickCombatDefense
@@ -269,14 +266,10 @@ const cancel: Move<CMCGameState> = ({ G, ctx, events }, playerId: string) => {
         }
       }
     }
-  }
-
-  if (G.returnStage.length > 0) {
+  } else if (G.returnStage.length > 0) {
     if (G.activeAbility || G.activeCard) {
       const returnStage = G.returnStage.pop();
       if (!returnStage) {
-        console.dir(G.returnStage);
-        console.log("Returnstage:" + returnStage);
         return INVALID_MOVE;
       }
       events.setStage(returnStage);
@@ -289,15 +282,13 @@ const cancel: Move<CMCGameState> = ({ G, ctx, events }, playerId: string) => {
     ) {
       const returnStage = G.returnStage.pop();
       if (!returnStage) {
-        console.dir(G.returnStage);
-        console.log("Return stage: " + returnStage);
         return INVALID_MOVE;
       }
       events.setStage(returnStage);
     }
   } else {
     // oh no your stage is broken???????
-    console.log("There's no return stage?");
+    console.error("There's no return stage?");
     return INVALID_MOVE;
   }
   resetActive(G);
@@ -322,7 +313,6 @@ const pickEntity: Move<CMCGameState> = (
   }
 
   if (!CanClickCard(card, playerId, clickType, ctx, G)) {
-    console.log("Cant click that card");
     return INVALID_MOVE;
   }
   // determine based on state
@@ -336,14 +326,18 @@ const pickEntity: Move<CMCGameState> = (
     }
     G.activeCard = card;
     G.returnStage.push(Stages.combat);
-    console.log("Setting returnstage to combat");
+    console.log(
+      "Setting returnstage to combat, we are in " + GetActiveStage(ctx)
+    );
     events.setStage(Stages.pickCombatTarget);
   } else if (GetActiveStage(ctx) == Stages.pickCombatTarget) {
     if (!G.activeCard) {
-      return INVALID_MOVE;
+      events.setStage(Stages.combat);
+      return;
     }
     if (G.activeCard.type != CardType.MONSTER) {
-      return INVALID_MOVE;
+      events.setStage(Stages.combat);
+      return;
     }
     if (card.type != CardType.PERSONA && card.type != CardType.MONSTER) {
       return INVALID_MOVE;
@@ -409,26 +403,21 @@ const pickEntity: Move<CMCGameState> = (
   } else if (GetActiveStage(ctx) == Stages.pickAbilityTarget) {
     // ability or spell targeting
     if (!G.activeAbility || !G.activeCard) {
-      console.log("No active card");
       return INVALID_MOVE;
     }
     if (!CanActivateAbility(G.activeCard, G.activeAbility, G, ctx, card)) {
-      console.log("cannot activate ability");
       return INVALID_MOVE;
     }
     if (!ActivateAbility(G.activeCard, G.activeAbility, G, ctx, false, card)) {
-      console.log("ability failed to activate");
       return INVALID_MOVE;
     }
     if (G.returnStage) {
       const returnStage = G.returnStage.pop();
       if (!returnStage) {
-        console.log("No reurn stage");
         return INVALID_MOVE;
       }
       events.setStage(returnStage);
     } else {
-      console.log("some other possibility");
       return INVALID_MOVE;
     }
   } else if (GetActiveStage(ctx) == Stages.sacrifice) {

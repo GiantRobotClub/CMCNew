@@ -31,6 +31,9 @@ function Home() {
         <Link to="/playcpu">Single Player</Link>
       </div>
       <div>
+        <Link to="/play2cpu">Zero Player</Link>
+      </div>
+      <div>
         <Link to="/Game">Test local</Link>
       </div>
       <div>

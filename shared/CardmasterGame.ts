@@ -59,6 +59,7 @@ import { DbFullDeck, DbPlayer } from "../server/DbTypes";
 import { GetPlayer } from "../server/DbWrapper";
 import { GetFullDeck } from "../server/DbWrapper";
 import { Events } from "boardgame.io/src/plugins/events/events";
+import ai from "./ai";
 
 export interface CMCGameState {
   playerData: {
@@ -102,7 +103,7 @@ export interface CMCGameState {
   combat?: CMCCombat;
   resolution?: CMCCombatResults;
   abilityStack: StackedAbility[];
-  lastAbilityLength: number;
+  lastAbilityStack: StackedAbility[];
   wait: boolean;
 }
 
@@ -117,7 +118,6 @@ export const CardmasterConflict: Game<CMCGameState> = {
     let gameStarted = false;
     let playerData: any;
     let isMulti = false;
-    console.dir(setupData);
     if (!setupData || setupData.multi == false) {
       isMulti = false;
       setupData = CreateDebugSetupData();
@@ -134,19 +134,12 @@ export const CardmasterConflict: Game<CMCGameState> = {
         "1": CreateDefaultPlayer("1"),
       };
     }
-    /*
-    if (!setupData) {
-      setupData = CreateDebugSetupData();
-      console.log(setupData.decks);
-    }
-    decks = ParseDecks(setupData.decks);
 
-   
-*/
     return {
       ready: 0,
       wait: isMulti,
-      lastAbilityLength: 0,
+      abilityStack: [],
+      lastAbilityStack: [],
       playerData: playerData,
       returnStage: [],
       didinitialsetup: false,
@@ -200,9 +193,9 @@ export const CardmasterConflict: Game<CMCGameState> = {
       secret: {
         decks: decks,
       },
-      abilityStack: [],
     };
   },
+
   name: "cmcr",
   seed: Date.now().toString(),
   phases: {
@@ -239,8 +232,6 @@ export const CardmasterConflict: Game<CMCGameState> = {
             console.log("COULDNT LOAD DECK");
             return INVALID_MOVE;
           }
-          console.log("Deck:");
-          console.dir(deck.deck);
           // parse out your deck
           const deckholder = {};
           deckholder[gameplayerid] = deck.deck;
@@ -263,6 +254,7 @@ export const CardmasterConflict: Game<CMCGameState> = {
       onBegin: ({ G, ctx, events, random }) => {
         console.log("Beginning first turn!!!!");
 
+        G.gameStarted = true;
         // sjhuffle decks
         G.secret.decks["0"] = random.Shuffle(G.secret.decks["0"]);
         G.secret.decks["0"] = random.Shuffle(G.secret.decks["1"]);
@@ -355,12 +347,12 @@ export const CardmasterConflict: Game<CMCGameState> = {
               playCardFromHand: playCardFromHand,
               activateAbility: activateAbility,
               passStage: passStage,
+              cancel: cancel,
             },
             next: Stages.combat,
           },
           combat: {
             moves: {
-              activateAbility: activateAbility,
               //chooseCard
               passStage: passStage,
               pickEntity: pickEntity,
@@ -371,7 +363,6 @@ export const CardmasterConflict: Game<CMCGameState> = {
           },
           defense: {
             moves: {
-              activateAbility: activateAbility,
               //chooseCard
               passStage: passStage,
               pickEntity: pickEntity,
@@ -442,91 +433,7 @@ export const CardmasterConflict: Game<CMCGameState> = {
     }
   },
 
-  ai: {
-    enumerate: (G, ctx) => {
-      let moves: any[] = [];
-
-      if (GetActiveStage(ctx) != Stages.resolve) {
-        if (!G.activeAbility && !G.activeCard) {
-          moves.push({ move: "passStage" });
-        }
-      } else {
-        moves.push({ move: "passTurn" });
-      }
-
-      if (
-        G.activeAbility ||
-        G.activeCard ||
-        [
-          Stages.pickAbilityTarget,
-          Stages.pickCombatDefense,
-          Stages.pickCombatTarget,
-          Stages.pickSlot,
-        ].includes(GetActiveStage(ctx))
-      ) {
-        moves.push({ move: "cancel", args: [GetActivePlayer(ctx)] });
-      }
-
-      if (GetActiveStage(ctx) == Stages.play) {
-        let hand: CMCCard[] = G.players[GetActivePlayer(ctx)].hand;
-        if (!G.activeCard) {
-          hand.forEach((crd, idx) => {
-            if (
-              CanClickCard(crd, GetActivePlayer(ctx), ClickType.HAND, ctx, G)
-            ) {
-              moves.push({
-                move: "playCardFromHand",
-                args: [
-                  G.players[GetActivePlayer(ctx)].hand[idx],
-                  GetActivePlayer(ctx),
-                ],
-              });
-            }
-          });
-        }
-      }
-      for (const slotplayer in G.slots) {
-        if (
-          CanClickCard(
-            G.playerData[slotplayer].persona,
-            GetActivePlayer(ctx),
-            ClickType.PERSONA,
-            ctx,
-            G
-          )
-        ) {
-          moves.push({
-            move: "pickEntity",
-            args: [G.playerData[slotplayer].persona, GetActivePlayer(ctx)],
-          });
-        }
-        for (const subplayer in G.slots[slotplayer]) {
-          for (const [index, card] of G.slots[slotplayer][
-            subplayer
-          ].entries()) {
-            if (
-              CanClickCard(
-                card,
-                GetActivePlayer(ctx),
-                subplayer == "effects" ? ClickType.EFFECT : ClickType.MONSTER,
-                ctx,
-                G
-              )
-            ) {
-              moves.push({
-                move: card.type == CardType.EMPTY ? "chooseSlot" : "pickEntity",
-                args: [
-                  G.slots[slotplayer][subplayer][index],
-                  GetActivePlayer(ctx),
-                ],
-              });
-            }
-          }
-        }
-      }
-      return moves;
-    },
-  },
+  ai: ai,
 };
 
 // something has set the loser flag.

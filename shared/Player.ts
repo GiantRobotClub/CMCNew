@@ -39,7 +39,6 @@ function ParseDbPlayer(
   player: DbPlayer
 ) {
   const newplayer: CMCPlayer = CreateDefaultPlayer(gameplayerid);
-  console.dir(player);
   newplayer.name = player.username;
   const newcard = GetCardPrototype(deck.deck.persona) as CMCPersonaCard;
   let card: CMCPersonaCard = {

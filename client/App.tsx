@@ -6,6 +6,7 @@ import Default from "./Default";
 import Cmc from "./Cmc";
 import DualClient from "./Game";
 import CPUClient from "./VsCPU";
+import DualCpu from "./cpuvcpu";
 import MultiClient from "./multi";
 import LobbyCustom from "./Lobby";
 import CreatePlayer from "./CreatePlayer";
@@ -20,6 +21,7 @@ function App() {
         <Route path="/" element={<Default />} />
         <Route path="/play/:mid/:pid/:cred" element={<Cmc />} />
         <Route path="/playcpu" element={<CPUClient />} />
+        <Route path="/play2cpu" element={<DualCpu />} />
         <Route path="/multi/:id" element={<MultiClient />} />
         <Route path="/lobby" element={<LobbyCustom />} />
         <Route path="/public" />

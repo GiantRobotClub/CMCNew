@@ -136,16 +136,12 @@ export function DamageTarget(
 ) {
   if (!target) return false;
   if (![CardType.PERSONA, CardType.MONSTER].includes(target.type)) {
-    console.log("target is not the right kind of card");
-    console.dir(target);
     return false;
   }
   if (IsMonster(target) || IsPersona(target)) {
-    console.log("Card is monster or target");
     DealDamage(target, card, ability.metadata.amount, G);
     return true;
   } else {
-    console.dir(target);
     return false;
   }
 }

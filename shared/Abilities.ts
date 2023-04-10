@@ -172,10 +172,9 @@ function ResolveStack(G, ctx) {
         stacked.target
       )
     ) {
-      console.log("STacked ability was cancelled!!!!");
     }
   }
-  G.lastAbilityLength = 0;
+  G.lastAbilityStack = [];
 }
 function ActivateAbility(
   card: CMCCard,
@@ -187,7 +186,6 @@ function ActivateAbility(
 ): boolean {
   const cardowner = OwnerOf(card, G);
   if (!CanActivateAbility(card, ability, G, ctx)) {
-    console.log("Cannot activate");
     return false;
   }
 
@@ -197,7 +195,6 @@ function ActivateAbility(
       if (
         !abilityFunc(card, ability, EmptyTriggerData, cardowner, G, ctx, target)
       ) {
-        console.log("func failed");
         return false;
       }
     }
@@ -206,19 +203,17 @@ function ActivateAbility(
       const costFunc: Function = CardFunctions[ability.costCode];
       // actually pay mana
       if (!costFunc(card, cardowner, G, ctx, false, false)) {
-        console.log("cost failed");
         return false; // cant afford
       }
     }
     if (card.type == CardType.SPELL) {
       // put the card in the graveyard and out of your hand
-      console.log("Removing from hand");
+
       AddToGraveyard(card, G);
       RemoveFromHand(card, cardowner, G);
     }
   } else {
     if (!AddToStack(card, ability, G, ctx, target)) {
-      console.log("couldnt add to stack");
       return false;
     }
   }
@@ -233,7 +228,6 @@ function AddToStack(
   target?: CMCCard
 ): boolean {
   if (!ability.speed) {
-    console.log("Ability has no speed");
     return false;
   }
   const stackedAbility: StackedAbility = {

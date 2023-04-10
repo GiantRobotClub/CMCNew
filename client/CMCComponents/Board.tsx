@@ -28,8 +28,7 @@ export function CMCBoard(props: CMCProps) {
     ) {
       // send the decks up as a move
       const matchdata: FilteredMetadata = props.matchData;
-      console.log("MATCH DATA");
-      console.dir(matchdata);
+
       props.moves.ready(
         props.playerID,
         matchdata[props.playerID || "0"].data.dbPlayerId
