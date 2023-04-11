@@ -2,7 +2,7 @@
   "prototypes": {
     "empty": {
       "expansion": "base",
-      "alignment": 0,
+      "alignment": "NONE",
       "guid": "",
       "subtype": "",
       "costFunction": "DefaultCost",
@@ -10,7 +10,7 @@
       "name": "",
       "picture": "",
       "cardtext": "",
-      "type": 0,
+      "type": "EMPTY",
       "sac": {
         "mana": {
           "V": 0,
@@ -29,30 +29,16 @@
     },
     "emptyloc": {
       "owner": "",
-      "alignment": 1,
+      "alignment": "NONE",
       "guid": "TEMPORARY",
       "subtype": "",
       "name": "NOWHERE",
       "picture": "nowhere.jpg",
       "cardtext": "You are nowhere.",
-      "type": 5,
+      "type": "LOCATION",
       "sac": {},
       "cost": {},
-      "abilities": [
-        {
-          "triggerType": 2,
-          "activateCode": "ManaGenerate",
-          "triggerCode": "TriggerStage",
-          "metadata": {
-            "triggername": "start_turn",
-            "triggerstage": "initial",
-            "color": "A",
-            "amount": 1
-          },
-          "abilityName": "Generate Mana",
-          "abilityText": "Adds one Anodyne per turn"
-        }
-      ],
+      "abilities": [],
       "expansion": "base"
     },
 
@@ -60,7 +46,7 @@
       "dizzy": false,
       "status": {},
       "destroyed": false,
-      "alignment": 1,
+      "alignment": "ANODYNE",
       "guid": "TEMPORARY",
       "subtype": "generator",
       "costFunction": "DefaultCost",
@@ -68,7 +54,7 @@
       "name": "GENERATOR",
       "picture": "generator.jpg",
       "cardtext": " A basic generator ",
-      "type": 3,
+      "type": "EFFECT",
       "sac": {
         "mana": {
           "V": 0,
@@ -85,7 +71,7 @@
       },
       "abilities": [
         {
-          "triggerType": 2,
+          "triggerType": "AUTOMATIC_STAGE",
           "activateCode": "ManaGenerate",
           "triggerCode": "TriggerStage",
           "metadata": {
@@ -102,7 +88,7 @@
     },
     "debugloc": {
       "owner": "",
-      "alignment": 1,
+      "alignment": "NONE",
       "guid": "TEMPORARY",
       "subtype": "",
       "costFunction": "DefaultCost",
@@ -110,7 +96,7 @@
       "name": "MANA LAND",
       "picture": "manaland.jpg",
       "cardtext": "A lot of mana here",
-      "type": 5,
+      "type": "LOCATION",
       "sac": {
         "mana": {
           "V": 0,
@@ -127,7 +113,7 @@
       },
       "abilities": [
         {
-          "triggerType": 2,
+          "triggerType": "AUTOMATIC_STAGE",
           "activateCode": "ManaGenerate",
           "triggerCode": "TriggerStage",
           "metadata": {
@@ -145,10 +131,10 @@
     "debugslime": {
       "life": 10,
       "attack": 10,
-      "dizzy": false,
+      "dizzy": true,
       "status": {},
       "destroyed": false,
-      "alignment": 1,
+      "alignment": "ANODYNE",
       "guid": "TEMPORARY",
       "subtype": "slime",
       "costFunction": "DefaultCost",
@@ -156,7 +142,7 @@
       "name": "SLIME",
       "picture": "slime.jpg",
       "cardtext": " Just a debug slime ",
-      "type": 2,
+      "type": "MONSTER",
       "statmods": [
         {
           "source": "test2",
@@ -187,7 +173,7 @@
       },
       "abilities": [
         {
-          "triggerType": 0,
+          "triggerType": "ACTIVATED",
           "activateCode": "ManaGenerate",
           "metadata": {
             "color": "A",
@@ -195,8 +181,8 @@
           },
           "speed": 1,
           "abilityName": "Generate Mana",
-          "abilityText": "Add one anodyne",
-          "abilityCostText": "Z"
+          "abilityText": "Add (A)",
+          "abilityCostText": "(dizzy)"
         }
       ],
       "expansion": "base"
@@ -223,7 +209,7 @@
       "startingHand": 1,
       "drawPerTurn": 1,
       "maxHand": 1,
-      "alignment": 1,
+      "alignment": "NONE",
       "guid": "TEMPORARY",
       "subtype": "",
       "costFunction": "DefaultCost",
@@ -231,7 +217,7 @@
       "name": "Master of Cards",
       "picture": "basepersona.jpg",
       "cardtext": " Garden Variety ",
-      "type": 6,
+      "type": "PERSONA",
       "sac": {
         "mana": {
           "V": 0,
@@ -250,7 +236,7 @@
       "expansion": "base"
     },
     "debugspell": {
-      "alignment": 1,
+      "alignment": "ANODYNE",
       "guid": "TEMPORARY",
       "subtype": "",
       "costFunction": "DefaultCost",
@@ -258,7 +244,7 @@
       "name": "zoop",
       "picture": "zoop.jpg",
       "cardtext": "Deal 10 damage to target",
-      "type": 4,
+      "type": "SPELL",
       "sac": {
         "mana": {
           "V": 0,
@@ -275,7 +261,7 @@
       },
       "abilities": [
         {
-          "triggerType": 1,
+          "triggerType": "ACTIVATED_TARGETED",
           "targetCode": "IsDamagable",
           "activateCode": "DamageTarget",
           "metadata": {

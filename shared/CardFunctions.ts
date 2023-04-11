@@ -23,6 +23,7 @@ import {
   PlayerPay,
 } from "./LogicFunctions";
 import { CMCPlayer } from "./Player";
+import { GetActivePlayer } from "./Util";
 
 // defaultcost checks everything in the player.resources against the card.cost.
 export function DefaultCost(
@@ -182,11 +183,6 @@ function MatchState(original: {}, match: {}) {
   return returnval;
 }
 
-enum MATCHPLAYER {
-  OWNER = "0",
-  OPPONENT = "1",
-  BOTH = "3",
-}
 export function Match(
   card: CMCCard,
   cardowner: string,
@@ -198,13 +194,21 @@ export function Match(
   // no match pattern means everybody.
 
   if (ability.metadata.matchplayer) {
-    if (ability.metadata.matchplayer == MATCHPLAYER.BOTH) {
-    } else if (ability.metadata.matchplayer == MATCHPLAYER.OWNER) {
+    if (ability.metadata.matchplayer == TriggerPlayerType.EITHER) {
+    } else if (ability.metadata.matchplayer == TriggerPlayerType.OWNER) {
       if (cardowner != OwnerOf(target, G)) {
         return false;
       }
-    } else if (ability.metadata.matchplayer == MATCHPLAYER.OPPONENT) {
+    } else if (ability.metadata.matchplayer == TriggerPlayerType.OPPONENT) {
       if (cardowner == OwnerOf(target, G)) {
+        return false;
+      }
+    } else if (ability.metadata.matchplayer == TriggerPlayerType.ACTIVE) {
+      if (GetActivePlayer(ctx) == OwnerOf(target, G)) {
+        return false;
+      }
+    } else if (ability.metadata.matchplayer == TriggerPlayerType.ACTIVE) {
+      if (GetActivePlayer(ctx) != OwnerOf(target, G)) {
         return false;
       }
     }

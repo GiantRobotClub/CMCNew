@@ -1,0 +1,35 @@
+.editor {
+  background-color: white;
+  display: flex;
+}
+
+.cards {
+  display: flex;
+  flex-shrink: 1;
+  flex-wrap: wrap;
+  width: 20em;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+.smallcards {
+  height: 12em;
+}
+.bigcards {
+  height: 12em;
+}
+.superbig {
+  height: 25em;
+}
+
+.texteditor {
+  overflow-y: scroll;
+  height: 100vh;
+}
+
+.wheelcontrol {
+  width: 18em;
+  color: black;
+}
+.wheelcontrol * {
+  color: black;
+}

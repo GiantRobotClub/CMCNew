@@ -3,13 +3,13 @@ const CLIENT_PORT = 3000;
 const GAME_PORT = 3050;
 
 enum CardType {
-  EMPTY = 0,
-  DUMMY,
-  MONSTER,
-  EFFECT,
-  SPELL,
-  LOCATION,
-  PERSONA,
+  EMPTY = "EMPTY",
+  DUMMY = "DUMMY",
+  MONSTER = "MONSTER",
+  EFFECT = "EFFECT",
+  SPELL = "SPELL",
+  LOCATION = "LOCATION",
+  PERSONA = "PERSONA",
 }
 
 enum ClickType {
@@ -41,14 +41,14 @@ enum Stages {
 }
 
 enum Alignment {
-  NONE,
-  ANODYNE,
-  PROFANE,
-  VENERATED,
-  AP,
-  PV,
-  VA,
-  GOLDEN,
+  NONE = "NONE",
+  ANODYNE = "ANODYNE",
+  PROFANE = "PROFANE",
+  VENERATED = "VENERATED",
+  AP = "AP",
+  PV = "PV",
+  VA = "VA",
+  GOLDEN = "GOLDEN",
 }
 
 const PlayerIDs = ["0", "1"];

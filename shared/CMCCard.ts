@@ -1,6 +1,7 @@
 import { Ctx } from "boardgame.io";
 import { FaLeaf, FaSearch } from "react-icons/fa";
 import { prototypes } from "../shared/data/cards.json";
+import { current } from "immer";
 import {
   Alignment,
   CardType,
@@ -188,6 +189,11 @@ function GetCardPrototype(name: string): CMCCard {
   return newprototype;
 }
 
+function LoadCardPrototype(json: string | object): CMCCard {
+  const newprototype = typeof json === "string" ? JSON.parse(json) : json;
+  return newprototype;
+}
+
 function ApplyStat(mod: {}, orig: {}): any {
   const modified: {} = orig;
   Object.entries(mod).forEach(([index, submod]) => {
@@ -202,7 +208,7 @@ function ApplyStat(mod: {}, orig: {}): any {
 }
 
 function GetModifiedStatCard(card: CMCCard): CMCCard {
-  let newCard: CMCCard = window.structuredClone(card);
+  let newCard: CMCCard = JSON.parse(JSON.stringify(card));
   if (newCard.original) {
     newCard = newCard.original;
   }
@@ -236,6 +242,7 @@ export {
   CreateSpellCard,
   GetCardPrototype,
   GetModifiedStatCard,
+  LoadCardPrototype,
   StatMod,
   ApplyStat,
 };

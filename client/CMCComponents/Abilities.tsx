@@ -1,5 +1,5 @@
-import React, { CSSProperties } from "react";
-import icons from "./Icons";
+import React, { CSSProperties, ReactNodeArray } from "react";
+import { icons, scanForIcons } from "./Icons";
 import { Ability, TriggerType } from "../../shared/Abilities";
 import { CMCCard, CMCMonsterCard } from "../../shared/CMCCard";
 import { CardType } from "../../shared/Constants";
@@ -39,6 +39,15 @@ function CmcCardDetailAbility({
           clickability &&
           (ability.triggerType == TriggerType.ACTIVATED ||
             ability.triggerType == TriggerType.ACTIVATED_TARGETED);
+
+        let costitems: string | ReactNodeArray = "";
+        let textitems: string | ReactNodeArray = "";
+        if (showbutton && ability.abilityCostText) {
+          costitems = scanForIcons(ability.abilityCostText);
+        }
+        if (showbutton && ability.abilityText) {
+          textitems = scanForIcons(ability.abilityText);
+        }
         return (
           <div
             className="ability"
@@ -51,11 +60,27 @@ function CmcCardDetailAbility({
                 "abilityText " + (showbutton ? " abilityHasButton" : "")
               }
             >
-              {showbutton && ability.abilityCostText
-                ? ability.abilityCostText + ":"
-                : ""}
-
-              {ability.abilityText}
+              {
+                <span className="abilityCostText">
+                  {showbutton && ability.abilityCostText && costitems
+                    ? Array.isArray(costitems)
+                      ? costitems.map((item) => {
+                          return <span>{item}</span>;
+                        })
+                      : costitems
+                    : ""}
+                  :
+                </span>
+              }
+              <span className="abilityCostText">
+                {showbutton && ability.abilityText && textitems
+                  ? Array.isArray(textitems)
+                    ? textitems.map((item) => {
+                        return <span>{item}</span>;
+                      })
+                    : textitems
+                  : ""}
+              </span>
             </div>
             {ownerId == playerId && showbutton ? (
               <button

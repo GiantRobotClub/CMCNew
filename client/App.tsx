@@ -12,6 +12,7 @@ import LobbyCustom from "./Lobby";
 import CreatePlayer from "./CreatePlayer";
 import Home from "./Home";
 import Test from "./Test";
+import CardEdit from "./CardEdit";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/player/create" element={<CreatePlayer />} />
         <Route path="/home" element={<Home />} />
         <Route path="/test" element={<Test />} />
+        <Route path="/edit" element={<CardEdit />} />
       </Routes>
     </Router>
   );

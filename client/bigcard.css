@@ -68,6 +68,14 @@
   vertical-align: sub;
   display: inline-block;
 }
+.detailCard .abilityCostText svg {
+  vertical-align: middle;
+  display: inline-block;
+}
+.detailCard .abilityText svg {
+  vertical-align: middle;
+  display: inline-block;
+}
 .detailCard .spacer {
   border: 1px solid grey;
 }
@@ -369,4 +377,29 @@
 .cardsubtype .subtype {
   font-size: 0.4em;
   padding-left: 0.2em;
+}
+
+.dizzy {
+  opacity: 75%;
+  position: absolute;
+  top: 1.2em;
+  left: 1em;
+}
+.dizzy svg {
+  color: orange;
+  width: 5em;
+  height: 5em;
+}
+.dizzy.dizzyvis {
+  display: block;
+}
+.dizzy.dizzyunvis {
+  display: none;
+}
+
+.cardStyle {
+  position: relative;
+}
+.handcontainer .dizzyvis {
+  display: none !important;
 }

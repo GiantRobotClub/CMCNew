@@ -12,13 +12,14 @@ import { dataToEsm } from "@rollup/pluginutils";
 import { CardType } from "./Constants";
 
 enum TriggerType {
-  ACTIVATED = 0,
-  ACTIVATED_TARGETED,
-  AUTOMATIC_STAGE,
-  AUTOMATIC_RESPONSE,
-  AUTOMATIC_POSTCOMBAT,
-  AUTOMATIC_PRECOMBAT,
-  CONSTANT_FILTERED,
+  ACTIVATED = "ACTIVATED",
+  ACTIVATED_TARGETED = "ACTIVATED_TARGETED",
+  AUTOMATIC_STAGE = "AUTOMATIC_STAGE",
+  AUTOMATIC_RESPONSE = "AUTOMATIC_RESPONSE",
+  AUTOMATIC_POSTCOMBAT = "AUTOMATIC_POSTCOMBAT",
+  AUTOMATIC_PRECOMBAT = "AUTOMATIC_PRECOMBAT",
+  CONSTANT_FILTERED = "CONSTANT_FILTERED",
+  ACTIVATED_CHAIN = "ACTIVATED_CHAIN",
 }
 
 enum AbilitySpeed {
@@ -54,9 +55,11 @@ interface Ability {
 }
 
 enum TriggerPlayerType {
-  EITHER = 0,
-  ACTIVE = 1,
-  INACTIVE = 2,
+  EITHER = "EITHER",
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  OWNER = "OWNER",
+  OPPONENT = "OPPONENT",
 }
 interface TriggeringTrigger {
   name: string;
@@ -209,11 +212,33 @@ function ActivateAbility(
         return false; // cant afford
       }
     }
+    if (ability.costCode) {
+      const costFunc: Function = CardFunctions[ability.costCode];
+      // actually pay mana
+      if (!costFunc(card, cardowner, G, ctx, false, false)) {
+        return false; // cant afford
+      }
+    }
     if (card.type == CardType.SPELL) {
       // put the card in the graveyard and out of your hand
 
       AddToGraveyard(card, G);
       RemoveFromHand(card, cardowner, G);
+    }
+    if (ability.metadata.chain !== undefined) {
+      // run another ability afterwards.
+      const chainedability = card.abilities[ability.metadata.chain];
+      if (chainedability.triggerType != TriggerType.ACTIVATED_CHAIN) {
+        return false;
+      }
+      return ActivateAbility(
+        card,
+        chainedability,
+        G,
+        ctx,
+        resolveStack,
+        target
+      );
     }
   } else {
     if (!AddToStack(card, ability, G, ctx, target)) {

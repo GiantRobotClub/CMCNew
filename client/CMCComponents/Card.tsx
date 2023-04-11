@@ -2,6 +2,7 @@ import React, { CSSProperties } from "react";
 import { blank_object } from "svelte/internal";
 import {
   CMCCard,
+  CMCEntityCard,
   CMCMonsterCard,
   CMCPersonaCard,
   GetModifiedStatCard,
@@ -9,7 +10,8 @@ import {
 
 import { Alignment, CardType } from "../../shared/Constants";
 import { CMCPlayer } from "../../shared/Player";
-import icons from "./Icons";
+import { icons } from "./Icons";
+import { scanForIcons } from "./Icons";
 import { GiBroadsword, GiHealthNormal } from "react-icons/gi";
 import CmcCardDetailAbility from "./Abilities";
 function CMCCardVisual({
@@ -139,6 +141,7 @@ function CMCCardVisual({
               );
             const costkey = "cost" + key;
             const costamount = cardObject.cost[type][key];
+
             return (
               <span className={costkey} key={costkey + cardObject.guid}>
                 {icons[key]}
@@ -185,9 +188,6 @@ function CMCCardVisual({
         <div className="life">
           <GiHealthNormal className="cardicon health" />
           <span className="curlife">{(cardObject as CMCMonsterCard).life}</span>
-          <span className="totallife">
-            /{(cardObject as CMCMonsterCard).life}
-          </span>
         </div>
       </div>
     );
@@ -371,6 +371,17 @@ function CMCCardVisual({
         )}
         <div className="bottomline">{attackLine}</div>
         {playerData}
+      </div>
+      <div
+        className={
+          "dizzy" +
+          ((card.type == CardType.EFFECT || card.type == CardType.MONSTER) &&
+          (card as CMCEntityCard).dizzy
+            ? " dizzyvis"
+            : " dizzyunvis")
+        }
+      >
+        {icons["dizzytop"]}
       </div>
     </button>
   );
