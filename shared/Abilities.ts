@@ -1,8 +1,13 @@
 import { Ctx } from "boardgame.io";
 import { CMCGameState } from "./CardmasterGame";
-import { CMCCard } from "./CMCCard";
+import { CMCCard, StatMod } from "./CMCCard";
 import * as CardFunctions from "./CardFunctions";
-import { AddToGraveyard, OwnerOf, RemoveFromHand } from "./LogicFunctions";
+import {
+  AddToGraveyard,
+  AllCards,
+  OwnerOf,
+  RemoveFromHand,
+} from "./LogicFunctions";
 import { dataToEsm } from "@rollup/pluginutils";
 import { CardType } from "./Constants";
 
@@ -72,14 +77,11 @@ function Ability_Trigger(
 ) {
   let newG = G;
   //console.log("Ability trigger check " + JSON.stringify(trigger_data));
-  for (const slotplayer in G.slots) {
-    for (const subplayer in G.slots[slotplayer]) {
-      for (const subrow of G.slots[slotplayer][subplayer]) {
-        const card: CMCCard = subrow;
-        newG = handleTrigger(card, trigger_data, slotplayer, ctx, G);
-      }
-    }
-  }
+  const allcards = AllCards(G).allinplay;
+  allcards.forEach((card) => {
+    newG = handleTrigger(card, trigger_data, OwnerOf(card, G), ctx, G);
+  });
+
   return newG;
 }
 
@@ -144,7 +146,7 @@ function CanActivateAbility(
     ability.targetCode
   ) {
     const targetFunc: Function = CardFunctions[ability.targetCode];
-    if (!targetFunc(card, cardowner, target, G, ctx)) {
+    if (!targetFunc(card, ability, cardowner, target, G, ctx)) {
       return false;
     }
   }
@@ -267,6 +269,60 @@ function TriggerAuto(name: string, ctx: Ctx, G: CMCGameState): void {
   }
 }
 
+function ApplyStatChangesToThisCard(
+  card: CMCCard,
+  tcard: CMCCard,
+  ctx: Ctx,
+  G: CMCGameState
+) {
+  // wipe out existing ones from this source
+  if (tcard.statmods) {
+    tcard.statmods = tcard.statmods.filter(
+      (mod: StatMod) => mod.sourceGuid != card.guid
+    );
+  }
+
+  card.abilities.forEach((ability) => {
+    if (ability.triggerType != TriggerType.CONSTANT_FILTERED) {
+      return;
+    }
+    if (!ability.metadata.statmod) {
+      return;
+    }
+    if (!ability.targetCode) {
+      return;
+    }
+    const targetFunc: Function = CardFunctions[ability.targetCode];
+    if (!targetFunc(card, ability, OwnerOf(card, G), tcard, G, ctx)) {
+      return;
+    }
+    const statmod: StatMod = {
+      sourceGuid: card.guid,
+      mods: [ability.metadata.statmod],
+    };
+    if (!card.statmods) {
+      card.statmods = [];
+    }
+    card.statmods.push(statmod);
+  });
+}
+
+function ApplyStatChanges(card: CMCCard, ctx: Ctx, G: CMCGameState) {
+  for (const slotplayer in G.slots) {
+    const subplayer = "monsters";
+    for (const subrow of G.slots[slotplayer][subplayer]) {
+      const tcard: CMCCard = subrow;
+      ApplyStatChangesToThisCard(card, tcard, ctx, G);
+    }
+  }
+}
+function ApplyAllStatChanges(ctx: Ctx, G: CMCGameState) {
+  const allcards = AllCards(G).all;
+  allcards.forEach((card) => {
+    ApplyStatChanges(card, ctx, G);
+  });
+}
+
 interface StackedAbility {
   card: CMCCard;
   ability: Ability;
@@ -285,4 +341,6 @@ export {
   StackedAbility,
   AbilitySpeed,
   ResolveStack,
+  ApplyStatChanges,
+  ApplyAllStatChanges,
 };
