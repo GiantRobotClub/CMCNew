@@ -682,6 +682,48 @@ function Sacrifice(
   CardScan(G, random);
   return true;
 }
+
+function AllCards(G: CMCGameState) {
+  const cards = {
+    grave: [] as CMCCard[],
+    hand: [] as CMCCard[],
+    loc: [] as CMCCard[],
+    persona: [] as CMCCard[],
+    field: [] as CMCCard[],
+    all: [] as CMCCard[],
+    allinplay: [] as CMCCard[],
+  };
+  for (const slotplayer in G.slots) {
+    for (const subplayer in G.slots[slotplayer]) {
+      for (const subrow of G.slots[slotplayer][subplayer]) {
+        const card: CMCCard = subrow;
+        cards.field.push(card);
+        cards.all.push(card);
+        cards.allinplay.push(card);
+      }
+    }
+  }
+  cards.loc.push(G.location);
+  cards.persona.push(G.playerData[0].persona);
+  cards.persona.push(G.playerData[1].persona);
+  cards.hand.push(...G.players[0].hand);
+  cards.hand.push(...G.players[1].hand);
+  cards.grave.push(...G.playerData[1].graveyard);
+  cards.grave.push(...G.playerData[0].graveyard);
+
+  cards.all.push(G.location);
+  cards.all.push(G.playerData[0].persona);
+  cards.all.push(G.playerData[1].persona);
+  cards.all.push(...G.players[0].hand);
+  cards.all.push(...G.players[1].hand);
+  cards.all.push(...G.playerData[1].graveyard);
+  cards.all.push(...G.playerData[0].graveyard);
+
+  cards.allinplay.push(G.location);
+  cards.allinplay.push(G.playerData[0].persona);
+  cards.allinplay.push(G.playerData[1].persona);
+  return cards;
+}
 export {
   OwnerOf,
   CanClickCard,
@@ -706,4 +748,5 @@ export {
   CanDiscard,
   ForceDiscard,
   IsInHand,
+  AllCards,
 };

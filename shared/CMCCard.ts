@@ -236,4 +236,6 @@ export {
   CreateSpellCard,
   GetCardPrototype,
   GetModifiedStatCard,
+  StatMod,
+  ApplyStat,
 };

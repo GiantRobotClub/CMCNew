@@ -151,3 +151,69 @@ export function DamageTarget(
     return false;
   }
 }
+export function Always(
+  card: CMCCard,
+  cardowner: string,
+  ability: Ability,
+  target: CMCCard,
+  G: CMCGameState,
+  ctx: Ctx
+) {
+  return true;
+}
+
+function MatchState(original: {}, match: {}) {
+  if (!match) {
+    return true;
+  }
+  const entries = Object.entries(match);
+  let returnval: boolean = true;
+  entries.forEach(([key, value]) => {
+    if (typeof value === "object") {
+      if (original.hasOwnProperty(key)) {
+        returnval = MatchState(original[key], value as object);
+        return;
+      }
+    } else {
+      returnval = value == original[key];
+      return;
+    }
+  });
+  return returnval;
+}
+
+enum MATCHPLAYER {
+  OWNER = "0",
+  OPPONENT = "1",
+  BOTH = "3",
+}
+export function Match(
+  card: CMCCard,
+  cardowner: string,
+  ability: Ability,
+  target: CMCCard,
+  G: CMCGameState,
+  ctx: Ctx
+): boolean {
+  // no match pattern means everybody.
+
+  if (ability.metadata.matchplayer) {
+    if (ability.metadata.matchplayer == MATCHPLAYER.BOTH) {
+    } else if (ability.metadata.matchplayer == MATCHPLAYER.OWNER) {
+      if (cardowner != OwnerOf(target, G)) {
+        return false;
+      }
+    } else if (ability.metadata.matchplayer == MATCHPLAYER.OPPONENT) {
+      if (cardowner == OwnerOf(target, G)) {
+        return false;
+      }
+    }
+  }
+
+  if (ability.metadata.matchPattern) {
+    if (!MatchState(target, ability.metadata.matchPattern)) {
+      return false;
+    }
+  }
+  return true;
+}

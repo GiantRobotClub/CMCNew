@@ -13,6 +13,8 @@ import { CMCPlayer, CreateDefaultPlayer, ParseDbPlayer } from "./Player";
 import {
   Ability,
   Ability_Trigger,
+  ApplyAllStatChanges,
+  ApplyStatChanges,
   StackedAbility,
   TriggerAuto,
   TriggeringTrigger,
@@ -319,6 +321,7 @@ export const CardmasterConflict: Game<CMCGameState> = {
         },
         onMove: ({ G, ctx, events, random }) => {
           CheckState(G);
+          ApplyAllStatChanges(ctx, G);
         },
 
         stages: {
