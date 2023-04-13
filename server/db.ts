@@ -93,17 +93,54 @@ function GetOwnedCards(playerid: string): DbOwnedCard[] | undefined {
   return deck;
 }
 
+function NewEmptyDeck(owner: string, newid: string): DbFullDeck {
+  const newDeck: DbDeck = {
+    ownerid: owner,
+    deckid: newid,
+    persona: "debugpersona",
+    deckname: "New Deck",
+    deckicon: "default",
+  };
+  const newFdeck: DbFullDeck = {
+    deck: newDeck,
+    cards: [],
+  };
+  return newFdeck;
+}
+function DeleteDeck(deckid: string) {
+  const database = db();
+  let stmtsql = "DELETE FROM deck where deckid=(?);";
+  let stmt2sql = " DELETE FROM deck_card where deckid=(?);";
+
+  const stmt = database.prepare(stmtsql);
+  const stmt2 = database.prepare(stmt2sql);
+  console.log("Deleting ", deckid);
+  stmt.run(deckid);
+  stmt2.run(deckid);
+}
 function CreateDeck(deck: DbFullDeck) {
+  const database = db();
+  console.dir(deck);
   const check = GetDeck(deck.deck.deckid);
   if (check !== undefined) {
     console.log("Deck already exists");
     return false;
   }
+  console.dir(deck);
   //todo make this not awful
   let stmtsql =
     "INSERT INTO deck (deckid, ownerid, deckname, deckicon, persona) values (?,?,?,?,?)";
+
   const stmt = database.prepare(stmtsql);
 
+  console.dir(deck.deck);
+  console.log(
+    deck.deck.deckid,
+    deck.deck.ownerid,
+    deck.deck.deckname,
+    deck.deck.deckicon,
+    deck.deck.persona
+  );
   stmt.run(
     deck.deck.deckid,
     deck.deck.ownerid,
@@ -196,4 +233,6 @@ export {
   LoadJsonDeck,
   GetDeckList,
   GetPlayerIdFromName,
+  NewEmptyDeck,
+  DeleteDeck,
 };

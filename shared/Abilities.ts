@@ -10,6 +10,8 @@ import {
 } from "./LogicFunctions";
 import { dataToEsm } from "@rollup/pluginutils";
 import { CardType } from "./Constants";
+import { Random, RandomAPI } from "boardgame.io/src/plugins/random/random";
+import { EventsAPI } from "boardgame.io/src/plugins/events/events";
 
 enum TriggerType {
   ACTIVATED = "ACTIVATED",
@@ -76,13 +78,24 @@ const EmptyTriggerData = {
 function Ability_Trigger(
   trigger_data: TriggeringTrigger,
   G: CMCGameState,
-  ctx: Ctx
+  ctx: Ctx,
+
+  random: RandomAPI,
+  events: EventsAPI
 ) {
   let newG = G;
   //console.log("Ability trigger check " + JSON.stringify(trigger_data));
   const allcards = AllCards(G).allinplay;
   allcards.forEach((card) => {
-    newG = handleTrigger(card, trigger_data, OwnerOf(card, G), ctx, G);
+    newG = handleTrigger(
+      card,
+      trigger_data,
+      OwnerOf(card, G),
+      ctx,
+      G,
+      random,
+      events
+    );
   });
 
   return newG;
@@ -93,17 +106,39 @@ function handleTrigger(
   trigger_data: TriggeringTrigger,
   owner: string,
   ctx: Ctx,
-  G: CMCGameState
+  G: CMCGameState,
+  random: RandomAPI,
+  events: EventsAPI
 ) {
   let newG = G;
   for (const ability of card.abilities) {
     if (ability.triggerCode) {
       const triggerFunc: Function = CardFunctions[ability.triggerCode];
       //console.log(CardFunctions);
-      if (triggerFunc(card, ability, trigger_data, owner, newG, ctx)) {
+      if (
+        triggerFunc(
+          card,
+          ability,
+          trigger_data,
+          owner,
+          newG,
+          ctx,
+          random,
+          events
+        )
+      ) {
         if (ability.activateCode) {
           const abilityFunc: Function = CardFunctions[ability.activateCode];
-          abilityFunc(card, ability, trigger_data, owner, newG, ctx);
+          abilityFunc(
+            card,
+            ability,
+            trigger_data,
+            owner,
+            newG,
+            ctx,
+            random,
+            events
+          );
           //console.log(newG);
         }
       }
@@ -118,7 +153,8 @@ function CanActivateAbility(
   ability: Ability,
   G: CMCGameState,
   ctx: Ctx,
-
+  random?: RandomAPI,
+  events?: EventsAPI,
   target?: CMCCard
 ): boolean {
   const cardowner = OwnerOf(card, G);
@@ -149,7 +185,7 @@ function CanActivateAbility(
     ability.targetCode
   ) {
     const targetFunc: Function = CardFunctions[ability.targetCode];
-    if (!targetFunc(card, ability, cardowner, target, G, ctx)) {
+    if (!targetFunc(card, ability, cardowner, target, G, ctx, events, random)) {
       return false;
     }
   }
@@ -158,16 +194,25 @@ function CanActivateAbility(
   if (ability.costCode) {
     const costFunc: Function = CardFunctions[ability.costCode];
     // do dry run of cost.  will run the actual one afterwards.
-    if (!costFunc(card, cardowner, G, ctx, false, true)) {
+    if (!costFunc(card, cardowner, G, ctx, false, true, events, random)) {
       return false; // cant afford
     }
   }
   return true;
 }
-function ResolveStack(G, ctx) {
+function ResolveStack(
+  G: CMCGameState,
+  ctx: Ctx,
+  random: RandomAPI,
+  events: EventsAPI
+) {
   SortStack(G, ctx);
+
   while (G.abilityStack.length > 0) {
     const stacked = G.abilityStack.pop();
+    if (!stacked) {
+      break;
+    }
     if (
       !ActivateAbility(
         stacked.card,
@@ -175,6 +220,8 @@ function ResolveStack(G, ctx) {
         G,
         ctx,
         true,
+        random,
+        events,
         stacked.target
       )
     ) {
@@ -188,10 +235,12 @@ function ActivateAbility(
   G: CMCGameState,
   ctx: Ctx,
   resolveStack: boolean,
+  random: RandomAPI,
+  events: EventsAPI,
   target?: CMCCard
 ): boolean {
   const cardowner = OwnerOf(card, G);
-  if (!CanActivateAbility(card, ability, G, ctx)) {
+  if (!CanActivateAbility(card, ability, G, ctx, random, events)) {
     return false;
   }
 
@@ -237,6 +286,8 @@ function ActivateAbility(
         G,
         ctx,
         resolveStack,
+        random,
+        events,
         target
       );
     }
@@ -280,7 +331,13 @@ function SortStack(G: CMCGameState, ctx: Ctx) {
   );
 }
 
-function TriggerAuto(name: string, ctx: Ctx, G: CMCGameState): void {
+function TriggerAuto(
+  name: string,
+  ctx: Ctx,
+  G: CMCGameState,
+  random: RandomAPI,
+  events: EventsAPI
+): void {
   if (ctx.activePlayers !== null) {
     Ability_Trigger(
       {
@@ -289,7 +346,9 @@ function TriggerAuto(name: string, ctx: Ctx, G: CMCGameState): void {
         triggeringPlayer: ctx.currentPlayer,
       },
       G,
-      ctx
+      ctx,
+      random,
+      events
     );
   }
 }

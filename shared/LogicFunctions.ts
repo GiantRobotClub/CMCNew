@@ -336,7 +336,9 @@ function CanClickCard(
   playerId: string,
   clickType: ClickType,
   ctx: Ctx,
-  G: CMCGameState
+  G: CMCGameState,
+  random?: RandomAPI,
+  events?: EventsAPI
 ): boolean {
   // is there an active ability?  If so, check targeting
   if (G.activeAbility) {
@@ -347,7 +349,18 @@ function CanClickCard(
     if (GetActiveStage(ctx) != Stages.pickAbilityTarget) {
       return false;
     }
-    if (!CanActivateAbility(G.activeCard, G.activeAbility, G, ctx, card)) {
+    if (
+      !CanActivateAbility(
+        G.activeCard,
+        G.activeAbility,
+        G,
+        ctx,
+        random,
+        events,
+
+        card
+      )
+    ) {
       return false;
     }
 

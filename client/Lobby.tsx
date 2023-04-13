@@ -5,6 +5,9 @@ import { LobbyAPI } from "boardgame.io/src/types";
 import { DbPlayer } from "../server/DbTypes";
 import { useNavigate } from "react-router-dom";
 import { GiCoinsPile } from "react-icons/gi";
+import SessionHandler from "./SessionHandler";
+
+<SessionHandler />;
 const baseplayer: DbPlayer = {
   playerid: "",
   username: "",

@@ -9,6 +9,7 @@ import { BsFillDropletFill } from "react-icons/bs";
 import { TbCards, TbGrave2 } from "react-icons/tb";
 import { CgCardSpades } from "react-icons/cg";
 import { RiStarSFill } from "react-icons/ri";
+import { RxCardStack, RxCardStackPlus } from "react-icons/rx";
 import React from "react";
 import reactStringReplace from "react-string-replace";
 
@@ -23,6 +24,8 @@ export const icons = {
   graveyard: <TbGrave2 />,
   dizzytop: <GiStarsStack />,
   dizzy: <RiStarSFill />,
+  default: <RxCardStack />,
+  adddeck: <RxCardStackPlus />,
 };
 export function scanForIcons(string: string): string | React.ReactNodeArray {
   let returnstring: string | React.ReactNodeArray = string;

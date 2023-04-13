@@ -5,7 +5,8 @@ import { useParams } from "react-router-dom";
 
 import { SocketIO } from "boardgame.io/multiplayer";
 import React from "react";
-
+import SessionHandler from "./SessionHandler";
+<SessionHandler />;
 const CmcClient = Client({
   game: CardmasterConflict,
   numPlayers: 2,

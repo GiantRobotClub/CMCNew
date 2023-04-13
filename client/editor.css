@@ -33,3 +33,164 @@
 .wheelcontrol * {
   color: black;
 }
+
+#deckchooser .deckvisual .personacard .cardStyleClickable {
+  filter: unset !important;
+  box-shadow: none !important;
+  color: black;
+  transform: scale(1);
+  z-index: 50;
+}
+#deckchooser .deckvisual .personacard .cardStyleClickable:hover {
+  box-shadow: none !important;
+  background-color: grey;
+  transform: scale(1);
+  z-index: 100;
+}
+#deckchooser .deckvisual .personacard .cardStyleClicked {
+  background-color: rgb(255, 214, 208);
+  filter: unset !important;
+  transform: scale(1);
+}
+#deckchooser .deckvisual {
+  position: relative;
+}
+#deckchooser .deckvisual .deckicon svg {
+  position: absolute;
+  left: 15%;
+  bottom: -10%;
+  height: 70%;
+  width: 70%;
+  z-index: 200;
+  filter: drop-shadow(0 0 0.1em #fff)
+    drop-shadow(/* inner white */ 0 0 0.2em #f0f)
+    drop-shadow(/* middle magenta */ 0 0 0.3em #0ff /* outer cyan */);
+}
+#deckchooser {
+  display: flex;
+}
+
+#deckEditor .cardStyleClickable {
+  filter: unset !important;
+  box-shadow: none !important;
+  color: black;
+  transform: scale(1);
+  z-index: 50;
+}
+#deckEditor .cardStyleClickable:hover {
+  box-shadow: none !important;
+  background-color: grey;
+  transform: scale(1);
+  z-index: 100;
+}
+#deckEditor .cardStyleClicked {
+  background-color: rgb(255, 214, 208);
+  filter: unset !important;
+  transform: scale(1);
+}
+#deckEditor .personacard {
+  position: relative;
+}
+#deckEditor .deckcardvisual {
+  position: relative;
+  height: 10em;
+}
+#deckEditor .ownedcardvisual {
+  position: relative;
+  height: 10em;
+}
+.ownedcards {
+  display: flex;
+  border: 1px solid white;
+  border-radius: 1em;
+  padding: 1em;
+  overflow-x: scroll;
+  height: 20em;
+  flex-wrap: wrap;
+}
+.currentdeck {
+  display: flex;
+  border: 1px solid white;
+  border-radius: 1em;
+  padding: 1em;
+  height: 20em;
+  flex-wrap: wrap;
+
+  overflow-x: scroll;
+}
+.ownedpersonas {
+  display: flex;
+  border: 1px solid white;
+  border-radius: 1em;
+  padding: 1em;
+
+  overflow-y: scroll;
+}
+.personapicker {
+  border: 1px solid white;
+  border-radius: 1em;
+  padding: 1em;
+}
+.cardpicker {
+  border: 1px solid white;
+  border-radius: 1em;
+  padding: 1em;
+}
+
+.currentpersona {
+  border: 1px solid white;
+  border-radius: 1em;
+  padding: 1em;
+}
+
+#deckEditor .amount {
+  position: absolute;
+  font-size: 3em;
+  left: 15%;
+  bottom: -10%;
+  height: 70%;
+  width: 70%;
+  z-index: 200;
+  filter: drop-shadow(0 0 0.1em #fff)
+    drop-shadow(/* inner white */ 0 0 0.2em #f0f)
+    drop-shadow(/* middle magenta */ 0 0 0.3em #0ff /* outer cyan */);
+  pointer-events: none;
+}
+#deckEditor {
+  display: flex;
+
+  max-height: 100vh;
+  overflow-y: scroll;
+}
+#deckEditor .symbolpicker {
+  display: flex;
+  flex-wrap: wrap;
+  width: 10em;
+  border: 1px solid white;
+  border-radius: 1em;
+  padding: 1em;
+  overflow-y: scroll;
+}
+#deckEditor .symbolpicker svg {
+  filter: drop-shadow(0 0 0.1em #fff)
+    drop-shadow(/* inner white */ 0 0 0.2em #f0f)
+    drop-shadow(/* middle magenta */ 0 0 0.3em #0ff /* outer cyan */);
+  width: 3em;
+  height: 3em;
+  pointer-events: none;
+}
+#deckEditor .currentpersonabox {
+  position: relative;
+}
+#deckEditor .currentpersonabox .deckicon svg {
+  position: absolute;
+  left: 15%;
+  bottom: -10%;
+  height: 70%;
+  width: 70%;
+  z-index: 200;
+  filter: drop-shadow(0 0 0.1em #fff)
+    drop-shadow(/* inner white */ 0 0 0.2em #f0f)
+    drop-shadow(/* middle magenta */ 0 0 0.3em #0ff /* outer cyan */);
+  pointer-events: none;
+}

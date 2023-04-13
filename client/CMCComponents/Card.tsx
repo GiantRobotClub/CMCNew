@@ -25,6 +25,7 @@ function CMCCardVisual({
   detail = false,
   lookingplayer,
   owner,
+  showplayer = true,
 }: {
   card: CMCCard;
   canClick: boolean;
@@ -36,6 +37,7 @@ function CMCCardVisual({
   detail?: boolean;
   lookingplayer?: string;
   owner?: string;
+  showplayer?: boolean;
 }) {
   const isDetail: boolean = detail ?? false;
   const showabilitybutton: boolean = clickability ?? false;
@@ -343,7 +345,7 @@ function CMCCardVisual({
           <div className="cardname">{cardObject.name}</div>
         </div>
         <div className="cardpic">
-          <img src={"assets/cards/" + cardObject.picture} />
+          <img src={"/assets/cards/" + cardObject.picture} />
         </div>
         {isDetail ? (
           <div className="cardsubtype">
@@ -370,7 +372,7 @@ function CMCCardVisual({
           ""
         )}
         <div className="bottomline">{attackLine}</div>
-        {playerData}
+        {showplayer ? playerData : <></>}
       </div>
       <div
         className={

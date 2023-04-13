@@ -222,7 +222,6 @@ function GetModifiedStatCard(card: CMCCard): CMCCard {
     });
   });
   newCard.statmods = undefined;
-  console.dir(newCard.cost);
   return newCard;
 }
 

@@ -11,7 +11,8 @@
 
         { "cardid": "debugloc", "amount": 10 },
 
-        { "cardid": "debuggen", "amount": 10 }
+        { "cardid": "debuggen", "amount": 10 },
+        { "cardid": "debugpersona", "amount": 1 }
       ]
     }
   }

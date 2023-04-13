@@ -2,22 +2,34 @@ import Router from "@koa/router";
 import type { Server, Server as ServerTypes } from "boardgame.io";
 import { authenticator } from "@otplib/preset-default";
 import {
+  CreateDeck,
   CreatePlayer,
+  DeleteDeck,
   GetDeckList,
   GetFullDeck,
   GetOwnedCards,
   GetPlayer,
   GetPlayerIdFromName,
   LoadJsonDeck,
+  NewEmptyDeck,
 } from "./db";
-import { DbDeckCard, DbOwnedCard, DbPlayer } from "./DbTypes";
+import { DbDeckCard, DbFullDeck, DbOwnedCard, DbPlayer } from "./DbTypes";
 import { nanoid } from "nanoid";
 import { CgTapSingle } from "react-icons/cg";
+import bodyParser from "koa-bodyparser";
 export const Manage = new Router<any, Server.AppCtx>();
-import session from "koa-session";
 
 //replace the module
+Manage.post("/decks/save/:deckid", bodyParser(), (ctx, next) => {
+  const deckid = ctx.params.deckid;
+  let deck = ctx.request.body as { deck: DbFullDeck };
 
+  DeleteDeck(deckid);
+  CreateDeck(deck.deck);
+  ctx.body = { success: true };
+  return true;
+});
+Manage.use(bodyParser());
 Manage.get("/test", (ctx, next) => {
   const playerid = nanoid();
   const deckid = nanoid();
@@ -76,6 +88,12 @@ Manage.get("/decks/get/:deckid", (ctx, next) => {
   const deckid = ctx.params.deckid;
   ctx.body = { deckid: deckid, decks: GetFullDeck(deckid) };
 });
+Manage.get("/decks/create/:playerid", (ctx, next) => {
+  const newdeckid = nanoid();
+  const newemptydeck = NewEmptyDeck(ctx.params.playerid, newdeckid);
+  CreateDeck(newemptydeck);
+  ctx.body = { deckid: newdeckid, deck: newemptydeck };
+});
 Manage.get("/player/getbyname/:name", (ctx, next) => {
   const playerid = GetPlayerIdFromName(ctx.params.name);
   ctx.body = {
@@ -87,6 +105,11 @@ Manage.get("/player/getbyname/:name", (ctx, next) => {
 Manage.get("/player/getbyid/:id", (ctx, next) => {
   const player = GetPlayer(ctx.params.id);
   ctx.body = { player: player };
+});
+
+Manage.get("/player/getowned/:id", (ctx, next) => {
+  const owned = GetOwnedCards(ctx.params.id);
+  ctx.body = { owned: owned };
 });
 
 Manage.get("/player/getsession", (ctx, next) => {

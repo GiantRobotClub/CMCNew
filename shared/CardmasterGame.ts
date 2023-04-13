@@ -60,7 +60,6 @@ import { isModuleDeclaration } from "typescript";
 import { DbFullDeck, DbPlayer } from "../server/DbTypes";
 import { GetPlayer } from "../server/DbWrapper";
 import { GetFullDeck } from "../server/DbWrapper";
-import { Events } from "boardgame.io/src/plugins/events/events";
 import ai from "./ai";
 
 export interface CMCGameState {
@@ -299,7 +298,7 @@ export const CardmasterConflict: Game<CMCGameState> = {
         order: TurnOrder.CUSTOM(PlayerIDs), // anyone else is a spectator
         onBegin: ({ G, ctx, events, random }) => {
           if (ctx.activePlayers !== null) {
-            TriggerAuto(TriggerNames.START_TURN, ctx, G);
+            TriggerAuto(TriggerNames.START_TURN, ctx, G, random, events);
 
             const activePlayer = GetActivePlayer(ctx);
             // do turn mana, unless this is the first turn, then do initial mana and hand
@@ -312,8 +311,8 @@ export const CardmasterConflict: Game<CMCGameState> = {
         },
         onEnd: ({ G, ctx, events, random }) => {
           if (ctx.activePlayers !== null) {
-            TriggerAuto(TriggerNames.END_STAGE, ctx, G);
-            TriggerAuto(TriggerNames.END_TURN, ctx, G);
+            TriggerAuto(TriggerNames.END_STAGE, ctx, G, random, events);
+            TriggerAuto(TriggerNames.END_TURN, ctx, G, random, events);
           }
 
           resetCombat(G);

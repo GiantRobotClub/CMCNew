@@ -1,8 +1,7 @@
 import { Client } from "boardgame.io/react";
 import React from "react";
 import { CardmasterConflict } from "../shared/CardmasterGame";
-import { TicTacToe } from "../shared/Game";
-import { TicTacToeBoard } from "./Board";
+
 import { CMCBoard } from "./CMCComponents/Board";
 import { Local } from "boardgame.io/multiplayer";
 import { MCTSBot } from "boardgame.io/ai";

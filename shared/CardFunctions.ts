@@ -9,13 +9,16 @@ import {
 import { CMCGameState } from "./CardmasterGame";
 import {
   CMCCard,
+  CMCEntityCard,
   CMCMonsterCard,
   CMCPersonaCard,
   GetModifiedStatCard,
 } from "./CMCCard";
 import { CardType } from "./Constants";
 import {
+  AllCards,
   DealDamage,
+  ForceDiscard,
   IsMonster,
   IsPersona,
   OwnerOf,
@@ -24,6 +27,42 @@ import {
 } from "./LogicFunctions";
 import { CMCPlayer } from "./Player";
 import { GetActivePlayer } from "./Util";
+import { Random, RandomAPI } from "boardgame.io/src/plugins/random/random";
+import { EventsAPI } from "boardgame.io/src/plugins/plugin-events";
+
+export function DizzyCost(
+  card: CMCCard,
+  cardowner: string,
+  ability: Ability,
+  target: CMCCard,
+  G: CMCGameState,
+  ctx: Ctx,
+  events: EventsAPI,
+  random: RandomAPI,
+  dry: boolean
+): boolean {
+  if (card.type != CardType.EFFECT && card.type != CardType.MONSTER) {
+    return false;
+  }
+
+  let found: boolean = false;
+  for (const playcard of AllCards(G).allinplay) {
+    if (card.guid == playcard.guid) {
+      found = true;
+      break;
+    }
+  }
+  if (!found) {
+    return false;
+  }
+  if ((card as CMCEntityCard).dizzy) {
+    return false;
+  }
+  if (!dry) {
+    (card as CMCEntityCard).dizzy = true;
+  }
+  return true;
+}
 
 // defaultcost checks everything in the player.resources against the card.cost.
 export function DefaultCost(
@@ -31,6 +70,8 @@ export function DefaultCost(
   playertocheck: string,
   G: CMCGameState,
   ctx: Ctx,
+  random: RandomAPI,
+  events: EventsAPI,
   dry: boolean
 ): boolean {
   const fullplayer: CMCPlayer = G.playerData[playertocheck];
@@ -61,6 +102,8 @@ export function IsDamagable(
   cardowner: string,
   target: CMCCard,
   G: CMCGameState,
+  random: RandomAPI,
+  events: EventsAPI,
   ctx: Ctx
 ): boolean {
   // can only damage in field
@@ -92,6 +135,8 @@ export function ManaGenerate(
   owner: string,
   G: CMCGameState,
   ctx: Ctx,
+  random: RandomAPI,
+  events: EventsAPI,
   target?: CMCCard
 ): boolean {
   let playerid = OwnerOf(card, G);
@@ -114,7 +159,9 @@ export function TriggerStage(
   trigger: TriggeringTrigger,
   owner: string,
   G: CMCGameState,
-  ctx: Ctx
+  ctx: Ctx,
+  random: RandomAPI,
+  events: EventsAPI
 ): boolean {
   if (!ctx.activePlayers) {
     return false;
@@ -139,6 +186,8 @@ export function DamageTarget(
   owner: string,
   G: CMCGameState,
   ctx: Ctx,
+  random: RandomAPI,
+  events: EventsAPI,
   target?: CMCCard
 ) {
   if (!target) return false;
@@ -220,4 +269,31 @@ export function Match(
     }
   }
   return true;
+}
+
+export function Discard(
+  card: CMCCard,
+  ability: Ability,
+  trigger: TriggeringTrigger,
+  owner: string,
+  G: CMCGameState,
+  ctx: Ctx,
+  random: RandomAPI,
+  events: EventsAPI,
+  target?: CMCCard
+) {
+  let targeto = owner;
+
+  if (!target) {
+    //assume owner
+    targeto = owner;
+  } else {
+    targeto = OwnerOf(target, G);
+  }
+  let discardchoose = false;
+  if (ability.metadata && "discardchoose" in ability.metadata) {
+    discardchoose = ability.metadata.discardchoose;
+  }
+
+  return ForceDiscard(discardchoose, targeto, G, ctx, random, events);
 }
