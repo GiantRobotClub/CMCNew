@@ -106,6 +106,24 @@ const DeckEditor = ({ deckid }: { deckid: string }) => {
     setOwnedCards(newOwned);
     setFullDeck(newDeck);
   };
+  const fixCounts = (deck: DbFullDeck, owned: DbOwnedCard[]) => {
+    for (const card of deck.cards) {
+      for (const owncard of owned) {
+        if (owncard.cardid == card.cardid) {
+          // fix numbers
+          if (owncard.amount < card.amount) {
+            console.log("Too many of " + card.cardid);
+            card.amount = owncard.amount;
+          }
+          owncard.amount = owncard.amount - card.amount;
+        }
+      }
+    }
+    owned = owned.filter((card) => card.amount > 0);
+    deck.cards = deck.cards.filter((card) => card.amount > 0);
+    setFullDeck(deck);
+    setOwnedCards(owned);
+  };
   const addDeck = (cardid: string) => {
     const newDeck = JSON.parse(JSON.stringify(FullDeck));
     let index = -1;
@@ -158,6 +176,7 @@ const DeckEditor = ({ deckid }: { deckid: string }) => {
             .then((data) => {
               const owneddeck = data.owned as DbOwnedCard[];
               setOwnedCards(owneddeck);
+              fixCounts(fulldeck, owneddeck);
               setLoading(false);
             });
         });

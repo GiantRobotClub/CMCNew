@@ -194,3 +194,7 @@
     drop-shadow(/* middle magenta */ 0 0 0.3em #0ff /* outer cyan */);
   pointer-events: none;
 }
+
+#deckEditor .dizzy {
+  display: none;
+}
