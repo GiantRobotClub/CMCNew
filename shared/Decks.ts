@@ -30,7 +30,7 @@ function ParseDbDeck(playerid: string, deck: DbFullDeck, G: CMCGameState) {
   const newDeck: CMCCard[] = [];
   deck.cards.forEach(function (card: DbDeckCard) {
     for (let i = 0; i < card.amount; i++) {
-      newDeck.push(GetCardPrototype(card.cardid));
+      newDeck.push(JSON.parse(JSON.stringify(GetCardPrototype(card.cardid))));
     }
   });
   G.secret.decks[playerid] = newDeck;

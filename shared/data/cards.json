@@ -173,6 +173,7 @@
       },
       "abilities": [
         {
+          "costCode": "DizzyCost",
           "triggerType": "ACTIVATED",
           "activateCode": "ManaGenerate",
           "metadata": {
@@ -196,7 +197,7 @@
           "P": 1
         },
         "intrinsic": {
-          "health": 100
+          "health": 300
         }
       },
       "resourcePerTurn": {

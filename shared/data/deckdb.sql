@@ -28,3 +28,11 @@ CREATE TABLE IF NOT EXISTS player (
     authenticationcode text,
     selecteddeck text
 );
+
+CREATE TABLE IF NOT EXISTS materials (
+    playerid text,
+    letter text,
+    amount integer,
+    PRIMARY KEY(playerid,letter)
+    )
+    ;

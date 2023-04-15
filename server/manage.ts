@@ -1,5 +1,5 @@
 import Router from "@koa/router";
-import type { Server, Server as ServerTypes } from "boardgame.io";
+import type { PlayerID, Server, Server as ServerTypes } from "boardgame.io";
 import { authenticator } from "@otplib/preset-default";
 import {
   CreateDeck,
@@ -7,17 +7,93 @@ import {
   DeleteDeck,
   GetDeckList,
   GetFullDeck,
+  GetMats,
   GetOwnedCards,
   GetPlayer,
   GetPlayerIdFromName,
+  GiveMats,
   LoadJsonDeck,
   NewEmptyDeck,
 } from "./db";
-import { DbDeckCard, DbFullDeck, DbOwnedCard, DbPlayer } from "./DbTypes";
+import {
+  DbCraftingMat,
+  DbCraftingMats,
+  DbDeckCard,
+  DbFullDeck,
+  DbOwnedCard,
+  DbPlayer,
+} from "./DbTypes";
 import { nanoid } from "nanoid";
-import { CgTapSingle } from "react-icons/cg";
 import bodyParser from "koa-bodyparser";
+import crafting from "../shared/data/crafting.json";
 export const Manage = new Router<any, Server.AppCtx>();
+Manage.get("/mats/get/:playerid", (ctx, next) => {
+  const mats: DbCraftingMats | undefined = GetMats(ctx.params.playerid);
+  if (mats) {
+    ctx.body = { mats: mats };
+  } else {
+    ctx.boy = { mats: {} };
+  }
+  return true;
+});
+
+Manage.post("/mats/give", bodyParser(), (ctx, next) => {
+  let victoryinfo = ctx.request.body as {
+    id: PlayerID;
+    victory: { type: string; victory: boolean };
+  };
+  // figure out rewards
+  const letterrewardsall: string[] = [];
+  Object.entries(crafting.rewardrates).forEach((entry) => {
+    const [reward, amount] = entry;
+    for (let i = 0; i < amount; i++) {
+      letterrewardsall.push(reward);
+    }
+  });
+
+  const letterrewards: string[] = [];
+
+  const cardrewards: string[] = [];
+  const winamount = victoryinfo.victory.victory ? 3 : 1;
+  for (let i = 0; i < winamount; i++) {
+    letterrewards.push(
+      letterrewardsall[~~(Math.random() * letterrewardsall.length)]
+    );
+  }
+
+  // if the type is defined
+  if (victoryinfo.victory.type) {
+    cardrewards.push(victoryinfo.victory.type);
+  }
+  const newmats: DbCraftingMats = {
+    playerid: victoryinfo.id,
+    mats: [],
+  };
+
+  letterrewards.forEach((letter) => {
+    let found: boolean = false;
+    for (const mat of newmats.mats) {
+      if (mat.letter == letter) {
+        mat.amount = mat.amount + 1;
+        found = true;
+        continue;
+      }
+    }
+    if (!found) {
+      const newmat: DbCraftingMat = {
+        playerid: victoryinfo.id,
+        letter: letter,
+        amount: 1,
+      };
+    }
+  });
+
+  //give the player their rewards
+  GiveMats(newmats);
+  // return what those rewards are.
+  ctx.body = { letterrewards: letterrewards, cardrewards: cardrewards };
+  return true;
+});
 
 //replace the module
 Manage.post("/decks/save/:deckid", bodyParser(), (ctx, next) => {

@@ -13,6 +13,35 @@ import { RxCardStack, RxCardStackPlus } from "react-icons/rx";
 import React from "react";
 import reactStringReplace from "react-string-replace";
 
+import {
+  TbSquareRoundedLetterA,
+  TbSquareRoundedLetterB,
+  TbSquareRoundedLetterC,
+  TbSquareRoundedLetterD,
+  TbSquareRoundedLetterE,
+  TbSquareRoundedLetterF,
+  TbSquareRoundedLetterG,
+  TbSquareRoundedLetterH,
+  TbSquareRoundedLetterI,
+  TbSquareRoundedLetterJ,
+  TbSquareRoundedLetterK,
+  TbSquareRoundedLetterL,
+  TbSquareRoundedLetterM,
+  TbSquareRoundedLetterN,
+  TbSquareRoundedLetterO,
+  TbSquareRoundedLetterP,
+  TbSquareRoundedLetterQ,
+  TbSquareRoundedLetterR,
+  TbSquareRoundedLetterS,
+  TbSquareRoundedLetterT,
+  TbSquareRoundedLetterU,
+  TbSquareRoundedLetterV,
+  TbSquareRoundedLetterW,
+  TbSquareRoundedLetterX,
+  TbSquareRoundedLetterY,
+  TbSquareRoundedLetterZ,
+} from "react-icons/tb";
+
 export const icons = {
   V: <GiHolyGrail />,
   P: <GiEvilMoon />,
@@ -26,7 +55,35 @@ export const icons = {
   dizzy: <RiStarSFill />,
   default: <RxCardStack />,
   adddeck: <RxCardStackPlus />,
+
+  lettera: <TbSquareRoundedLetterA />,
+  letterb: <TbSquareRoundedLetterB />,
+  letterc: <TbSquareRoundedLetterC />,
+  letterd: <TbSquareRoundedLetterD />,
+  lettere: <TbSquareRoundedLetterE />,
+  letterf: <TbSquareRoundedLetterF />,
+  letterg: <TbSquareRoundedLetterG />,
+  letterh: <TbSquareRoundedLetterH />,
+  letteri: <TbSquareRoundedLetterI />,
+  letterj: <TbSquareRoundedLetterJ />,
+  letterk: <TbSquareRoundedLetterK />,
+  letterl: <TbSquareRoundedLetterL />,
+  letterm: <TbSquareRoundedLetterM />,
+  lettern: <TbSquareRoundedLetterN />,
+  lettero: <TbSquareRoundedLetterO />,
+  letterp: <TbSquareRoundedLetterP />,
+  letterq: <TbSquareRoundedLetterQ />,
+  letterr: <TbSquareRoundedLetterR />,
+  letters: <TbSquareRoundedLetterS />,
+  lettert: <TbSquareRoundedLetterT />,
+  letteru: <TbSquareRoundedLetterU />,
+  letterv: <TbSquareRoundedLetterV />,
+  letterw: <TbSquareRoundedLetterW />,
+  letterx: <TbSquareRoundedLetterX />,
+  lettery: <TbSquareRoundedLetterY />,
+  letterz: <TbSquareRoundedLetterZ />,
 };
+
 export function scanForIcons(string: string): string | React.ReactNodeArray {
   let returnstring: string | React.ReactNodeArray = string;
   for (const icon of Object.keys(icons)) {
@@ -34,7 +91,6 @@ export function scanForIcons(string: string): string | React.ReactNodeArray {
     returnstring = reactStringReplace(returnstring, matchstring, (match, i) => (
       <>{icons[match.substring(1, match.length - 1)]}</>
     ));
-    console.log(returnstring);
   }
   return returnstring;
 }

@@ -30,4 +30,21 @@ interface DbFullDeck {
   cards: DbDeckCard[];
 }
 
-export { DbDeck, DbFullDeck, DbOwnedCard, DbPlayer, DbDeckCard };
+interface DbCraftingMat {
+  playerid: string;
+  letter: string;
+  amount: number;
+}
+interface DbCraftingMats {
+  playerid: string;
+  mats: DbCraftingMat[];
+}
+export {
+  DbDeck,
+  DbFullDeck,
+  DbOwnedCard,
+  DbPlayer,
+  DbDeckCard,
+  DbCraftingMat,
+  DbCraftingMats,
+};

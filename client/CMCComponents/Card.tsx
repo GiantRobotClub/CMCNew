@@ -11,7 +11,6 @@ import {
 import { Alignment, CardType } from "../../shared/Constants";
 import { CMCPlayer } from "../../shared/Player";
 import { icons } from "./Icons";
-import { scanForIcons } from "./Icons";
 import { GiBroadsword, GiHealthNormal } from "react-icons/gi";
 import CmcCardDetailAbility from "./Abilities";
 function CMCCardVisual({
@@ -317,76 +316,104 @@ function CMCCardVisual({
       );
     }
   }
-
-  return (
-    <button
-      key={cardObject.guid}
-      onClick={doClick}
-      disabled={!canClick}
+  const dizzyhtml = (
+    <div
       className={
-        "cardStyle " +
-        alignstyle +
-        " cardStyleActive" +
-        (canClick ? " cardStyleClickable" : "") +
-        (activeCard ? " cardStyleClicked" : "") +
-        (big ? " bigCardStyle" : " littlecard") +
-        " " +
-        (isDetail ? " detailCard " : "") +
-        cardtypestyle
+        "dizzy" +
+        ((card.type == CardType.EFFECT || card.type == CardType.MONSTER) &&
+        (card as CMCEntityCard).dizzy
+          ? " dizzyvis"
+          : " dizzyunvis")
       }
     >
-      <div className="card">
-        <div className="manaline">
-          {costLine}
-          {sacLine}
-        </div>
-        {playerLine}
-        <div className="nameline">
-          <div className="cardname">{cardObject.name}</div>
-        </div>
-        <div className="cardpic">
-          <img src={"/assets/cards/" + cardObject.picture} />
-        </div>
-        {isDetail ? (
-          <div className="cardsubtype">
-            <label>{summontext}</label>
-            <div className="subtype">{card.subtype || genericsubtype}</div>
-          </div>
-        ) : (
-          ""
-        )}
-        <div className="cardbox">
-          <div className="cardtext">{card.cardtext}</div>
-        </div>
-        {isDetail ? (
-          <div className="abilities">
-            <CmcCardDetailAbility
-              card={card}
-              playerId={lookingplayer ?? ""}
-              clickability={showabilitybutton}
-              ownerId={owner ?? ""}
-              doClick={doClick}
-            />
-          </div>
-        ) : (
-          ""
-        )}
-        <div className="bottomline">{attackLine}</div>
-        {showplayer ? playerData : <></>}
+      {icons["dizzytop"]}
+    </div>
+  );
+  let middle = (
+    <div className="card">
+      <div className="manaline">
+        {costLine}
+        {sacLine}
       </div>
+      {playerLine}
+      <div className="nameline">
+        <div className="cardname">{cardObject.name}</div>
+      </div>
+      <div className="cardpic">
+        <img src={"/assets/cards/" + cardObject.picture} />
+      </div>
+      {isDetail ? (
+        <div className="cardsubtype">
+          <label>{summontext}</label>
+          <div className="subtype">{card.subtype || genericsubtype}</div>
+        </div>
+      ) : (
+        ""
+      )}
+      <div className="cardbox">
+        <div className="cardtext">{card.cardtext}</div>
+      </div>
+      {isDetail ? (
+        <div className="abilities">
+          <CmcCardDetailAbility
+            key="detailcard"
+            card={card}
+            playerId={lookingplayer ?? ""}
+            clickability={showabilitybutton}
+            ownerId={owner ?? ""}
+            doClick={doClick}
+          />
+        </div>
+      ) : (
+        ""
+      )}
+      <div className="bottomline">{attackLine}</div>
+      {showplayer ? playerData : <></>}
+    </div>
+  );
+  if (detail) {
+    return (
       <div
+        key={cardObject.guid}
+        onClick={doClick}
         className={
-          "dizzy" +
-          ((card.type == CardType.EFFECT || card.type == CardType.MONSTER) &&
-          (card as CMCEntityCard).dizzy
-            ? " dizzyvis"
-            : " dizzyunvis")
+          "cardStyle " +
+          alignstyle +
+          " cardStyleActive" +
+          (canClick ? " cardStyleClickable" : "") +
+          (activeCard ? " cardStyleClicked" : "") +
+          (big ? " bigCardStyle" : " littlecard") +
+          " " +
+          (isDetail ? " detailCard " : "") +
+          cardtypestyle
         }
       >
-        {icons["dizzytop"]}
+        {middle}
+        {dizzyhtml}
       </div>
-    </button>
-  );
+    );
+  } else
+    return (
+      <button
+        key={cardObject.guid}
+        onClick={doClick}
+        disabled={!canClick}
+        className={
+          "cardStyle " +
+          alignstyle +
+          " cardStyleActive" +
+          (canClick ? " cardStyleClickable" : "") +
+          (activeCard ? " cardStyleClicked" : "") +
+          (big ? " bigCardStyle" : " littlecard") +
+          " " +
+          (isDetail ? " detailCard " : "") +
+          cardtypestyle
+        }
+      >
+        {middle}
+        {dizzyhtml}
+      </button>
+    );
 }
 
 export default CMCCardVisual;

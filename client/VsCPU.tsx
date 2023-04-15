@@ -7,8 +7,8 @@ import { Local } from "boardgame.io/multiplayer";
 import { MCTSBot } from "boardgame.io/ai";
 
 const Config = {
-  depth: 10,
-  iterations: 75,
+  depth: 5,
+  iterations: 3,
 };
 
 class MyBot extends MCTSBot {

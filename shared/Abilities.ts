@@ -5,6 +5,7 @@ import * as CardFunctions from "./CardFunctions";
 import {
   AddToGraveyard,
   AllCards,
+  CardScan,
   OwnerOf,
   RemoveFromHand,
 } from "./LogicFunctions";
@@ -12,6 +13,8 @@ import { dataToEsm } from "@rollup/pluginutils";
 import { CardType } from "./Constants";
 import { Random, RandomAPI } from "boardgame.io/src/plugins/random/random";
 import { EventsAPI } from "boardgame.io/src/plugins/events/events";
+import { RiCreativeCommonsSaLine } from "react-icons/ri";
+import { AbilityFunctionArgs } from "./CardFunctions";
 
 enum TriggerType {
   ACTIVATED = "ACTIVATED",
@@ -115,30 +118,34 @@ function handleTrigger(
     if (ability.triggerCode) {
       const triggerFunc: Function = CardFunctions[ability.triggerCode];
       //console.log(CardFunctions);
-      if (
-        triggerFunc(
-          card,
-          ability,
-          trigger_data,
-          owner,
-          newG,
-          ctx,
-          random,
-          events
-        )
-      ) {
+      const args: AbilityFunctionArgs = {
+        card: card,
+        ability: ability,
+        trigger: trigger_data,
+        cardowner: owner,
+        G: newG,
+        ctx: ctx,
+        random: random,
+        events: events,
+        target: undefined,
+        dry: false,
+      };
+      if (triggerFunc(args)) {
         if (ability.activateCode) {
           const abilityFunc: Function = CardFunctions[ability.activateCode];
-          abilityFunc(
-            card,
-            ability,
-            trigger_data,
-            owner,
-            newG,
-            ctx,
-            random,
-            events
-          );
+          const args: AbilityFunctionArgs = {
+            card: card,
+            ability: ability,
+            trigger: trigger_data,
+            cardowner: owner,
+            G: newG,
+            ctx: ctx,
+            random: random,
+            events: events,
+            target: undefined,
+            dry: false,
+          };
+          abilityFunc(args);
           //console.log(newG);
         }
       }
@@ -185,16 +192,38 @@ function CanActivateAbility(
     ability.targetCode
   ) {
     const targetFunc: Function = CardFunctions[ability.targetCode];
-    if (!targetFunc(card, ability, cardowner, target, G, ctx, events, random)) {
+    const args: AbilityFunctionArgs = {
+      card: card,
+      ability: ability,
+      cardowner: cardowner,
+      G: G,
+      ctx: ctx,
+      random: random,
+      events: events,
+      target: target,
+      dry: true,
+    };
+    if (!targetFunc(args)) {
       return false;
     }
   }
 
-  // pay if needed
+  // can pay
   if (ability.costCode) {
     const costFunc: Function = CardFunctions[ability.costCode];
+    const args: AbilityFunctionArgs = {
+      card: card,
+      ability: ability,
+      cardowner: cardowner,
+      G: G,
+      ctx: ctx,
+      random: random,
+      events: events,
+      target: undefined,
+      dry: true,
+    };
     // do dry run of cost.  will run the actual one afterwards.
-    if (!costFunc(card, cardowner, G, ctx, false, true, events, random)) {
+    if (!costFunc(args)) {
       return false; // cant afford
     }
   }
@@ -225,9 +254,14 @@ function ResolveStack(
         stacked.target
       )
     ) {
+      console.error(
+        "Failed to use ability. " + stacked.ability.abilityName + " Going on."
+      );
     }
   }
   G.lastAbilityStack = [];
+
+  CardScan(G, random);
 }
 function ActivateAbility(
   card: CMCCard,
@@ -241,36 +275,71 @@ function ActivateAbility(
 ): boolean {
   const cardowner = OwnerOf(card, G);
   if (!CanActivateAbility(card, ability, G, ctx, random, events)) {
+    console.error("Cant activate");
     return false;
+  }
+
+  if (ability.costCode) {
+    const costFunc: Function = CardFunctions[ability.costCode];
+    const args: AbilityFunctionArgs = {
+      card: card,
+      ability: ability,
+      cardowner: cardowner,
+      G: G,
+      ctx: ctx,
+      random: random,
+      events: events,
+      target: undefined,
+      dry: true,
+    };
+    if (!costFunc(args)) {
+      console.error("Did not pass " + costFunc);
+      return false; // cant afford
+    }
   }
 
   if (resolveStack || ability.speed == AbilitySpeed.S) {
     if (ability.activateCode) {
       const abilityFunc: Function = CardFunctions[ability.activateCode];
-      if (
-        !abilityFunc(card, ability, EmptyTriggerData, cardowner, G, ctx, target)
-      ) {
+      const args: AbilityFunctionArgs = {
+        card: card,
+        ability: ability,
+        cardowner: cardowner,
+        G: G,
+        ctx: ctx,
+        random: random,
+        events: events,
+        target: target,
+        dry: false,
+      };
+      if (!abilityFunc(args)) {
+        console.error("Did not pass " + abilityFunc);
         return false;
       }
     }
 
+    // actually pay mana
     if (ability.costCode) {
       const costFunc: Function = CardFunctions[ability.costCode];
+      const args: AbilityFunctionArgs = {
+        card: card,
+        ability: ability,
+        cardowner: cardowner,
+        G: G,
+        ctx: ctx,
+        random: random,
+        events: events,
+        target: target,
+        dry: false,
+      };
       // actually pay mana
-      if (!costFunc(card, cardowner, G, ctx, false, false)) {
-        return false; // cant afford
-      }
-    }
-    if (ability.costCode) {
-      const costFunc: Function = CardFunctions[ability.costCode];
-      // actually pay mana
-      if (!costFunc(card, cardowner, G, ctx, false, false)) {
+      if (!costFunc(args)) {
+        console.error("Did not pass " + costFunc);
         return false; // cant afford
       }
     }
     if (card.type == CardType.SPELL) {
       // put the card in the graveyard and out of your hand
-
       AddToGraveyard(card, G);
       RemoveFromHand(card, cardowner, G);
     }
@@ -278,6 +347,7 @@ function ActivateAbility(
       // run another ability afterwards.
       const chainedability = card.abilities[ability.metadata.chain];
       if (chainedability.triggerType != TriggerType.ACTIVATED_CHAIN) {
+        console.error("tried 2 chain");
         return false;
       }
       return ActivateAbility(
@@ -296,6 +366,7 @@ function ActivateAbility(
       return false;
     }
   }
+  CardScan(G, random);
   return true;
 }
 
@@ -376,8 +447,17 @@ function ApplyStatChangesToThisCard(
     if (!ability.targetCode) {
       return;
     }
+    const args: AbilityFunctionArgs = {
+      card: card,
+      ability: ability,
+      cardowner: OwnerOf(card, G),
+      G: G,
+      ctx: ctx,
+      target: tcard,
+      dry: false,
+    };
     const targetFunc: Function = CardFunctions[ability.targetCode];
-    if (!targetFunc(card, ability, OwnerOf(card, G), tcard, G, ctx)) {
+    if (!targetFunc(args)) {
       return;
     }
     const statmod: StatMod = {

@@ -1,0 +1,37 @@
+{
+  "crafting": {
+    "AAA": "debugslime",
+    "VAP": "debugloc",
+    "GEN": "debuggen",
+    "ZOP": "debugspell",
+    "CARDM": "debugpersona"
+  },
+  "rewardrates": {
+    "A": 5,
+    "B": 3,
+    "C": 3,
+    "D": 3,
+    "E": 5,
+    "F": 3,
+    "G": 3,
+    "H": 3,
+    "I": 5,
+    "J": 3,
+    "K": 3,
+    "L": 3,
+    "M": 2,
+    "N": 2,
+    "O": 5,
+    "P": 2,
+    "Q": 2,
+    "R": 2,
+    "S": 2,
+    "T": 2,
+    "U": 5,
+    "V": 2,
+    "W": 2,
+    "X": 1,
+    "Y": 1,
+    "Z": 1
+  }
+}

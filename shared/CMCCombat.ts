@@ -173,6 +173,10 @@ function SetCombatAttacker(
     return false;
   }
 
+  // is the attacker dizzy?
+  if (attacker.dizzy) {
+    return false;
+  }
   // is the attacker already attacking?
   // is the defender already defending? unless it's a persona
   for (const existingattacker of G.combat.targets) {

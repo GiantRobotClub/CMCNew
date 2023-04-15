@@ -2,6 +2,7 @@ import { Ctx } from "boardgame.io";
 import { CMCGameState } from "./CardmasterGame";
 import {
   CMCCard,
+  CMCEffectCard,
   CMCEntityCard,
   CMCLocationCard,
   CMCMonsterCard,
@@ -23,6 +24,7 @@ import {
 import { GetActivePlayer, GetActiveStage } from "./Util";
 import { CanActivateAbility } from "./Abilities";
 import { EventsAPI } from "boardgame.io/dist/types/src/plugins/plugin-events";
+import { AbilityFunctionArgs } from "./CardFunctions";
 
 // adds a card from deck to hand
 function DrawCard(
@@ -53,7 +55,13 @@ function PlayerAddResource(playerid: string, resource: any, G: CMCGameState) {
 }
 
 // reduces resource.
-function PlayerPay(playerid: string, cost: any, G: CMCGameState) {
+function PlayerPay(
+  playerid: string,
+  cost: any,
+  G: CMCGameState,
+  random?: RandomAPI,
+  events?: EventsAPI
+) {
   const fullplayer: CMCPlayer = G.playerData[playerid];
 
   if (!fullplayer) {
@@ -244,7 +252,9 @@ function PlayEntity(
   slot: CMCCard,
   playerID: string,
   G: CMCGameState,
-  ctx: Ctx
+  ctx: Ctx,
+  random: RandomAPI,
+  events: EventsAPI
 ): CMCGameState | boolean {
   let found = false;
   let hand: CMCCard[] = G.players[playerID].hand;
@@ -255,24 +265,33 @@ function PlayEntity(
   });
 
   if (!found) {
+    console.error("cannot play entity due to not found");
+    return false;
+  }
+  const args: AbilityFunctionArgs = {
+    card: card,
+    cardowner: playerID,
+    G: G,
+    ctx: ctx,
+    random: random,
+    events: events,
+    target: undefined,
+    dry: false,
+  };
+  let success_pay = CardFunctions[card.costFunction](args);
+
+  if (!success_pay) {
+    console.error("cannot play entity due to price");
     return false;
   }
 
-  let success_pay = CardFunctions[card.costFunction](
-    card,
-    playerID,
-    G,
-    ctx,
-    false
-  );
-
-  if (!success_pay) return false;
-
   if (!PlaceCard(card, slot, playerID, G)) {
+    console.error("cannot play entity due placement error");
     return false;
   }
 
   if (!RemoveFromHand(card, playerID, G)) {
+    console.error("cannot remove from hand");
     return false;
   }
 
@@ -297,7 +316,7 @@ function OwnerOf(card: CMCCard, G: CMCGameState) {
     hand.forEach((handcard, _idx) => {
       if (card.guid == handcard.guid) {
         found = true;
-        return;
+        return slotplayer;
       }
     });
     if (found) {
@@ -340,6 +359,10 @@ function CanClickCard(
   random?: RandomAPI,
   events?: EventsAPI
 ): boolean {
+  // inactive player cant click a darn thing
+  if (playerId != GetActivePlayer(ctx)) {
+    return false;
+  }
   // is there an active ability?  If so, check targeting
   if (G.activeAbility) {
     if (!G.activeCard) {
@@ -370,22 +393,14 @@ function CanClickCard(
   let currentPlayer = ctx.currentPlayer;
 
   // are you the active player
-  if (!ctx.activePlayers) {
-    return false;
-  }
-  let activePlayer = "0";
-  if ("0" in ctx.activePlayers) {
-    activePlayer = "0";
-  } else if ("1" in ctx.activePlayers) {
-    activePlayer = "1";
-  }
+  const activePlayer = GetActivePlayer(ctx);
 
   if (activePlayer != playerId) {
     // only the active player can act
     return false;
   }
 
-  let stage = ctx.activePlayers[activePlayer];
+  let stage = GetActiveStage(ctx);
   if (clickType == ClickType.HAND) {
     // are we in play phase or combat phase and is it that player's turn
     if (activePlayer === currentPlayer) {
@@ -406,8 +421,17 @@ function CanClickCard(
     }
 
     // so! can you play it??
-
-    if (!CardFunctions[card.costFunction](card, cardOwner, G, ctx, true)) {
+    const args: AbilityFunctionArgs = {
+      card: card,
+      cardowner: cardOwner,
+      G: G,
+      ctx: ctx,
+      random: random,
+      events: events,
+      target: undefined,
+      dry: true,
+    };
+    if (!CardFunctions[card.costFunction](args)) {
       return false;
     }
     return true;
@@ -425,6 +449,7 @@ function CanClickCard(
       if (!G.activeCard) {
         return false; // you aren't playing a card
       }
+
       if (![CardType.EFFECT, CardType.MONSTER].includes(G.activeCard.type)) {
         return false; // only effects and monsters go into slots
       }
@@ -441,10 +466,17 @@ function CanClickCard(
         // you aren't the owner
         return false;
       }
-
-      if (
-        !CardFunctions[G.activeCard.costFunction](card, cardOwner, G, ctx, true)
-      ) {
+      const args: AbilityFunctionArgs = {
+        card: card,
+        cardowner: cardOwner,
+        G: G,
+        ctx: ctx,
+        random: random,
+        events: events,
+        target: undefined,
+        dry: true,
+      };
+      if (!CardFunctions[G.activeCard.costFunction](args)) {
         // cant afford this card?
         return false;
       }
@@ -701,20 +733,26 @@ function AllCards(G: CMCGameState) {
     grave: [] as CMCCard[],
     hand: [] as CMCCard[],
     loc: [] as CMCCard[],
-    persona: [] as CMCCard[],
-    field: [] as CMCCard[],
+    persona: [] as CMCPersonaCard[],
+    field: [] as CMCEntityCard[],
     all: [] as CMCCard[],
     allinplay: [] as CMCCard[],
+    monsters: [] as CMCMonsterCard[],
+    effects: [] as CMCEffectCard[],
   };
   for (const slotplayer in G.slots) {
     for (const subplayer in G.slots[slotplayer]) {
       for (const subrow of G.slots[slotplayer][subplayer]) {
         const card: CMCCard = subrow;
-        cards.field.push(card);
+        cards.field.push(card as CMCEntityCard);
         cards.all.push(card);
         cards.allinplay.push(card);
+        cards[subplayer].push(card);
       }
     }
+  }
+  if (!G.playerData) {
+    console.dir(current(G));
   }
   cards.loc.push(G.location);
   cards.persona.push(G.playerData[0].persona);
@@ -725,6 +763,9 @@ function AllCards(G: CMCGameState) {
   cards.grave.push(...G.playerData[0].graveyard);
 
   cards.all.push(G.location);
+  if (!G.playerData) {
+    console.dir(current(G));
+  }
   cards.all.push(G.playerData[0].persona);
   cards.all.push(G.playerData[1].persona);
   cards.all.push(...G.players[0].hand);
@@ -736,6 +777,28 @@ function AllCards(G: CMCGameState) {
   cards.allinplay.push(G.playerData[0].persona);
   cards.allinplay.push(G.playerData[1].persona);
   return cards;
+}
+
+function Undizzy(activeplayer: string, G: CMCGameState, ctx: Ctx) {
+  const entities = AllCards(G).field.filter(
+    (card) => OwnerOf(card, G) == activeplayer
+  );
+  entities.forEach((card) => {
+    const entity = card as CMCEntityCard;
+    entity.dizzy = false;
+  });
+}
+function DizzyOne(findcard: CMCEntityCard, G: CMCGameState) {
+  for (const slotplayer in G.slots) {
+    for (const subplayer in G.slots[slotplayer]) {
+      for (const subrow of G.slots[slotplayer][subplayer]) {
+        const card: CMCEntityCard = subrow;
+        if (findcard.guid == card.guid) {
+          card.dizzy = true;
+        }
+      }
+    }
+  }
 }
 export {
   OwnerOf,
@@ -762,4 +825,6 @@ export {
   ForceDiscard,
   IsInHand,
   AllCards,
+  Undizzy,
+  DizzyOne,
 };

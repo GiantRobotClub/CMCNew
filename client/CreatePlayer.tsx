@@ -3,7 +3,7 @@ import "./App.css";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import qrcode from "qrcode";
-import { DbPlayer } from "../server/db";
+import { DbPlayer } from "../server/DbTypes";
 enum CREATE {
   NOT = 0,
   QR = 1,

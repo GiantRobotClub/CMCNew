@@ -1,19 +1,19 @@
 import { Client } from "boardgame.io/react";
 import React from "react";
 import { CMCGameState, CardmasterConflict } from "../shared/CardmasterGame";
-import { TicTacToe } from "../shared/Game";
-import { TicTacToeBoard } from "./Board";
+
 import { CMCBoard } from "./CMCComponents/Board";
 import { Local, SocketIO } from "boardgame.io/multiplayer";
 import { MCTSBot } from "boardgame.io/ai";
 import { Ctx } from "boardgame.io";
-import { GetActivePlayer, OtherPlayer } from "../shared/Util";
-import { CardType } from "../shared/Constants";
+import { GetActivePlayer, GetActiveStage, OtherPlayer } from "../shared/Util";
+import { CardType, PlayerIDs, Stages } from "../shared/Constants";
 import { PlayerID } from "boardgame.io/src/types";
+import { Stage } from "boardgame.io/src/core/turn-order";
 
 const Config = {
-  depth: 10,
-  iterations: 75,
+  depth: 3,
+  iterations: 40,
 };
 interface Objective {
   checker: (G: any, ctx: Ctx) => boolean;
@@ -24,45 +24,39 @@ type Objectives = Record<string, Objective>;
 
 const objectivehealth: Objective = {
   checker: (G: CMCGameState, ctx: Ctx) => {
-    return (
-      G.playerData[OtherPlayer(GetActivePlayer(ctx))].resources.intrinsic
-        .health < G.playerData[GetActivePlayer(ctx)].resources.intrinsic.health
-    );
+    const playerid = "0";
+    if (
+      GetActiveStage(ctx) == Stages.respond ||
+      GetActiveStage(ctx) == Stages.defense
+    ) {
+      return true;
+    }
+
+    const objective =
+      G.playerData[OtherPlayer(playerid)].resources.intrinsic.health >=
+      G.playerData[playerid].resources.intrinsic.health;
+
+    return objective;
   },
   weight: 4,
 };
-const objectivemonsters: Objective = {
-  checker: (G: CMCGameState, ctx: Ctx) => {
-    let yourmonsters = 0;
-    let theirmonsters = 0;
-
-    G.slots[OtherPlayer(GetActivePlayer(ctx))].monsters.forEach((card) => {
-      if (card.type != CardType.EMPTY) {
-        theirmonsters = theirmonsters + 1;
-      }
-    });
-    G.slots[GetActivePlayer(ctx)].monsters.forEach((card) => {
-      if (card.type != CardType.EMPTY) {
-        yourmonsters = yourmonsters + 1;
-      }
-    });
-    return yourmonsters >= theirmonsters;
-  },
-  weight: 2,
-};
-
 function objectivesfunc(G: any, ctx: Ctx, playerID?: PlayerID): Objectives {
-  const obs: Objectives = {
-    monster: objectivemonsters,
-    health: objectivehealth,
-  };
-  return obs;
+  if (playerID == "0") {
+    const obs: Objectives = {
+      health: objectivehealth,
+    };
+    return obs;
+  } else {
+    const obs: Objectives = {
+      health: objectivehealth,
+    };
+    return obs;
+  }
 }
 class MyBot extends MCTSBot {
   constructor({
     enumerate,
     seed,
-    objectives,
     game,
     iterations,
     playoutDepth,
@@ -71,11 +65,7 @@ class MyBot extends MCTSBot {
     console.log("Creating bot..");
     iterations = Config.iterations;
     playoutDepth = Config.depth;
-    if (!objectives) {
-      objectives = [];
-    }
-    objectives.push(objectivemonsters);
-    objectives.push(objectivehealth);
+
     super({
       enumerate,
       seed,

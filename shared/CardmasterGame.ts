@@ -48,6 +48,7 @@ import {
   passTurn,
   chooseSlot,
   activateAbility,
+  StagesDefiniton,
 } from "./Moves";
 import { GiConsoleController } from "react-icons/gi";
 import {
@@ -323,103 +324,7 @@ export const CardmasterConflict: Game<CMCGameState> = {
           ApplyAllStatChanges(ctx, G);
         },
 
-        stages: {
-          error: {},
-          initial: {
-            moves: {
-              passStage: passStage,
-            },
-            next: Stages.draw,
-          },
-          draw: {
-            moves: {
-              passStage: passStage,
-            }, // automatically does the draw for you
-            next: Stages.sacrifice,
-          },
-          sacrifice: {
-            moves: {
-              passStage: passStage,
-              pickEntity: pickEntity,
-            },
-            next: Stages.play,
-          },
-          play: {
-            moves: {
-              playCardFromHand: playCardFromHand,
-              activateAbility: activateAbility,
-              passStage: passStage,
-              cancel: cancel,
-            },
-            next: Stages.combat,
-          },
-          combat: {
-            moves: {
-              //chooseCard
-              passStage: passStage,
-              pickEntity: pickEntity,
-              cancel: cancel,
-            },
-
-            next: Stages.defense,
-          },
-          defense: {
-            moves: {
-              //chooseCard
-              passStage: passStage,
-              pickEntity: pickEntity,
-              cancel: cancel,
-            },
-
-            next: Stages.resolve,
-          },
-          resolve: {
-            moves: {
-              passTurn: passTurn,
-            },
-            next: Stages.draw,
-          },
-
-          pickSlot: {
-            moves: {
-              chooseSlot: chooseSlot,
-              cancel: cancel,
-            },
-          },
-
-          // states depending on player actions
-
-          pickCombatTarget: {
-            moves: {
-              pickEntity: pickEntity,
-              cancel: cancel,
-            },
-          },
-          pickCombatDefense: {
-            moves: {
-              pickEntity: pickEntity,
-              cancel: cancel,
-            },
-          },
-          pickAbilityTarget: {
-            moves: {
-              pickEntity: pickEntity,
-              cancel: cancel,
-            },
-          },
-          discardCard: {
-            moves: {
-              playCardFromHand: playCardFromHand,
-            },
-          },
-          respond: {
-            moves: {
-              activateAbility: activateAbility,
-              pickEntity: pickEntity,
-              passStage: passStage,
-            },
-          },
-        },
+        stages: StagesDefiniton,
       },
     },
   },

@@ -1,90 +1,198 @@
-import { Ctx } from "boardgame.io";
+import { AiEnumerate, Ctx } from "boardgame.io";
 import { CMCCard } from "./CMCCard";
 import { Stages, ClickType, CardType } from "./Constants";
-import { CanClickCard } from "./LogicFunctions";
+import {
+  AllCards,
+  CanClickCard,
+  OwnerOf,
+  PlayerAddResource,
+} from "./LogicFunctions";
 import { GetActiveStage, GetActivePlayer } from "./Util";
+import { CMCGameState } from "./CardmasterGame";
+import { StagesDefiniton } from "./Moves";
+import { Stage } from "boardgame.io/src/core/turn-order";
+import { CanActivateAbility, TriggerType } from "./Abilities";
 
-const ai = {
-  enumerate: (G, ctx) => {
-    let moves: any[] = [];
+interface moveshape {
+  move: string;
+  args?: any[];
+}
 
-    if (GetActiveStage(ctx) != Stages.resolve) {
-      if (!G.activeAbility && !G.activeCard) {
-        moves.push({ move: "passStage" });
+function isSmart(
+  card: CMCCard,
+  stage: Stages,
+  G: CMCGameState,
+  playerID: string
+) {
+  switch (stage) {
+    case Stages.sacrifice:
+      {
+        console.dir(G.playerData[playerID].resources.mana);
+        const totalmana =
+          parseInt(G.playerData[playerID].resources.mana.A) +
+          parseInt(G.playerData[playerID].resources.mana.V) +
+          parseInt(G.playerData[playerID].resources.mana.P);
+        if (totalmana > 2) {
+          return false;
+        }
       }
-    } else {
-      moves.push({ move: "passTurn" });
-    }
+      return true;
+  }
 
-    if (G.lastAbilityStack.length < G.abilityStack.length) {
-      moves.push({ move: "cancel", args: [GetActivePlayer(ctx)] });
-    }
-    if (GetActiveStage(ctx) == Stages.play) {
-      let hand: CMCCard[] = G.players[GetActivePlayer(ctx)].hand;
-      if (!G.activeCard) {
-        hand.forEach((crd, idx) => {
-          if (CanClickCard(crd, GetActivePlayer(ctx), ClickType.HAND, ctx, G)) {
-            moves.push({
-              move: "playCardFromHand",
-              args: [
-                G.players[GetActivePlayer(ctx)].hand[idx],
-                GetActivePlayer(ctx),
-              ],
-            });
-          }
-        });
-      }
-    } else if (
-      [
-        Stages.pickAbilityTarget,
-        Stages.pickCombatDefense,
-        Stages.pickCombatTarget,
-        Stages.pickSlot,
-      ].includes(GetActiveStage(ctx))
-    ) {
-      moves.push({ move: "cancel", args: [GetActivePlayer(ctx)] });
-    }
-    for (const slotplayer in G.slots) {
-      if (
-        CanClickCard(
-          G.playerData[slotplayer].persona,
-          GetActivePlayer(ctx),
-          ClickType.PERSONA,
-          ctx,
-          G
-        )
-      ) {
-        moves.push({
-          move: "pickEntity",
-          args: [G.playerData[slotplayer].persona, GetActivePlayer(ctx)],
-        });
-      }
-      for (const subplayer in G.slots[slotplayer]) {
-        for (const [index, card] of G.slots[slotplayer][subplayer].entries()) {
-          if (
-            CanClickCard(
-              card,
-              GetActivePlayer(ctx),
-              subplayer == "effects" ? ClickType.EFFECT : ClickType.MONSTER,
-              ctx,
-              G
-            )
-          ) {
-            moves.push({
-              move: card.type == CardType.EMPTY ? "chooseSlot" : "pickEntity",
-              args: [
-                G.slots[slotplayer][subplayer][index],
-                GetActivePlayer(ctx),
-              ],
-            });
+  return true;
+}
+
+function AllowedMoveVariants(
+  G: CMCGameState,
+  ctx: Ctx,
+  playerid: string,
+  movename: string,
+  curmoves: moveshape[]
+) {
+  const stage = GetActiveStage(ctx);
+  const activeplayer = GetActivePlayer(ctx);
+
+  const moves: moveshape[] = [];
+
+  function addmove(args: any[]) {
+    const newmove: moveshape = {
+      move: movename,
+      args: args,
+    };
+    moves.push(newmove);
+  }
+
+  switch (movename) {
+    case "playCardFromHand": {
+      // if one of your cards in your hand is playable, do it here
+      for (const card of G.players[activeplayer].hand) {
+        if (!card) continue;
+        if (OwnerOf(card, G) == activeplayer) {
+          if (CanClickCard(card, activeplayer, ClickType.HAND, ctx, G)) {
+            addmove([card, activeplayer]);
           }
         }
       }
+      break;
+    }
+    case "activateAbility": {
+      // if one of your entities has an activated ability, trigger from here
+      for (const card of AllCards(G).field) {
+        if (OwnerOf(card, G) == activeplayer) {
+          for (const ability of card.abilities) {
+            if (
+              [TriggerType.ACTIVATED, TriggerType.ACTIVATED_TARGETED].includes(
+                ability.triggerType
+              )
+            ) {
+              if (CanActivateAbility(card, ability, G, ctx)) {
+                addmove([card, ability, activeplayer]);
+              }
+            }
+          }
+        }
+      }
+      break;
     }
 
-    if (moves.length == 0) {
-      moves.push({ move: "passTurn" });
-      moves.push({ move: "cancel", args: [GetActivePlayer(ctx)] });
+    case "pickEntity": {
+      // go through all entities and check if you can click
+      for (const card of AllCards(G).allinplay) {
+        if (OwnerOf(card, G) == activeplayer) {
+          if (card.type != CardType.EMPTY) {
+            if (card.type == CardType.MONSTER) {
+              if (CanClickCard(card, activeplayer, ClickType.MONSTER, ctx, G)) {
+                if (isSmart(card, stage, G, playerid))
+                  addmove([card, activeplayer]);
+              }
+            }
+            if (card.type == CardType.EFFECT) {
+              if (CanClickCard(card, activeplayer, ClickType.EFFECT, ctx, G)) {
+                if (isSmart(card, stage, G, playerid))
+                  addmove([card, activeplayer]);
+              }
+            }
+            if (card.type == CardType.PERSONA) {
+              if (CanClickCard(card, activeplayer, ClickType.PERSONA, ctx, G)) {
+                if (isSmart(card, stage, G, playerid))
+                  addmove([card, activeplayer]);
+              }
+            }
+          }
+        }
+      }
+      break;
+    }
+    case "chooseSlot": {
+      // go through all slots and check fi you can click
+      for (const card of AllCards(G).effects) {
+        if (OwnerOf(card, G) == activeplayer) {
+          if (card.type == CardType.EMPTY) {
+            if (CanClickCard(card, activeplayer, ClickType.EFFECT, ctx, G)) {
+              addmove([card, activeplayer]);
+            }
+          }
+        }
+      }
+      for (const card of AllCards(G).monsters) {
+        if (OwnerOf(card, G) == activeplayer) {
+          if (card.type == CardType.EMPTY) {
+            if (CanClickCard(card, activeplayer, ClickType.MONSTER, ctx, G)) {
+              addmove([card, activeplayer]);
+            }
+          }
+        }
+      }
+      break;
+    }
+    case "cancel": {
+      // if there's nothing else you can do, cancel
+      if (curmoves.length == 0) {
+        addmove([activeplayer]);
+      }
+      break;
+    }
+    case "passTurn": {
+      // you can always pass turn if it's available.
+      addmove([]);
+      break;
+    }
+    case "passStage": {
+      // you can always pass stage if it's legal
+      addmove([]);
+      break;
+    }
+  }
+  return moves as moveshape[];
+}
+const ai = {
+  enumerate: (G: CMCGameState, ctx: Ctx, playerid: string) => {
+    let moves: moveshape[] = [];
+
+    const stage = GetActiveStage(ctx);
+    const activeplayer = GetActivePlayer(ctx);
+
+    if (activeplayer != playerid) {
+      console.error("You are not active anyway");
+    }
+
+    if (StagesDefiniton.hasOwnProperty(stage)) {
+      const stagedef = StagesDefiniton[stage];
+      if (stagedef.hasOwnProperty("moves")) {
+        const movelist = stagedef["moves"];
+        const allowedmoves = Object.keys(movelist);
+        // check if each possible move is allowed.
+        for (const movename of allowedmoves) {
+          const variants = AllowedMoveVariants(
+            G,
+            ctx,
+            playerid,
+            movename,
+            moves
+          );
+          moves.push(...variants);
+        }
+      }
     }
     return moves;
   },

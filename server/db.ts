@@ -7,6 +7,8 @@ import {
   DbOwnedCard,
   DbPlayer,
   DbDeckCard,
+  DbCraftingMats,
+  DbCraftingMat,
 } from "./DbTypes";
 
 let database: Database;
@@ -17,6 +19,55 @@ function db(): Database {
   database.exec(buf.toString());
   //  database.pragma("journal_mode = WAL");
   return database;
+}
+
+function SetMats(mats: DbCraftingMats) {
+  const database = db();
+  const stmt = database.prepare("DELETE from materials where playerid=(?)");
+  stmt.run(mats.playerid);
+
+  const insert = database.prepare(
+    "INSERT into MATERIALS (playerid, letter, amount) VALUES (?,?,?)"
+  );
+  for (const mat of mats.mats) {
+    insert.run(mats.playerid, mat.letter, mat.amount);
+  }
+}
+
+function GetMats(playerID: string): DbCraftingMats | undefined {
+  const database = db();
+  const stmt = database.prepare(
+    "SELECT playerid, letter, amount from materials where playerid=(?)"
+  );
+  const rows = stmt.all(playerID);
+  if (!rows) {
+    return undefined;
+  }
+  const letters: DbCraftingMat[] = rows as DbCraftingMat[];
+  const mats: DbCraftingMats = {
+    playerid: playerID,
+    mats: letters,
+  };
+  return mats;
+}
+
+function GiveMats(newmats: DbCraftingMats): DbCraftingMats | undefined {
+  const mats = GetMats(newmats.playerid);
+  if (mats != undefined) {
+    for (const mat of mats.mats) {
+      let updated: boolean = false;
+      for (const newmat of newmats.mats) {
+        if ((newmat.letter = mat.letter)) {
+          newmat.amount = newmat.amount + newmat.amount;
+          updated = true;
+          break;
+        }
+      }
+      if (updated) continue;
+    }
+  }
+  SetMats(newmats);
+  return newmats;
 }
 
 function GetPlayer(playerId: string): DbPlayer | undefined {
@@ -235,4 +286,8 @@ export {
   GetPlayerIdFromName,
   NewEmptyDeck,
   DeleteDeck,
+  GiveMats,
+  SetMats,
+  GetMats,
+  DbPlayer,
 };

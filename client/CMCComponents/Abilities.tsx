@@ -84,8 +84,12 @@ function CmcCardDetailAbility({
             </div>
             {ownerId == playerId && showbutton ? (
               <button
-                onClick={() => handleAbilityClick(ability)}
-                id={index.toString()}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  console.dir("ability clicked: ", ability);
+                  handleAbilityClick(ability);
+                }}
+                key={index.toString()}
                 className="activateAbility"
               >
                 Do!

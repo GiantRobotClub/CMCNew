@@ -1,7 +1,7 @@
 // // // MOVES // // //
 
 import { ActivePlayersArg, Move } from "boardgame.io";
-import { INVALID_MOVE } from "boardgame.io/core";
+import { INVALID_MOVE, Stage } from "boardgame.io/core";
 import {
   Ability,
   ActivateAbility,
@@ -33,6 +33,7 @@ import {
   Sacrifice,
   ForceDiscard,
   Discard,
+  Undizzy,
 } from "./LogicFunctions";
 import { CMCPlayer } from "./Player";
 import { GetActivePlayer, GetActiveStage, OtherPlayer } from "./Util";
@@ -46,7 +47,7 @@ const passTurn: Move<CMCGameState> = ({ G, ctx, events }) => {
 // move to next stage and handle the new stage's start
 const passStage: Move<CMCGameState> = ({ G, ctx, events, random }) => {
   resetActive(G);
-  TriggerAuto(TriggerNames.END_STAGE, ctx, G);
+  TriggerAuto(TriggerNames.END_STAGE, ctx, G, random, events);
   const activePlayer = GetActivePlayer(ctx);
 
   // is there a modified stack? if so go to the response stage.
@@ -60,8 +61,8 @@ const passStage: Move<CMCGameState> = ({ G, ctx, events, random }) => {
     if (arg.value !== undefined) {
       arg.value[OtherPlayer(GetActivePlayer(ctx))] = Stages.respond;
     }
+    events.endStage();
     events.setActivePlayers(arg);
-    events.setStage(Stages.respond);
     return;
   }
 
@@ -69,6 +70,7 @@ const passStage: Move<CMCGameState> = ({ G, ctx, events, random }) => {
     // going into draw phase
     const player: CMCPlayer = G.playerData[activePlayer];
     const okay = DrawCard(activePlayer, player.persona.drawPerTurn, G);
+    Undizzy(activePlayer, G, ctx);
 
     if (!okay) {
       console.log("player lost due to draw out at beginning of stage");
@@ -101,11 +103,13 @@ const passStage: Move<CMCGameState> = ({ G, ctx, events, random }) => {
       events.setStage(Stages.play);
     }
   } else if (GetActiveStage(ctx) == Stages.play) {
+    resetActive(G);
     // go into combat stage, set up combat.
     G.combat = StartCombatPhase();
     events.endStage();
   } else if (GetActiveStage(ctx) == Stages.respond) {
-    ResolveStack(G, ctx);
+    ResolveStack(G, ctx, random, events);
+    resetActive(G);
     let returnStage: Stages | undefined = G.returnStage.pop();
     while (returnStage == Stages.respond) {
       returnStage = G.returnStage.pop();
@@ -113,10 +117,17 @@ const passStage: Move<CMCGameState> = ({ G, ctx, events, random }) => {
     if (!returnStage) {
       return INVALID_MOVE;
     }
-    events.setStage(returnStage);
+    const arg: ActivePlayersArg = {
+      value: {},
+    };
+    if (arg.value !== undefined) {
+      arg.value[ctx.currentPlayer] = returnStage;
+    }
+    events.endStage();
+    events.setActivePlayers(arg);
   } else if (GetActiveStage(ctx) == Stages.combat) {
     // do you have any combat? if no, skip defrense
-    if (!G.combat) {
+    if (!G.combat || G.combat.targets.length == 0) {
       events.setStage(Stages.resolve);
     } else {
       // else, go to defense stage.
@@ -141,7 +152,7 @@ const passStage: Move<CMCGameState> = ({ G, ctx, events, random }) => {
 
 // click a card in your hand to play
 const playCardFromHand: Move<CMCGameState> = (
-  { G, ctx, events },
+  { G, ctx, random, events },
   card: CMCCard,
   playerId: string
 ) => {
@@ -170,7 +181,7 @@ const playCardFromHand: Move<CMCGameState> = (
     G.returnStage.push(Stages[ctx.activePlayers[playerId]]);
     events.setStage(Stages.pickSlot);
   } else if (card.type == CardType.SPELL) {
-    if (card.abilities.length != 1) {
+    if (card.abilities.length == 0) {
       return INVALID_MOVE;
     }
     const ability: Ability = card.abilities[0];
@@ -185,14 +196,33 @@ const playCardFromHand: Move<CMCGameState> = (
       if (!CanActivateAbility(card, ability, G, ctx, undefined)) {
         return INVALID_MOVE;
       }
-      if (!ActivateAbility(card, ability, G, ctx, false, undefined)) {
+      if (
+        !ActivateAbility(
+          card,
+          ability,
+          G,
+          ctx,
+          false,
+          random,
+          events,
+          undefined
+        )
+      ) {
         return INVALID_MOVE;
       }
     } else {
       return INVALID_MOVE;
     }
   } else if (card.type == CardType.LOCATION) {
-    let success_play = PlayEntity(card, G.location, playerId, G, ctx);
+    let success_play = PlayEntity(
+      card,
+      G.location,
+      playerId,
+      G,
+      ctx,
+      random,
+      events
+    );
     if (!success_play) {
       return INVALID_MOVE;
     }
@@ -200,7 +230,7 @@ const playCardFromHand: Move<CMCGameState> = (
 };
 
 const activateAbility: Move<CMCGameState> = (
-  { G, ctx, events },
+  { G, ctx, events, random },
   card: CMCCard,
   ability: Ability,
   playerId: string
@@ -216,7 +246,9 @@ const activateAbility: Move<CMCGameState> = (
     if (!CanActivateAbility(card, ability, G, ctx, undefined)) {
       return INVALID_MOVE;
     }
-    if (!ActivateAbility(card, ability, G, ctx, false, undefined)) {
+    if (
+      !ActivateAbility(card, ability, G, ctx, false, random, events, undefined)
+    ) {
       return INVALID_MOVE;
     }
   } else {
@@ -317,6 +349,10 @@ const pickEntity: Move<CMCGameState> = (
   }
   // determine based on state
   if (GetActiveStage(ctx) == Stages.combat) {
+    if (G.abilityStack) {
+      // cant go to combat target stage without resolving first.
+      return INVALID_MOVE;
+    }
     // pick attacker
     if (card.type != CardType.MONSTER) {
       return INVALID_MOVE;
@@ -324,6 +360,7 @@ const pickEntity: Move<CMCGameState> = (
     if (OwnerOf(card, G) != playerId) {
       return INVALID_MOVE;
     }
+    console.error(card);
     G.activeCard = card;
     G.returnStage.push(Stages.combat);
     console.log(
@@ -367,6 +404,19 @@ const pickEntity: Move<CMCGameState> = (
     if (OwnerOf(card, G) == playerId) {
       return INVALID_MOVE;
     }
+    // you have no defenders
+    let found = false;
+    for (const card of G.slots[GetActivePlayer(ctx)].effects) {
+      if (card.type != CardType.EMPTY) {
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      return INVALID_MOVE;
+    }
+
     // pick attacking card
 
     G.activeCard = card;
@@ -405,10 +455,31 @@ const pickEntity: Move<CMCGameState> = (
     if (!G.activeAbility || !G.activeCard) {
       return INVALID_MOVE;
     }
-    if (!CanActivateAbility(G.activeCard, G.activeAbility, G, ctx, card)) {
+    if (
+      !CanActivateAbility(
+        G.activeCard,
+        G.activeAbility,
+        G,
+        ctx,
+        random,
+        events,
+        card
+      )
+    ) {
       return INVALID_MOVE;
     }
-    if (!ActivateAbility(G.activeCard, G.activeAbility, G, ctx, false, card)) {
+    if (
+      !ActivateAbility(
+        G.activeCard,
+        G.activeAbility,
+        G,
+        ctx,
+        false,
+        random,
+        events,
+        card
+      )
+    ) {
       return INVALID_MOVE;
     }
     if (G.returnStage) {
@@ -435,26 +506,147 @@ const pickEntity: Move<CMCGameState> = (
 
 // pick a slot on the board, used to play cards, etc.
 const chooseSlot: Move<CMCGameState> = (
-  { G, ctx, events },
+  { G, ctx, events, random },
   card: CMCCard,
   playerId: string
 ) => {
   let returnStage = G.returnStage.length > 0 ? G.returnStage.pop() : "error";
   if (!returnStage) {
+    console.error("Cant choose slot in this stage");
     return INVALID_MOVE;
   }
   if (returnStage == "error") {
+    console.error("Cant choose slot in this stage: error");
     return INVALID_MOVE;
   }
+
   let success_play: boolean | CMCGameState = false;
   if (G.activeCard && returnStage == Stages.play) {
+    if (OwnerOf(G.activeCard, G) != playerId) {
+      //card isnt yours
+    }
     //Move card from hand into play
-    success_play = PlayEntity(G.activeCard, card, playerId, G, ctx);
-    if (!success_play) return INVALID_MOVE;
+    success_play = PlayEntity(
+      G.activeCard,
+      card,
+      playerId,
+      G,
+      ctx,
+      random,
+      events
+    );
+    if (!success_play) {
+      console.error("Couldn't successfully play");
+      return INVALID_MOVE;
+    }
   }
 
   events.setStage(returnStage);
   resetActive(G);
+};
+
+const StagesDefiniton = {
+  error: {},
+  initial: {
+    moves: {
+      passStage: passStage,
+    },
+    next: Stages.draw,
+  },
+  draw: {
+    moves: {
+      playCardFromHand: playCardFromHand,
+      activateAbility: activateAbility,
+      passStage: passStage,
+    }, // automatically does the draw for you
+    next: Stages.sacrifice,
+  },
+  sacrifice: {
+    moves: {
+      passStage: passStage,
+      pickEntity: pickEntity,
+    },
+    next: Stages.play,
+  },
+  play: {
+    moves: {
+      playCardFromHand: playCardFromHand,
+      activateAbility: activateAbility,
+      passStage: passStage,
+      cancel: cancel,
+    },
+    next: Stages.combat,
+  },
+  combat: {
+    moves: {
+      playCardFromHand: playCardFromHand,
+      activateAbility: activateAbility,
+      passStage: passStage,
+      pickEntity: pickEntity,
+      cancel: cancel,
+    },
+
+    next: Stages.defense,
+  },
+  defense: {
+    moves: {
+      playCardFromHand: playCardFromHand,
+      activateAbility: activateAbility,
+      passStage: passStage,
+      pickEntity: pickEntity,
+      cancel: cancel,
+    },
+
+    next: Stages.resolve,
+  },
+  resolve: {
+    moves: {
+      playCardFromHand: playCardFromHand,
+      activateAbility: activateAbility,
+      passTurn: passTurn,
+    },
+    next: Stages.draw,
+  },
+
+  pickSlot: {
+    moves: {
+      chooseSlot: chooseSlot,
+      cancel: cancel,
+    },
+  },
+
+  // states depending on player actions
+
+  pickCombatTarget: {
+    moves: {
+      pickEntity: pickEntity,
+      cancel: cancel,
+    },
+  },
+  pickCombatDefense: {
+    moves: {
+      pickEntity: pickEntity,
+      cancel: cancel,
+    },
+  },
+  pickAbilityTarget: {
+    moves: {
+      pickEntity: pickEntity,
+      cancel: cancel,
+    },
+  },
+  discardCard: {
+    moves: {
+      playCardFromHand: playCardFromHand,
+    },
+  },
+  respond: {
+    moves: {
+      activateAbility: activateAbility,
+      pickEntity: pickEntity,
+      passStage: passStage,
+    },
+  },
 };
 
 export {
@@ -465,4 +657,5 @@ export {
   passTurn,
   passStage,
   activateAbility,
+  StagesDefiniton,
 };
