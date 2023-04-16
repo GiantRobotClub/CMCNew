@@ -10,6 +10,7 @@ import SessionHandler from "./SessionHandler";
 const CmcClient = Client({
   game: CardmasterConflict,
   numPlayers: 2,
+
   board: CMCBoard,
   multiplayer: SocketIO({ server: window.location.hostname + ":8000" }),
 });
