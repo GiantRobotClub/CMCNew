@@ -6,6 +6,8 @@ import { DbPlayer } from "../server/DbTypes";
 import { useNavigate } from "react-router-dom";
 import { GiCoinsPile } from "react-icons/gi";
 import SessionHandler from "./SessionHandler";
+import { icons } from "./CMCComponents/Icons";
+import CMCPlayerVisual from "./CMCComponents/PlayerData";
 
 <SessionHandler />;
 const baseplayer: DbPlayer = {
@@ -85,7 +87,7 @@ const LobbyCustom = () => {
       });
   }
   async function CreateMatch() {
-    console.log("Creating match with setup data");
+    console.log("Creating match with deck data");
     lobbyClient
       .createMatch("cmcr", {
         numPlayers: 2,
@@ -136,50 +138,68 @@ const LobbyCustom = () => {
       setGotGamesOnce(true);
     }
 
-    setopengames(
-      <div>
-        {timertick} {isLoading ? "loading" : "loaded"}
-        {games.map((match, index) => (
-          <div
-            className="match"
-            key={match.matchID}
-            style={{ border: "1px solid white" }}
-          >
-            <div className="matchtime">{match.createdAt}</div>
-
-            <div className="matchplayers">
-              {" "}
-              players:
-              {match.players.map((player, index) => (
-                <div key={player.id}>
-                  name: {player.name} pid: {player.id}
-                  connected:
-                  {player.isConnected ? "yes" : "no"}
-                  {!player.name ? (
-                    <Link
-                      onClick={() => {
-                        JoinGame(match.matchID, player.id.toString());
-                      }}
-                      to={""}
-                    >
-                      Join
-                    </Link>
-                  ) : player.name == Player.username ? (
-                    ""
-                  ) : (
-                    <Link to={"/play/" + match.matchID + "/-1/none"}>
-                      Spectate
-                    </Link>
-                  )}
-                  <Link to={"/play/" + match.matchID + "/-1/none"}>
-                    Spectate Debug
-                  </Link>
-                </div>
-              ))}
-            </div>
-            <div className="matchoptions"></div>
+    function makeplayerbox(player, index, alreadyin, match) {
+      return (
+        <div className={"player-in-match" + index} key={player.id}>
+          <div className="playercontainer">
+            <CMCPlayerVisual player={player} />
           </div>
-        ))}
+          <div className="ready">
+            {player.isConnected ? icons.check : icons.x}
+          </div>
+          <div className="playerseatcontrols">
+            {!alreadyin && !player.name ? (
+              <Link
+                onClick={() => {
+                  JoinGame(match.matchID, player.id.toString());
+                }}
+                to={""}
+              >
+                {icons.controller} Play
+              </Link>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+      );
+    }
+    setopengames(
+      <div className="opengames">
+        {isLoading ? "loading" : ""}
+        {games.map((match, index) => {
+          let alreadyin = false;
+          if (
+            match.players["0"].data.dbPlayerId == PlayerID ||
+            match.players["1"].data.dbPlayerId == PlayerID
+          ) {
+            alreadyin = true;
+          }
+          return (
+            <div
+              className="match"
+              key={match.matchID}
+              style={{ border: "1px solid white" }}
+            >
+              <div className="matchtime">
+                {new Date(match.createdAt).toUTCString()}
+              </div>
+
+              <div className="matchplayers">
+                <div className="matchplayerline">
+                  {makeplayerbox(match.players["0"], index, alreadyin, match)}
+                  <div className="vsbox">VS</div>
+
+                  {makeplayerbox(match.players["1"], index, alreadyin, match)}
+                </div>
+                <Link to={"/play/" + match.matchID + "/-1/none"}>
+                  {icons.eye} Spectate
+                </Link>
+              </div>
+              <div className="matchoptions"></div>
+            </div>
+          );
+        })}
       </div>
     );
   }, [timertick]);
@@ -191,7 +211,6 @@ const LobbyCustom = () => {
           Create Match
         </button>
       </div>
-      <div>Current Games:</div>
       <div id="gamelist">{opengames}</div>
     </div>
   );

@@ -11,6 +11,7 @@ const SessionHandler = () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.playerid !== "") {
+          console.log("Found player id: ", data.playerid);
         } else {
           // return to login screen
           nav("/");

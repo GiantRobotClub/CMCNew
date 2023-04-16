@@ -1,0 +1,12 @@
+{
+  "bosses": {
+    "justica": {
+      "deck": "premade-justica",
+      "persona": "justica"
+    },
+    "protagonist": {
+      "deck": "premade-protagonist",
+      "persona": "protagonist"
+    }
+  }
+}

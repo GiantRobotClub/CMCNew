@@ -183,7 +183,7 @@ export function CMCBoard(props: CMCProps) {
     );
   } else {
     return (
-      <div>
+      <div className="cmcboard">
         <div className="debug">
           stage:
           {props.ctx.activePlayers

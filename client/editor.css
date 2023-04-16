@@ -33,29 +33,31 @@
 .wheelcontrol * {
   color: black;
 }
-
-#deckchooser .deckvisual .personacard .cardStyleClickable {
+.deckvisual {
+  position: relative;
+}
+.deckvisual .personacard .cardStyleClickable {
   filter: unset !important;
   box-shadow: none !important;
   color: black;
   transform: scale(1);
   z-index: 50;
 }
-#deckchooser .deckvisual .personacard .cardStyleClickable:hover {
+.deckvisual .personacard .cardStyleClickable:hover {
   box-shadow: none !important;
   background-color: grey;
   transform: scale(1);
   z-index: 100;
 }
-#deckchooser .deckvisual .personacard .cardStyleClicked {
+.deckvisual .personacard .cardStyleClicked {
   background-color: rgb(255, 214, 208);
   filter: unset !important;
   transform: scale(1);
 }
-#deckchooser .deckvisual {
+.deckvisual {
   position: relative;
 }
-#deckchooser .deckvisual .deckicon svg {
+.deckvisual .deckicon svg {
   position: absolute;
   left: 15%;
   bottom: -10%;
@@ -197,4 +199,23 @@
 
 #deckEditor .dizzy {
   display: none;
+}
+
+.gameplayer {
+  display: flex;
+}
+
+.matchplayerline {
+  display: flex;
+}
+
+.opengames {
+  display: flex;
+}
+
+.opengames .match {
+  padding: 1em;
+  margin: 1em;
+  background-color: rgb(65, 64, 64);
+  border-radius: 2em;
 }

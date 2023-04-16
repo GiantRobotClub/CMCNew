@@ -3,9 +3,16 @@ import {
   GiHolyGrail,
   GiElectric,
   GiStarsStack,
+  GiCauldron,
 } from "react-icons/gi";
+import { SlGameController } from "react-icons/sl";
+import {
+  AiFillCheckCircle,
+  AiFillCloseCircle,
+  AiFillEye,
+} from "react-icons/ai";
 import { FaBalanceScale } from "react-icons/fa";
-import { BsFillDropletFill } from "react-icons/bs";
+import { BsFillDropletFill, BsFillCpuFill } from "react-icons/bs";
 import { TbCards, TbGrave2 } from "react-icons/tb";
 import { CgCardSpades } from "react-icons/cg";
 import { RiStarSFill } from "react-icons/ri";
@@ -55,6 +62,13 @@ export const icons = {
   dizzy: <RiStarSFill />,
   default: <RxCardStack />,
   adddeck: <RxCardStackPlus />,
+  check: <AiFillCheckCircle />,
+  x: <AiFillCloseCircle />,
+  eye: <AiFillEye />,
+
+  cpu: <BsFillCpuFill />,
+  cauldron: <GiCauldron />,
+  controller: <SlGameController />,
 
   lettera: <TbSquareRoundedLetterA />,
   letterb: <TbSquareRoundedLetterB />,

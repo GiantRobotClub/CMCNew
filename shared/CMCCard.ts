@@ -182,7 +182,7 @@ function CreateEffectCard(): CMCEffectCard {
   return card;
 }
 function GetCardPrototype(name: string): CMCCard {
-  const newprototype = window.structuredClone(prototypes[name]);
+  const newprototype = JSON.parse(JSON.stringify(prototypes[name]));
 
   newprototype.original = prototypes[name];
 

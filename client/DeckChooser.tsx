@@ -9,14 +9,7 @@ import {
 import { CMCPlayer, CreateDefaultPlayer } from "../shared/Player";
 import { icons } from "./CMCComponents/Icons";
 import "./editor.css";
-
-interface decklistdefinition {
-  deckid: string;
-  ownerid: string;
-  deckicon: string;
-  persona: string;
-  deckname: string;
-}
+import { CreateDeckVisual, decklistdefinition } from "./DeckVisual";
 
 const DeckChooser = () => {
   const nav = useNavigate();
@@ -35,27 +28,6 @@ const DeckChooser = () => {
     }
   }
 
-  function CreateDeckVisual(player: CMCPlayer, deck: decklistdefinition) {
-    let deckvisual = (
-      <div className="deckvisual" key={deck.deckid}>
-        <div className="personacard">
-          <CMCCardVisual
-            card={GetCardPrototype(deck.persona)}
-            big={true}
-            canClick={true}
-            doClick={() => {
-              gotodeck(deck.deckid);
-            }}
-            activeCard={false}
-            player={player}
-            showplayer={false}
-          />
-        </div>
-        <div className="deckicon">{icons[deck.deckicon]}</div>
-      </div>
-    );
-    return deckvisual;
-  }
   function createNewDeck() {
     fetch("/api/manage/decks/create/" + PlayerID).then(() => {
       setfetchflag(!fetchflag);
@@ -99,7 +71,7 @@ const DeckChooser = () => {
     persona: "empty",
   };
   const eplayer = CreateDefaultPlayer(PlayerID);
-  let emptydeckvisual = CreateDeckVisual(eplayer, emptylinkdeck);
+  let emptydeckvisual = CreateDeckVisual(eplayer, emptylinkdeck, createNewDeck);
 
   return (
     <div id="deckchooser">
@@ -107,7 +79,7 @@ const DeckChooser = () => {
         console.dir(deck);
         const player = CreateDefaultPlayer(PlayerID);
         player.name = deck.deckname;
-        return CreateDeckVisual(player, deck);
+        return CreateDeckVisual(player, deck, () => gotodeck(deck.deckid));
       })}
       {emptydeckvisual}
     </div>
