@@ -19,12 +19,12 @@
   display: block;
   width: 90%;
   position: relative;
-  top: 57%;
+  top: 55%;
   margin: auto;
   height: 2.4em;
 }
 .detailCard.type-persona .cardsubtype {
-  top: 57%;
+  top: 55%;
 }
 .detailCard .cardbox {
   display: block;
@@ -157,6 +157,8 @@
 
 .detailCard .cardpic img {
   width: 100%;
+
+  height: auto;
   bottom: 0;
 }
 .detailCard div {
@@ -175,7 +177,7 @@
 }
 .detailCard.type-persona .cardpic img {
   width: 100%;
-  height: 100%;
+  height: auto;
   display: absolute;
   left: 0;
   top: 0;
@@ -210,6 +212,7 @@
   color: white;
   border-radius: 0.3em;
   background-color: rgba(3, 3, 3, 0.75);
+  text-align: center;
 }
 
 .detailCard .playerline {
@@ -264,7 +267,7 @@
 
 .detailCard .ability {
   border: 1px solid black;
-  background: lightblue;
+  background: rgba(111, 202, 238, 0.8);
   text-align: left;
   position: relative;
   font-size: 0.5em;
@@ -330,7 +333,15 @@
   width: 100%;
   height: 100%;
   position: relative;
-  top: 2em;
+  bottom: 0em;
+}
+
+.detailCard.type-persona .abilities {
+  height: 4.2em;
+  display: flex;
+  overflow-y: auto;
+  overflow-x: hidden;
+  align-items: end;
 }
 
 .detailCard.type-location .abilities {

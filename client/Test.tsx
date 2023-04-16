@@ -17,6 +17,7 @@ const Test = () => {
     "debugspell",
     "debugloc",
     "emptyloc",
+    "farisin",
   ];
   const DummyPlayer = CreateDefaultPlayer("0");
   const small = (

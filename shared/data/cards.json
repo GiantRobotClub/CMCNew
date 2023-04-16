@@ -274,6 +274,77 @@
         }
       ],
       "expansion": "base"
+    },
+    "farisin": {
+      "playerID": "0",
+      "startingResource": {
+        "mana": {
+          "V": 1,
+          "A": 1,
+          "P": 1
+        },
+        "intrinsic": {
+          "health": 400
+        }
+      },
+      "resourcePerTurn": {
+        "mana": {
+          "V": 1,
+          "A": 0,
+          "P": 1
+        }
+      },
+      "startingHand": 0,
+      "drawPerTurn": 1,
+      "maxHand": 7,
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Farisin, PALADIN CEO",
+      "picture": "farisin.png",
+      "cardtext": "We're your societal solutions company.",
+      "type": "PERSONA",
+      "sac": {
+        "mana": {
+          "V": 0,
+          "A": 0,
+          "P": 0
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": 0,
+          "A": 0,
+          "P": 0
+        }
+      },
+      "abilities": [
+        {
+          "triggerType": "AUTOMATIC_TRIGGERED",
+          "targetCode": "IsDamagable",
+          "activateCode": "DamageTarget",
+          "metadata": {
+            "amount": 10
+          },
+          "abilityName": "Security through Supremacy",
+          "abilityText": "Effects take 1(V) less to cast",
+          "speed": 2
+        },
+        {
+          "triggerType": "AUTOMATIC_POSTCOMBAT",
+          "targetCode": "IsDamagable",
+          "activateCode": "DamageTarget",
+          "metadata": {
+            "amount": 10
+          },
+          "abilityName": "Peace through Domination",
+          "abilityText": "After combat, your monsters gain 10 life",
+          "speed": 2
+        }
+      ],
+      "expansion": "base"
     }
   }
 }
