@@ -16,6 +16,7 @@ const Test = () => {
       {Object.entries(cards).map(([cardid, card]) => {
         return (
           <CMCCardVisual
+            key={cardid}
             card={card as CMCCard}
             canClick={false}
             doClick={undefined}

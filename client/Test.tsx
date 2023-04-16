@@ -31,6 +31,7 @@ const Test = () => {
             activeCard={false}
             player={DummyPlayer}
             big={false}
+            key={cardid}
           />
         );
       })}
@@ -47,6 +48,7 @@ const Test = () => {
             activeCard={false}
             player={DummyPlayer}
             big={true}
+            key={cardid}
           />
         );
       })}
@@ -66,6 +68,7 @@ const Test = () => {
             big={true}
             detail={true}
             owner="0"
+            key={cardid}
           />
         );
       })}

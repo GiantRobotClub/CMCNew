@@ -47,7 +47,6 @@ function CmcCardDetailAbility({
         }
         if (ability.abilityText) {
           textitems = scanForIcons(ability.abilityText);
-          console.dir(ability.abilityName, ability.abilityText);
         }
         return (
           <div
@@ -65,8 +64,8 @@ function CmcCardDetailAbility({
                 <span className="abilityCostText">
                   {showbutton && ability.abilityCostText && costitems
                     ? Array.isArray(costitems)
-                      ? costitems.map((item) => {
-                          return <span>{item}</span>;
+                      ? costitems.map((item, index) => {
+                          return <span key={index}>{item}</span>;
                         })
                       : costitems
                     : ""}
@@ -77,7 +76,7 @@ function CmcCardDetailAbility({
                 {ability.abilityText && textitems
                   ? Array.isArray(textitems)
                     ? textitems.map((item) => {
-                        return <span>{item}</span>;
+                        return <span key={item}>{item}</span>;
                       })
                     : textitems
                   : ""}

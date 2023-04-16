@@ -2,9 +2,11 @@ import { Ctx } from "boardgame.io";
 import { couldStartTrivia } from "typescript";
 import {
   Ability,
+  Targets,
   TriggeringTrigger,
   TriggerNames,
   TriggerPlayerType,
+  ValidTargets,
 } from "./Abilities";
 import { CMCGameState } from "./CardmasterGame";
 import {
@@ -20,6 +22,7 @@ import {
   DealDamage,
   DizzyOne,
   ForceDiscard,
+  GainLife,
   IsMonster,
   IsPersona,
   OwnerOf,
@@ -35,7 +38,7 @@ export interface AbilityFunctionArgs {
   card: CMCCard;
   cardowner: string;
   ability?: Ability;
-  target?: CMCCard;
+  target?: Targets;
   G: CMCGameState;
   ctx: Ctx;
   events?: EventsAPI;
@@ -44,11 +47,11 @@ export interface AbilityFunctionArgs {
   trigger?: TriggeringTrigger;
 }
 
-export function DizzyCost(args: AbilityFunctionArgs): boolean {
+export function DizzyCost(args: AbilityFunctionArgs): Targets {
   const { card, G, dry } = args;
   if (card.type != CardType.EFFECT && card.type != CardType.MONSTER) {
     console.error("not the right type");
-    return false;
+    return [];
   }
 
   let found: boolean = false;
@@ -60,7 +63,7 @@ export function DizzyCost(args: AbilityFunctionArgs): boolean {
   }
   if (!found) {
     console.error("card not found " + card);
-    return false;
+    return [];
   }
   if ("dizzy" in card && "destroyed" in card && "status" in card) {
     const entitycard: CMCEntityCard = card as CMCEntityCard;
@@ -71,32 +74,32 @@ export function DizzyCost(args: AbilityFunctionArgs): boolean {
         entitycard.dizzy,
         entitycard
       );
-      return false;
+      return [];
     }
   }
 
   if (!dry) {
     DizzyOne(card as CMCEntityCard, G);
   }
-  return true;
+  return card;
 }
 
 // defaultcost checks everything in the player.resources against the card.cost.
-export function DefaultCost(args: AbilityFunctionArgs): boolean {
+export function DefaultCost(args: AbilityFunctionArgs): Targets {
   const { card, G, cardowner, random, events, dry } = args;
 
   const fullplayer: CMCPlayer = G.playerData[cardowner];
 
   if (!fullplayer) {
     console.log("no full player");
-    return false;
+    return [];
   }
   const modcard = GetModifiedStatCard(card);
   for (const check in modcard.cost) {
     for (const sub in modcard.cost[check]) {
       if (fullplayer.resources[check][sub] < modcard.cost[check][sub]) {
         console.log("Cant play " + modcard.name);
-        return false;
+        return [];
       }
     }
   }
@@ -104,38 +107,48 @@ export function DefaultCost(args: AbilityFunctionArgs): boolean {
   // if we are actually calling to check
   if (!dry) {
     if (!PlayerPay(cardowner, modcard.cost, G, random, events)) {
-      return false;
+      return [];
     }
   }
-  return true;
+  return modcard;
 }
 
-export function IsDamagable(args: AbilityFunctionArgs): boolean {
+export function IsDamagable(args: AbilityFunctionArgs): Targets {
   const { target, G } = args;
+  const targets: CMCCard[] = [];
   if (!target) {
-    console.error("no target");
-    return false;
-  }
-  // can only damage in field
-  let found: boolean = false;
+    // no base target so let's create it based on the 'truth'
 
-  AllCards(G).allinplay.forEach((card) => {
-    if (card.guid == target.guid && card.type == CardType.MONSTER) {
-      found = true;
-    }
-  });
-
-  if (target.type == CardType.PERSONA) {
-    return true;
+    targets.push(...AllCards(G).allinplay);
+  } else {
+    targets.push(...(Array.isArray(target) ? target : [target]));
   }
-  // is it a damagable type
-  return found && (IsMonster(target) || IsPersona(target));
+
+  const realtargets: CMCCard[] = [];
+
+  for (const target of targets) {
+    // can only damage in field
+    let found: boolean = false;
+
+    AllCards(G).allinplay.forEach((card) => {
+      if (card.guid == target.guid && card.type == CardType.MONSTER) {
+        realtargets.push(card);
+      } else if (card.guid == target.guid && card.type == CardType.EFFECT) {
+        realtargets.push(card);
+      } else if (card.guid == target.guid && card.type == CardType.PERSONA) {
+        realtargets.push(card);
+      }
+    });
+
+    // is it a damagable type
+  }
+  return realtargets;
 }
 
-export function ManaGenerate(args: AbilityFunctionArgs): boolean {
+export function ManaGenerate(args: AbilityFunctionArgs): Targets {
   const { card, G, ability, ctx } = args;
   if (!ability) {
-    return false;
+    return [];
   }
   let playerid = OwnerOf(card, G);
   let player: CMCPlayer = G.playerData[playerid];
@@ -148,54 +161,77 @@ export function ManaGenerate(args: AbilityFunctionArgs): boolean {
   PlayerAddResource(playerid, resource, G);
 
   G.playerData[ctx.currentPlayer] = player;
-  return true;
+  return card;
 }
 
-export function TriggerStage(args: AbilityFunctionArgs): boolean {
-  const { trigger, ability, ctx, cardowner } = args;
+export function TriggerStage(args: AbilityFunctionArgs): Targets {
+  const { trigger, ability, ctx, cardowner, G } = args;
   if (!trigger) {
-    return false;
+    return [];
   }
   if (!ability) {
-    return false;
+    return [];
   }
   if (!ctx.activePlayers) {
-    return false;
+    return [];
   }
   let playerToCheck = cardowner;
   if (trigger.triggeringPlayer != cardowner) {
-    return false;
+    return [];
   }
   if (ctx.activePlayers[playerToCheck] != ability.metadata.triggerstage) {
-    return false;
+    return [];
   }
   if (trigger.name != ability.metadata.triggername) {
-    return false;
+    return [];
   }
-  return true;
+  return G.location;
 }
-
-export function DamageTarget(args: AbilityFunctionArgs) {
+export function LifeGain(args: AbilityFunctionArgs): Targets {
   const { target, card, ability, G } = args;
   if (!ability) {
-    console.error("no ability");
-    return false;
+    return [];
   }
-  if (!target) {
-    console.log("no target");
-    return false;
+  const targets: CMCCard[] = ValidTargets(args, AllCards(G).allinplay);
+  const realtargets: CMCCard[] = [];
+  for (const target of targets) {
+    if (![CardType.PERSONA, CardType.MONSTER].includes(target.type)) {
+      console.log("isnt persona or");
+      continue;
+    }
+    if (IsMonster(target) || IsPersona(target)) {
+      GainLife(target, ability.metadata.amount, G);
+
+      realtargets.push(target);
+    } else {
+      console.error("isnt persona or monster");
+      continue;
+    }
   }
-  if (![CardType.PERSONA, CardType.MONSTER].includes(target.type)) {
-    console.log("isnt persona or");
-    return false;
+
+  return realtargets;
+}
+export function DamageTarget(args: AbilityFunctionArgs): Targets {
+  const { target, card, ability, G } = args;
+  if (!ability) {
+    return [];
   }
-  if (IsMonster(target) || IsPersona(target)) {
-    DealDamage(target, card, ability.metadata.amount, G);
-    return true;
-  } else {
-    console.error("isnt persona or monster");
-    return false;
+  const targets: CMCCard[] = ValidTargets(args, AllCards(G).allinplay);
+  const realtargets: CMCCard[] = [];
+  let found = false;
+  for (const target of targets) {
+    if (![CardType.PERSONA, CardType.MONSTER].includes(target.type)) {
+      console.log("isnt persona or");
+      continue;
+    }
+    if (IsMonster(target) || IsPersona(target)) {
+      DealDamage(target, card, ability.metadata.amount, G);
+      realtargets.push(target);
+    } else {
+      console.error("isnt persona or monster");
+    }
   }
+  return realtargets;
 }
 export function Always(
   card: CMCCard,
@@ -228,42 +264,44 @@ function MatchState(original: {}, match: {}) {
   return returnval;
 }
 
-export function Match(args: AbilityFunctionArgs): boolean {
+export function Match(args: AbilityFunctionArgs): Targets {
   const { ability, G, target, cardowner, ctx } = args;
-  // no match pattern means everybody.
   if (!ability) {
-    return false;
+    return [];
   }
-  if (!target) {
-    return false;
-  }
-  if (ability.metadata.matchplayer) {
-    if (ability.metadata.matchplayer == TriggerPlayerType.EITHER) {
-    } else if (ability.metadata.matchplayer == TriggerPlayerType.OWNER) {
-      if (cardowner != OwnerOf(target, G)) {
-        return false;
+  const targets: CMCCard[] = ValidTargets(args, AllCards(G).allinplay);
+  const realtargets: CMCCard[] = [];
+  let found = false;
+  for (const target of targets) {
+    if (ability.metadata.matchplayer) {
+      if (ability.metadata.matchplayer == TriggerPlayerType.EITHER) {
+      } else if (ability.metadata.matchplayer == TriggerPlayerType.OWNER) {
+        if (cardowner != OwnerOf(target, G)) {
+          continue;
+        }
+      } else if (ability.metadata.matchplayer == TriggerPlayerType.OPPONENT) {
+        if (cardowner == OwnerOf(target, G)) {
+          continue;
+        }
+      } else if (ability.metadata.matchplayer == TriggerPlayerType.ACTIVE) {
+        if (GetActivePlayer(ctx) == OwnerOf(target, G)) {
+          continue;
+        }
+      } else if (ability.metadata.matchplayer == TriggerPlayerType.ACTIVE) {
+        if (GetActivePlayer(ctx) != OwnerOf(target, G)) {
+          continue;
+        }
       }
-    } else if (ability.metadata.matchplayer == TriggerPlayerType.OPPONENT) {
-      if (cardowner == OwnerOf(target, G)) {
-        return false;
-      }
-    } else if (ability.metadata.matchplayer == TriggerPlayerType.ACTIVE) {
-      if (GetActivePlayer(ctx) == OwnerOf(target, G)) {
-        return false;
-      }
-    } else if (ability.metadata.matchplayer == TriggerPlayerType.ACTIVE) {
-      if (GetActivePlayer(ctx) != OwnerOf(target, G)) {
-        return false;
-      }
+      realtargets.push(target);
     }
-  }
 
-  if (ability.metadata.matchPattern) {
-    if (!MatchState(target, ability.metadata.matchPattern)) {
-      return false;
+    if (ability.metadata.matchPattern) {
+      if (!MatchState(target, ability.metadata.matchPattern)) {
+        return [];
+      }
     }
   }
-  return true;
+  return realtargets;
 }
 
 export function Discard(args: AbilityFunctionArgs) {
@@ -274,18 +312,28 @@ export function Discard(args: AbilityFunctionArgs) {
   if (!ability) {
     return false;
   }
-  let targeto = cardowner;
 
-  if (!target) {
-    //assume owner
-    targeto = cardowner;
-  } else {
-    targeto = OwnerOf(target, G);
-  }
-  let discardchoose = false;
-  if (ability.metadata && "discardchoose" in ability.metadata) {
-    discardchoose = ability.metadata.discardchoose;
-  }
+  const targets: (CMCCard | undefined)[] = Array.isArray(target)
+    ? target
+    : [target];
 
-  return ForceDiscard(discardchoose, targeto, G, ctx, random, events);
+  let found = false;
+  for (const target of targets) {
+    let targeto = cardowner;
+
+    if (!target) {
+      //assume owner
+      targeto = cardowner;
+    } else {
+      targeto = OwnerOf(target, G);
+    }
+    let discardchoose = false;
+    if (ability.metadata && "discardchoose" in ability.metadata) {
+      discardchoose = ability.metadata.discardchoose;
+    }
+
+    found =
+      found && ForceDiscard(discardchoose, targeto, G, ctx, random, events);
+  }
+  return found;
 }

@@ -139,12 +139,6 @@ const passStage: Move<CMCGameState> = ({ G, ctx, events, random }) => {
     events.setActivePlayers({ currentPlayer: Stages.resolve });
     events.endStage();
   } else if (GetActiveStage(ctx) == Stages.resolve) {
-    if (
-      G.playerData[GetActivePlayer(ctx)].persona.maxHand <
-      G.players[GetActivePlayer(ctx)].hand.length
-    ) {
-      ForceDiscard(true, GetActivePlayer(ctx), G, ctx, random, events);
-    }
   } else {
     events.endStage();
   }

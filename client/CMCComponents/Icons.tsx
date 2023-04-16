@@ -4,6 +4,8 @@ import {
   GiElectric,
   GiStarsStack,
   GiCauldron,
+  GiHealthNormal,
+  GiBroadsword,
 } from "react-icons/gi";
 import { SlGameController } from "react-icons/sl";
 import {
@@ -65,6 +67,8 @@ export const icons = {
   check: <AiFillCheckCircle />,
   x: <AiFillCloseCircle />,
   eye: <AiFillEye />,
+  sword: <GiBroadsword />,
+  life: <GiHealthNormal />,
 
   cpu: <BsFillCpuFill />,
   cauldron: <GiCauldron />,

@@ -187,11 +187,11 @@ function CMCCardVisual({
     attackLine = (
       <div className="attackline">
         <div className="attack">
-          <GiBroadsword className="cardicon sword" />
+          {icons.sword}
           {(cardObject as CMCMonsterCard).attack}
         </div>
         <div className="life">
-          <GiHealthNormal className="cardicon health" />
+          {icons.life}
           <span className="curlife">{(cardObject as CMCMonsterCard).life}</span>
         </div>
       </div>

@@ -75,6 +75,8 @@ interface TriggeringTrigger {
   stage?: string;
 }
 
+type Targets = CMCCard | CMCCard[];
+
 const EmptyTriggerData = {
   name: "",
 };
@@ -272,7 +274,7 @@ function ActivateAbility(
   resolveStack: boolean,
   random: RandomAPI,
   events: EventsAPI,
-  target?: CMCCard
+  target?: Targets
 ): boolean {
   const cardowner = OwnerOf(card, G);
   if (!CanActivateAbility(card, ability, G, ctx, random, events)) {
@@ -376,7 +378,7 @@ function AddToStack(
   ability: Ability,
   G: CMCGameState,
   ctx: Ctx,
-  target?: CMCCard
+  target?: Targets
 ): boolean {
   if (!ability.speed) {
     return false;
@@ -448,13 +450,14 @@ function ApplyStatChangesToThisCard(
     if (!ability.targetCode) {
       return;
     }
+    const targetcard: Targets = tcard;
     const args: AbilityFunctionArgs = {
       card: card,
       ability: ability,
       cardowner: OwnerOf(card, G),
       G: G,
       ctx: ctx,
-      target: tcard,
+      target: targetcard,
       dry: false,
     };
     const targetFunc: Function = CardFunctions[ability.targetCode];
@@ -465,20 +468,18 @@ function ApplyStatChangesToThisCard(
       sourceGuid: card.guid,
       mods: [ability.metadata.statmod],
     };
-    if (!card.statmods) {
-      card.statmods = [];
+    if (!tcard.statmods) {
+      tcard.statmods = [];
     }
-    card.statmods.push(statmod);
+    tcard.statmods.push(statmod);
   });
 }
 
 function ApplyStatChanges(card: CMCCard, ctx: Ctx, G: CMCGameState) {
-  for (const slotplayer in G.slots) {
-    const subplayer = "monsters";
-    for (const subrow of G.slots[slotplayer][subplayer]) {
-      const tcard: CMCCard = subrow;
-      ApplyStatChangesToThisCard(card, tcard, ctx, G);
-    }
+  const allcards = AllCards(G).all;
+
+  for (const tcard of allcards) {
+    ApplyStatChangesToThisCard(card, tcard, ctx, G);
   }
 }
 function ApplyAllStatChanges(ctx: Ctx, G: CMCGameState) {
@@ -491,7 +492,24 @@ function ApplyAllStatChanges(ctx: Ctx, G: CMCGameState) {
 interface StackedAbility {
   card: CMCCard;
   ability: Ability;
-  target?: CMCCard;
+  target?: Targets;
+}
+
+function ValidTargets(args, possible: CMCCard[]) {
+  const { target, ability, G } = args;
+  if (!ability) {
+    console.error("no ability");
+    return [];
+  }
+  const targets: CMCCard[] = [];
+  if (!target) {
+    // no base target so let's create it based on the 'truth'
+
+    targets.push(...possible);
+  } else {
+    targets.push(...(Array.isArray(target) ? target : [target]));
+  }
+  return targets;
 }
 export {
   Ability,
@@ -508,4 +526,6 @@ export {
   ResolveStack,
   ApplyStatChanges,
   ApplyAllStatChanges,
+  Targets,
+  ValidTargets,
 };

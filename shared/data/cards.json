@@ -143,20 +143,7 @@
       "picture": "slime.jpg",
       "cardtext": " Just a debug slime ",
       "type": "MONSTER",
-      "statmods": [
-        {
-          "source": "test2",
-          "mods": [
-            {
-              "cost": {
-                "mana": {
-                  "V": 1
-                }
-              }
-            }
-          ]
-        }
-      ],
+
       "sac": {
         "mana": {
           "V": 0,
@@ -209,7 +196,7 @@
       },
       "startingHand": 1,
       "drawPerTurn": 1,
-      "maxHand": 1,
+      "maxHand": 5,
       "alignment": "NONE",
       "guid": "TEMPORARY",
       "subtype": "",
@@ -280,7 +267,7 @@
       "startingResource": {
         "mana": {
           "V": 1,
-          "A": 1,
+          "A": 0,
           "P": 1
         },
         "intrinsic": {
@@ -291,7 +278,7 @@
         "mana": {
           "V": 1,
           "A": 0,
-          "P": 1
+          "P": 0
         }
       },
       "startingHand": 0,
@@ -322,25 +309,40 @@
       },
       "abilities": [
         {
-          "triggerType": "AUTOMATIC_TRIGGERED",
-          "targetCode": "IsDamagable",
+          "triggerType": "CONSTANT_FILTERED",
+          "targetCode": "Match",
           "activateCode": "DamageTarget",
           "metadata": {
-            "amount": 10
+            "matchplayer": "OWNER",
+            "matchpattern": {
+              "type": "EFFECT"
+            },
+            "statmod": {
+              "cost": {
+                "mana": {
+                  "V": -1
+                }
+              }
+            }
           },
           "abilityName": "Security through Supremacy",
-          "abilityText": "Effects take 1(V) less to cast",
+          "abilityText": "Your effects take 1(V) less to cast",
           "speed": 2
         },
         {
           "triggerType": "AUTOMATIC_POSTCOMBAT",
-          "targetCode": "IsDamagable",
-          "activateCode": "DamageTarget",
+          "targetCode": "Match",
+          "activateCode": "GainLife",
+
           "metadata": {
+            "matchplayer": "OWNER",
+            "matchpattern": {
+              "type": "MONSTER"
+            },
             "amount": 10
           },
           "abilityName": "Peace through Domination",
-          "abilityText": "After combat, your monsters gain 10 life",
+          "abilityText": "After combat, your monsters gain 10(life)",
           "speed": 2
         }
       ],

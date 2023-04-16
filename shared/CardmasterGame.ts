@@ -26,6 +26,7 @@ import {
   CanClickCard,
   CheckState,
   DrawCard,
+  ForceDiscard,
   GenerateRandomGuid,
   OwnerOf,
   PlayEntity,
@@ -314,6 +315,12 @@ export const CardmasterConflict: Game<CMCGameState> = {
           if (ctx.activePlayers !== null) {
             TriggerAuto(TriggerNames.END_STAGE, ctx, G, random, events);
             TriggerAuto(TriggerNames.END_TURN, ctx, G, random, events);
+            if (
+              G.playerData[GetActivePlayer(ctx)].persona.maxHand <
+              G.players[GetActivePlayer(ctx)].hand.length
+            ) {
+              ForceDiscard(true, GetActivePlayer(ctx), G, ctx, random, events);
+            }
           }
 
           resetCombat(G);

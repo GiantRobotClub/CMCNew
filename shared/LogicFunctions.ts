@@ -124,6 +124,27 @@ function GenerateRandomGuid(random: RandomAPI) {
   return guid;
 }
 
+function GainLife(
+  card: CMCMonsterCard | CMCPersonaCard,
+  amount: number,
+  G: CMCGameState
+) {
+  if ("life" in card) {
+    for (const slotplayer in G.slots) {
+      for (const subplayer in G.slots[slotplayer]) {
+        for (const [index, card] of G.slots[slotplayer][subplayer].entries()) {
+          if (card.guid == card.guid) {
+            G.slots[slotplayer][subplayer][index].life += amount;
+            if (G.slots[slotplayer][subplayer][index].life <= 0) {
+              G.slots[slotplayer][subplayer][index].destroyed = true;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 // deal damage. source is used for triggers of various kinds.
 function DealDamage(
   damagee: CMCMonsterCard | CMCPersonaCard,
@@ -827,4 +848,5 @@ export {
   AllCards,
   Undizzy,
   DizzyOne,
+  GainLife,
 };
