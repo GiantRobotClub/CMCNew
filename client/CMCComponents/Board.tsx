@@ -9,6 +9,8 @@ import { Ability, StackedAbility } from "../../shared/Abilities";
 import { OtherPlayer } from "../../shared/Util";
 import { FilteredMetadata } from "boardgame.io";
 import { icons } from "./Icons";
+import useMousePosition from "./UseMousePosition";
+
 interface CMCProps extends BoardProps<CMCGameState> {
   // Additional custom properties for your component
 }
@@ -19,7 +21,7 @@ export function CMCBoard(props: CMCProps) {
   const [winner, setWinner] = useState("");
   const [rewards, setRewards] = useState([""]);
   const [dbid, setdbid] = useState("");
-
+  const mousePosition = useMousePosition();
   if (props.G.wait == false && !GameStarted) {
     setGameStarted(true);
   }
@@ -44,6 +46,7 @@ export function CMCBoard(props: CMCProps) {
   const [inspectMode, setInspectMode] = useState(false);
   const [inspectCard, setInspectCard] = useState(CreateBasicCard());
   const [clickableInspect, setclickableInspect] = useState(false);
+  const [hoverCard, setHoverCard] = useState(CreateBasicCard());
   if (!GameStarted) {
     return <div>waiting for players</div>;
   }
@@ -103,8 +106,14 @@ export function CMCBoard(props: CMCProps) {
     }
   };
 
-  const hoverOnCard = (e: MouseEvent<HTMLDivElement>) => {
-    const element = e.target as HTMLDivElement;
+  const hoverOnCard = (card: CMCCard | undefined) => {
+    if (!card) {
+      setHoverCard(CreateBasicCard());
+    } else {
+      const copy = JSON.parse(JSON.stringify(card));
+
+      setHoverCard(copy);
+    }
   };
 
   const flexStyle: CSSProperties = {
@@ -129,7 +138,6 @@ export function CMCBoard(props: CMCProps) {
   }
 
   let otherPlayer = you == "0" ? "1" : "0";
-  const hovercard = CreateBasicCard();
 
   if (props.ctx.gameover) {
     if (props.ctx.gameover.winner) {
@@ -196,6 +204,7 @@ export function CMCBoard(props: CMCProps) {
                 big={true}
                 activeCard={false}
                 player={props.G.playerData[otherPlayer]}
+                hover={hoverOnCard}
                 card={props.G.playerData[otherPlayer].persona}
                 doClick={() =>
                   clickCard(props.G.playerData[otherPlayer].persona)
@@ -221,6 +230,7 @@ export function CMCBoard(props: CMCProps) {
                 player={props.G.playerData[props.G.location.owner]}
                 card={props.G.location}
                 doClick={() => clickCard(props.G.location)}
+                hover={hoverOnCard}
                 canClick={
                   inspectMode ||
                   CanClickCard(
@@ -240,6 +250,7 @@ export function CMCBoard(props: CMCProps) {
                 activeCard={false}
                 player={props.G.playerData[you]}
                 card={props.G.playerData[you].persona}
+                hover={hoverOnCard}
                 doClick={() => clickCard(props.G.playerData[you].persona)}
                 canClick={
                   inspectMode ||
@@ -261,6 +272,7 @@ export function CMCBoard(props: CMCProps) {
                 (card: CMCCard, index: number) => (
                   <CMCCardVisual
                     big={false}
+                    hover={hoverOnCard}
                     activeCard={false}
                     player={props.G.playerData[otherPlayer]}
                     card={card}
@@ -285,6 +297,7 @@ export function CMCBoard(props: CMCProps) {
                 (card: CMCCard, index: number) => (
                   <CMCCardVisual
                     big={false}
+                    hover={hoverOnCard}
                     activeCard={false}
                     player={props.G.playerData[otherPlayer]}
                     card={card}
@@ -308,6 +321,7 @@ export function CMCBoard(props: CMCProps) {
               {state.slots[you].effects.map((card: CMCCard, index: number) => (
                 <CMCCardVisual
                   big={false}
+                  hover={hoverOnCard}
                   activeCard={false}
                   player={props.G.playerData[you]}
                   card={card}
@@ -330,6 +344,7 @@ export function CMCBoard(props: CMCProps) {
               {state.slots[you].monsters.map((card: CMCCard, index: number) => (
                 <CMCCardVisual
                   big={false}
+                  hover={hoverOnCard}
                   activeCard={false}
                   player={props.G.playerData[you]}
                   card={card}
@@ -406,6 +421,7 @@ export function CMCBoard(props: CMCProps) {
                 big={false}
                 player={props.G.playerData[you]}
                 card={card}
+                hover={hoverOnCard}
                 activeCard={
                   props.G.activeCard
                     ? props.G.activeCard.guid == card.guid
@@ -430,6 +446,7 @@ export function CMCBoard(props: CMCProps) {
                   big={false}
                   player={props.G.playerData[you]}
                   card={card}
+                  hover={hoverOnCard}
                   activeCard={
                     props.G.activeCard
                       ? props.G.activeCard.guid == card.guid
@@ -452,12 +469,19 @@ export function CMCBoard(props: CMCProps) {
             )}
           </div>
         </div>
-        <div className="hoverbigcard" id="hoverbigcard">
+        <div
+          className="hoverbigcard"
+          id="hoverbigcard"
+          style={{
+            left: mousePosition.x ? mousePosition.x + 10 : 0,
+            top: mousePosition.y ? mousePosition.y + 10 : 0,
+          }}
+        >
           <CMCCardVisual
             big={true}
             activeCard={false}
-            player={props.G.playerData[OwnerOf(hovercard, props.G)]}
-            card={hovercard}
+            player={props.G.playerData[OwnerOf(hoverCard, props.G)]}
+            card={hoverCard}
             doClick={() => {}}
             canClick={false}
             key={"player" + otherPlayer}

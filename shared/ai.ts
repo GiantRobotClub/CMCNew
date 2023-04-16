@@ -27,7 +27,6 @@ function isSmart(
   switch (stage) {
     case Stages.sacrifice:
       {
-        console.dir(G.playerData[playerID].resources.mana);
         const totalmana =
           parseInt(G.playerData[playerID].resources.mana.A) +
           parseInt(G.playerData[playerID].resources.mana.V) +

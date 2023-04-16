@@ -606,3 +606,42 @@ button:focus-visible {
 .controlbtns {
   z-index: -1;
 }
+
+.hoverbigcard {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2000;
+}
+.hoverbigcard .cardStyle {
+  font-size: 1.2em;
+}
+.hoverbigcard .cardStyleEmpty {
+  display: none;
+}
+
+.hoverbigcard .type-persona .bottomline {
+  display: none;
+}
+
+.hoverbigcard .type-persona .playerdata {
+  display: none;
+}
+.hoverbigcard .type-persona .playerline {
+  display: none;
+}
+
+.hoverbigcard .type-location .bottomline {
+  display: none;
+}
+
+.hoverbigcard .type-location .playerdata {
+  display: none;
+}
+.hoverbigcard .type-location .manaline {
+  display: none;
+}
+
+.hoverbigcard .type-location .cardbox {
+  display: none;
+}

@@ -25,6 +25,7 @@ function CMCCardVisual({
   lookingplayer,
   owner,
   showplayer = true,
+  hover = undefined,
 }: {
   card: CMCCard;
   canClick: boolean;
@@ -37,6 +38,7 @@ function CMCCardVisual({
   lookingplayer?: string;
   owner?: string;
   showplayer?: boolean;
+  hover?: any;
 }) {
   const isDetail: boolean = detail ?? false;
   const showabilitybutton: boolean = clickability ?? false;
@@ -69,7 +71,9 @@ function CMCCardVisual({
       alignstyle = "color-profane-venerated";
       break;
   }
-
+  function hoverOnCard(card: CMCCard | undefined) {
+    if (hover !== undefined) hover(card);
+  }
   const cardObject: CMCCard = GetModifiedStatCard(card);
   let costLine = <div style={noshow}></div>;
   let attackLine = <div style={noshow}></div>;
@@ -398,6 +402,8 @@ function CMCCardVisual({
         key={cardObject.guid}
         onClick={doClick}
         disabled={!canClick}
+        onMouseOver={() => hoverOnCard(cardObject)}
+        onMouseOut={() => hoverOnCard(undefined)}
         className={
           "cardStyle " +
           alignstyle +
