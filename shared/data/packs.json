@@ -1,0 +1,9 @@
+{
+  "packs": {
+    "base": {
+      "rare": ["debugpersona", "farisin"],
+      "common": ["debugslime", "debuggen"],
+      "uncommon": ["debugspell", "debugloc"]
+    }
+  }
+}

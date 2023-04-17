@@ -70,6 +70,14 @@ function GiveMats(newmats: DbCraftingMats): DbCraftingMats | undefined {
   return newmats;
 }
 
+function SetDeck(playerid: string, deckid: string) {
+  const database = db();
+  const stmt = database.prepare(
+    "update player set selecteddeck = (?) where playerid = (?)"
+  );
+  stmt.run(deckid, playerid);
+  return playerid;
+}
 function GetPlayer(playerId: string): DbPlayer | undefined {
   console.log("loading player by id " + playerId);
   const database = db();
@@ -252,6 +260,17 @@ function CreatePlayer(
   return player;
 }
 
+function SaveOwned(playerid: string, ownedcards: DbOwnedCard[]) {
+  const delstmt = database.prepare("DELETE FROM owned_card WHERE playerid=(?)");
+  delstmt.run(playerid);
+  ownedcards.forEach((card) => {
+    const cardstmt = database.prepare(
+      "INSERT into owned_card (playerid, cardid, amount) values (?, ?, ?)"
+    );
+    cardstmt.run(playerid, card.cardid, card.amount);
+  });
+}
+
 function LoadJsonDeck(premade: string): DbFullDeck | undefined {
   if (!premadeDecks.premadeDecks.hasOwnProperty(premade)) {
     return undefined;
@@ -290,4 +309,6 @@ export {
   SetMats,
   GetMats,
   DbPlayer,
+  SaveOwned,
+  SetDeck,
 };

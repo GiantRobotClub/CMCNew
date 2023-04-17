@@ -10,6 +10,7 @@ import { CMCPlayer, CreateDefaultPlayer } from "../shared/Player";
 import { icons } from "./CMCComponents/Icons";
 import "./editor.css";
 import { CreateDeckVisual, decklistdefinition } from "./DeckVisual";
+import { DbPlayer } from "../server/DbTypes";
 
 const DeckChooser = () => {
   const nav = useNavigate();
@@ -18,6 +19,14 @@ const DeckChooser = () => {
   const [isLoading, setisLoading] = useState(true);
   const [Decks, setDecks] = useState(decklist);
   const [fetchflag, setfetchflag] = useState(true);
+  const emptydb: DbPlayer = {
+    playerid: "",
+    username: "",
+    selecteddeck: "",
+    visualname: "",
+    authenticationcode: "",
+  };
+  const [DbPlayer, setDbPlayer] = useState(emptydb);
   function gotodeck(deckid: string) {
     if (deckid == "create") {
       fetch("/api/manage/decks/create/" + PlayerID).then(() => {
@@ -27,7 +36,12 @@ const DeckChooser = () => {
       nav("/decks/" + deckid);
     }
   }
-
+  function selectdeck(deckid: string) {
+    console.log("Selecting deck " + deckid);
+    fetch("/api/manage/decks/select/" + PlayerID + "/" + deckid).then(() => {
+      setfetchflag(!fetchflag);
+    });
+  }
   function createNewDeck() {
     fetch("/api/manage/decks/create/" + PlayerID).then(() => {
       setfetchflag(!fetchflag);
@@ -40,17 +54,22 @@ const DeckChooser = () => {
       .then((data) => {
         if (data.playerid !== "") {
           setPlayerID(data.playerid);
-
+          const playerid = data.playerid;
           fetch("/api/manage/decks/list/" + data.playerid)
             .then((response) => response.json())
             .then((data) => {
-              if (data.playerid != data.playerid) {
+              if (data.playerid != playerid) {
                 // error
                 console.log("Data is wrong");
                 console.dir(data);
                 nav("/");
               }
               setDecks(data.decks);
+              fetch("/api/manage/player/getbyid/" + playerid)
+                .then((response) => response.json())
+                .then((data) => {
+                  setDbPlayer(data.player);
+                });
               setisLoading(false);
             });
         } else {
@@ -72,16 +91,40 @@ const DeckChooser = () => {
   };
   const eplayer = CreateDefaultPlayer(PlayerID);
   let emptydeckvisual = CreateDeckVisual(eplayer, emptylinkdeck, createNewDeck);
-
+  const selected = (
+    <div className="isselected">
+      {icons.arrowdr}SELECTED{icons.arrowdl}
+    </div>
+  );
+  function notselected(deckid) {
+    return (
+      <div className="notselected">
+        <button className="selectionbutton" onClick={() => selectdeck(deckid)}>
+          Select
+        </button>
+      </div>
+    );
+  }
   return (
     <div id="deckchooser">
       {Decks.map((deck: decklistdefinition) => {
-        console.dir(deck);
         const player = CreateDefaultPlayer(PlayerID);
         player.name = deck.deckname;
-        return CreateDeckVisual(player, deck, () => gotodeck(deck.deckid));
-      })}
-      {emptydeckvisual}
+        return (
+          <div className="verticaldeckslice">
+            <div className="selected">
+              {DbPlayer.selecteddeck == deck.deckid
+                ? selected
+                : notselected(deck.deckid)}
+            </div>
+            {CreateDeckVisual(player, deck, () => gotodeck(deck.deckid))}
+          </div>
+        );
+      })}{" "}
+      <div className="verticaldeckslice">
+        <div className="selected"></div>
+        {emptydeckvisual}
+      </div>
     </div>
   );
 };

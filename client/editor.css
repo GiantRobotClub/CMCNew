@@ -219,3 +219,82 @@
   background-color: rgb(65, 64, 64);
   border-radius: 2em;
 }
+
+.mainmenu {
+  display: flex;
+}
+.menubuttons {
+  display: flex;
+  flex-wrap: wrap;
+  width: 40em;
+}
+
+.menuoption {
+  width: 15em;
+  height: 15em;
+  position: relative;
+  border: 1px solid white;
+  border-radius: 1em;
+}
+
+.menuoption svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+
+  filter: drop-shadow(0 0 0.1em #fff)
+    drop-shadow(/* inner white */ 0 0 0.2em #f0f)
+    drop-shadow(/* middle magenta */ 0 0 0.3em #0ff /* outer cyan */);
+}
+.menuoption {
+  vertical-align: middle;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+}
+.menuoption .play-text {
+  text-align: center;
+  padding-top: auto;
+  display: table-cell;
+  vertical-align: bottom;
+  font-size: 3em;
+  line-height: 0.8em;
+  flex-grow: 1;
+  vertical-align: text-bottom;
+  filter: drop-shadow(0 0 0.1em #fff)
+    drop-shadow(/* inner white */ 0 0 0.2em #f0f)
+    drop-shadow(/* middle magenta */ 0 0 0.3em #0ff /* outer cyan */);
+  color: white;
+  display: flex;
+  align-content: bottom;
+  align-items: end;
+}
+
+.menuoption .play-text .play-name {
+}
+.menuoption .play-description {
+  text-align: center;
+  flex-grow: 1;
+  font-size: 1.5em;
+  color: white;
+  filter: drop-shadow(0 0 0.1em #fff)
+    drop-shadow(/* inner white */ 0 0 0.2em #f0f)
+    drop-shadow(/* middle magenta */ 0 0 0.3em #0ff /* outer cyan */);
+}
+
+#deckchooser .verticaldeckslice .selected {
+  border: 1px solid rgb(170, 170, 214);
+  border-radius: 2em;
+  height: 2em;
+}
+#deckchooser .verticaldeckslice .selected button {
+  border: 1px solid rgb(170, 170, 214);
+  border-radius: 2em;
+  height: 2em;
+  width: 100%;
+}

@@ -14,6 +14,8 @@ import {
   GiveMats,
   LoadJsonDeck,
   NewEmptyDeck,
+  SaveOwned,
+  SetDeck,
 } from "./db";
 import {
   DbCraftingMat,
@@ -26,6 +28,7 @@ import {
 import { nanoid } from "nanoid";
 import bodyParser from "koa-bodyparser";
 import crafting from "../shared/data/crafting.json";
+import packs from "../shared/data/packs.json";
 export const Manage = new Router<any, Server.AppCtx>();
 Manage.get("/mats/get/:playerid", (ctx, next) => {
   const mats: DbCraftingMats | undefined = GetMats(ctx.params.playerid);
@@ -37,6 +40,90 @@ Manage.get("/mats/get/:playerid", (ctx, next) => {
   return true;
 });
 
+function AddCard(owned: DbOwnedCard[], cardid: string) {
+  for (const ownedcard of owned) {
+    if (ownedcard.cardid == cardid) {
+      ownedcard.cardid = ownedcard.cardid + 1;
+    }
+  }
+}
+
+Manage.get("/mats/craft/:playerid/:letters", (ctx, next) => {
+  const lettercode = ctx.params.letters;
+  const playerid = ctx.params.playerid;
+
+  const curmats = GetMats(playerid);
+  if (curmats == undefined) {
+    ctx.response.body = { error: "no mats found" };
+
+    return next();
+  }
+  const needed = [...lettercode];
+  const lettercounts = {};
+  needed.map((letter) => {
+    if (!lettercounts.hasOwnProperty(letter)) {
+      lettercounts[letter] = 0;
+    }
+    lettercounts[letter] = lettercounts[letter] + 1;
+  });
+
+  // check if you have those mats
+  for (const lettercount of Object.entries(lettercounts)) {
+    for (const mat of curmats.mats) {
+      if (mat.letter == lettercount[0]) {
+        mat.amount = mat.amount - 1;
+        if (mat.amount < 0) {
+          ctx.response.body = { error: "missing mat: " + mat.letter };
+          return next();
+        }
+      }
+    }
+  }
+
+  // get owned cards
+
+  const owned: DbOwnedCard[] | undefined = GetOwnedCards(playerid);
+  if (!owned) {
+    ctx.response.body = { error: "could not get owned" };
+    return next();
+  }
+  const cardsgiven: string[] = [];
+  if (crafting.crafting.hasOwnProperty(lettercode)) {
+    // give the card result and return the card id
+    const cardtogive = crafting.crafting[lettercode];
+    cardsgiven.push(cardtogive);
+    AddCard(owned, cardtogive);
+  } else {
+    // 4 common two uncommon one rare
+
+    for (let i = 0; i < 4; i++) {
+      const randomElement =
+        packs.packs.base.common[
+          Math.floor(Math.random() * packs.packs.base.common.length)
+        ];
+      AddCard(owned, randomElement);
+      cardsgiven.push(randomElement);
+    }
+    for (let i = 0; i < 2; i++) {
+      const randomElement =
+        packs.packs.base.uncommon[
+          Math.floor(Math.random() * packs.packs.base.uncommon.length)
+        ];
+      AddCard(owned, randomElement);
+      cardsgiven.push(randomElement);
+    }
+    for (let i = 0; i < 1; i++) {
+      const randomElement =
+        packs.packs.base.rare[
+          Math.floor(Math.random() * packs.packs.base.rare.length)
+        ];
+      AddCard(owned, randomElement);
+      cardsgiven.push(randomElement);
+    }
+  }
+  SaveOwned(playerid, owned);
+  ctx.response.body = { given: cardsgiven };
+});
 Manage.post("/mats/give", bodyParser(), (ctx, next) => {
   let victoryinfo = ctx.request.body as {
     id: PlayerID;
@@ -187,7 +274,47 @@ Manage.get("/player/getowned/:id", (ctx, next) => {
   const owned = GetOwnedCards(ctx.params.id);
   ctx.body = { owned: owned };
 });
+Manage.get("/decks/select/:playerid/:deckid", (ctx, next) => {
+  console.log("Selecting deck");
+  const deckid = ctx.params.deckid;
+  const playerid = ctx.params.playerid;
+  console.dir(ctx.params);
+  // load player
+  const player = GetPlayer(playerid);
+  if (!player || player === undefined) {
+    ctx.response.body = { error: "could not load player" };
+    console.log("Selecting deck");
+    return next();
+  }
+  // load deck
+  const decks = GetDeckList(playerid);
 
+  console.dir(decks);
+  //check owner
+  let found = false;
+  for (const deck of decks) {
+    if (deck.deckid == deckid) {
+      found = true;
+      break;
+    }
+  }
+
+  if (!found) {
+    ctx.response.body = { error: "could not authenticate deck" };
+    return next();
+  }
+
+  console.log("setting to " + deckid);
+  // change deck id
+  SetDeck(playerid, deckid);
+
+  player.selecteddeck = deckid;
+  // return info
+  ctx.request.body = {
+    decks: decks,
+    player: player,
+  };
+});
 Manage.get("/player/getsession", (ctx, next) => {
   if (ctx.session === null) {
     ctx.body = { playerid: "" };
@@ -204,10 +331,14 @@ Manage.get("/player/login/:name/:authcode", (ctx, next) => {
   if (playerid == "") throw "Player not found";
   const player = GetPlayer(playerid);
   if (player === undefined) throw "Player not found from ID";
-  const success = authenticator.check(
+  let success = authenticator.check(
     ctx.params.authcode,
     player.authenticationcode
   );
+  //TODO: make this only work in dev environment
+  if (ctx.params.authcode == "DEBUG") {
+    success = true;
+  }
   if (!success) {
     throw (
       "Invalid authenticator code " +

@@ -14,7 +14,12 @@ import {
   AiFillEye,
 } from "react-icons/ai";
 import { FaBalanceScale } from "react-icons/fa";
-import { BsFillDropletFill, BsFillCpuFill } from "react-icons/bs";
+import {
+  BsFillDropletFill,
+  BsFillCpuFill,
+  BsFillArrowDownRightCircleFill,
+  BsFillArrowDownLeftCircleFill,
+} from "react-icons/bs";
 import { TbCards, TbGrave2 } from "react-icons/tb";
 import { CgCardSpades } from "react-icons/cg";
 import { RiStarSFill } from "react-icons/ri";
@@ -73,6 +78,9 @@ export const icons = {
   cpu: <BsFillCpuFill />,
   cauldron: <GiCauldron />,
   controller: <SlGameController />,
+
+  arrowdr: <BsFillArrowDownRightCircleFill />,
+  arrowdl: <BsFillArrowDownLeftCircleFill />,
 
   lettera: <TbSquareRoundedLetterA />,
   letterb: <TbSquareRoundedLetterB />,
