@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./App.css";
+
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import qrcode from "qrcode";

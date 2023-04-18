@@ -1,22 +1,23 @@
 import React from "react";
-import "./App.css";
-import "./bigcard.css";
-import "./editor.css";
+import "./style/App.css";
+import "./style/bigcard.css";
+import "./style/editor.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Default from "./Default";
-import Cmc from "./Cmc";
-import DualClient from "./Game";
-import CPUClient from "./VsCPU";
-import DualCpu from "./cpuvcpu";
-import MultiClient from "./multi";
-import LobbyCustom from "./Lobby";
-import CreatePlayer from "./CreatePlayer";
-import Home from "./Home";
-import Test from "./Test";
-import CardEdit from "./CardEdit";
-import SessionHandler from "./SessionHandler";
-import AllCards from "./AllCards";
-import DeckManager from "./Decks";
+import Default from "./Pages/Default";
+import Cmc from "./Pages/Cmc";
+import DualClient from "./Pages/Game";
+import CPUClient from "./Pages/VsCPU";
+import DualCpu from "./Pages/cpuvcpu";
+import MultiClient from "./Pages/multi";
+import LobbyCustom from "./Pages/Lobby";
+import CreatePlayer from "./Pages/CreatePlayer";
+import Home from "./Pages/Home";
+import Test from "./Pages/Test";
+import CardEdit from "./Pages/CardEdit";
+import SessionHandler from "./CMCComponents/SessionHandler";
+import AllCards from "./Pages/AllCards";
+import DeckManager from "./Pages/Decks";
+import Craft from "./Pages/Crafting";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route path="/test" element={<Test />} />
         <Route path="/allcards" element={<AllCards />} />
         <Route path="/edit" element={<CardEdit />} />
+        <Route path="/Craft" element={<Craft />} />
 
         <Route path="/decks/:deckid" element={<DeckManager />} />
         <Route path="/decks" element={<DeckManager />} />

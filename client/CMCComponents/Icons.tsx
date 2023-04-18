@@ -19,6 +19,7 @@ import {
   BsFillCpuFill,
   BsFillArrowDownRightCircleFill,
   BsFillArrowDownLeftCircleFill,
+  BsFillBackspaceFill,
 } from "react-icons/bs";
 import { TbCards, TbGrave2 } from "react-icons/tb";
 import { CgCardSpades } from "react-icons/cg";
@@ -108,6 +109,8 @@ export const icons = {
   letterx: <TbSquareRoundedLetterX />,
   lettery: <TbSquareRoundedLetterY />,
   letterz: <TbSquareRoundedLetterZ />,
+
+  backspace: <BsFillBackspaceFill />,
 };
 
 export function scanForIcons(string: string): string | React.ReactNodeArray {

@@ -1,9 +1,8 @@
 import React from "react";
-import SessionHandler from "./SessionHandler";
+import SessionHandler from "../CMCComponents/SessionHandler";
 import { useParams } from "react-router-dom";
 import DeckEditor from "./DeckEditor";
 import DeckChooser from "./DeckChooser";
-import "./editor.css";
 <SessionHandler />;
 const DeckManager = () => {
   const { deckid } = useParams();

@@ -1,23 +1,22 @@
 import { Client } from "boardgame.io/react";
 import React, { useState } from "react";
-import { CardmasterConflict } from "../shared/CardmasterGame";
-import { CMCBoard } from "./CMCComponents/Board";
+import { CardmasterConflict } from "../../shared/CardmasterGame";
+import { CMCBoard } from "../CMCComponents/Board";
 import { Local } from "boardgame.io/multiplayer";
 import Select from "react-select";
-import prototypes from "../shared/data/cards.json";
+import prototypes from "../../shared/data/cards.json";
 import JSONInput from "react-json-editor-ajrm";
 import locale from "react-json-editor-ajrm/locale/en";
 
-import "./editor.css";
 import {
   CMCCard,
   CreateBasicCard,
   GetCardPrototype,
   LoadCardPrototype,
-} from "../shared/CMCCard";
-import CMCCardVisual from "./CMCComponents/Card";
-import { CreateDefaultPlayer } from "../shared/Player";
-import CmcCardDetailAbility from "./CMCComponents/Abilities";
+} from "../../shared/CMCCard";
+import CMCCardVisual from "../CMCComponents/Card";
+import { CreateDefaultPlayer } from "../../shared/Player";
+import CmcCardDetailAbility from "../CMCComponents/Abilities";
 import { JSONEditor } from "react-json-editor-viewer";
 
 const Test = () => {

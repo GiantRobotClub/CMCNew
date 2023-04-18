@@ -1,11 +1,11 @@
 import { Client } from "boardgame.io/react";
-import { CardmasterConflict } from "../shared/CardmasterGame";
-import { CMCBoard } from "./CMCComponents/Board";
+import { CardmasterConflict } from "../../shared/CardmasterGame";
+import { CMCBoard } from "../CMCComponents/Board";
 import { useParams } from "react-router-dom";
 
 import { SocketIO } from "boardgame.io/multiplayer";
 import React from "react";
-import SessionHandler from "./SessionHandler";
+import SessionHandler from "../CMCComponents/SessionHandler";
 <SessionHandler />;
 const CmcClient = Client({
   game: CardmasterConflict,

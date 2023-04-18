@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { DbDeck, DbDeckCard, DbFullDeck, DbOwnedCard } from "../server/DbTypes";
-import CMCCardVisual from "./CMCComponents/Card";
-import { CMCCard, GetCardPrototype } from "../shared/CMCCard";
-import { CreateDefaultPlayer } from "../shared/Player";
-import { CardType } from "../shared/Constants";
+import {
+  DbDeck,
+  DbDeckCard,
+  DbFullDeck,
+  DbOwnedCard,
+} from "../../server/DbTypes";
+import CMCCardVisual from "../CMCComponents/Card";
+import { CMCCard, GetCardPrototype } from "../../shared/CMCCard";
+import { CreateDefaultPlayer } from "../../shared/Player";
+import { CardType } from "../../shared/Constants";
 
-import { icons } from "./CMCComponents/Icons";
+import { icons } from "../CMCComponents/Icons";
 
 const DeckEditor = ({ deckid }: { deckid: string }) => {
   const emptydbdeck: DbDeck = {

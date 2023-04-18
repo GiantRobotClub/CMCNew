@@ -1,13 +1,17 @@
 import { Client } from "boardgame.io/react";
 import React from "react";
-import { CMCGameState, CardmasterConflict } from "../shared/CardmasterGame";
+import { CMCGameState, CardmasterConflict } from "../../shared/CardmasterGame";
 
-import { CMCBoard } from "./CMCComponents/Board";
+import { CMCBoard } from "../CMCComponents/Board";
 import { Local, SocketIO } from "boardgame.io/multiplayer";
 import { MCTSBot } from "boardgame.io/ai";
 import { Ctx } from "boardgame.io";
-import { GetActivePlayer, GetActiveStage, OtherPlayer } from "../shared/Util";
-import { CardType, PlayerIDs, Stages } from "../shared/Constants";
+import {
+  GetActivePlayer,
+  GetActiveStage,
+  OtherPlayer,
+} from "../../shared/Util";
+import { CardType, PlayerIDs, Stages } from "../../shared/Constants";
 import { PlayerID } from "boardgame.io/src/types";
 import { Stage } from "boardgame.io/src/core/turn-order";
 

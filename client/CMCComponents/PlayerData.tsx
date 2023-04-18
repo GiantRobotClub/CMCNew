@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Server } from "boardgame.io/src/types";
 import { DbDeck, DbFullDeck } from "../../server/DbTypes";
-import { CreateDeckVisual, decklistdefinition } from "../DeckVisual";
+import { CreateDeckVisual, decklistdefinition } from "../Pages/DeckVisual";
 import { CreateDefaultPlayer } from "../../shared/Player";
 const emptydbdeck: DbDeck = {
   deckicon: "",

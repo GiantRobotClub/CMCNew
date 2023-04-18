@@ -67,6 +67,8 @@
   filter: drop-shadow(0 0 0.1em #fff)
     drop-shadow(/* inner white */ 0 0 0.2em #f0f)
     drop-shadow(/* middle magenta */ 0 0 0.3em #0ff /* outer cyan */);
+
+  pointer-events: none;
 }
 #deckchooser {
   display: flex;
@@ -297,4 +299,59 @@
   border-radius: 2em;
   height: 2em;
   width: 100%;
+}
+
+.CraftingInterface .entrybox {
+  border: 2px solid aqua;
+  border-radius: 2em;
+}
+
+.CraftingInterface .letters {
+}
+
+.CraftingInterface .letterbox {
+  border: 2px solid aqua;
+  border-radius: 2em;
+  display: flex;
+  height: 6em;
+}
+
+.CraftingInterface .letterbox .selectletter {
+  width: 100%;
+  height: 4em;
+  padding: 0.5em;
+}
+
+.CraftingInterface .letterbox .letter {
+  width: 100%;
+  height: 100%;
+  padding: 0.5em;
+  flex-basis: 0;
+}
+
+.CraftingInterface .letterbox .letter svg {
+  width: 2em;
+  height: 2em;
+  padding: 0.5em;
+}
+.CraftingInterface .wordentry {
+  text-align: center;
+}
+.CraftingInterface .wordletters {
+  display: flex;
+  width: 70%;
+  height: 2em;
+  padding: 1em;
+  font-size: 2em;
+  letter-spacing: 1em;
+  text-align: center;
+}
+
+.gotcards {
+  display: flex;
+  width: 100%;
+  overflow-x: scroll;
+}
+
+.verticaldeckslice {
 }

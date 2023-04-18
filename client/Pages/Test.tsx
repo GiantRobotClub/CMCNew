@@ -1,12 +1,12 @@
 import { Client } from "boardgame.io/react";
 import React from "react";
-import { CardmasterConflict } from "../shared/CardmasterGame";
-import { CMCBoard } from "./CMCComponents/Board";
+import { CardmasterConflict } from "../../shared/CardmasterGame";
+import { CMCBoard } from "../CMCComponents/Board";
 import { Local } from "boardgame.io/multiplayer";
-import { GetCardPrototype } from "../shared/CMCCard";
-import CMCCardVisual from "./CMCComponents/Card";
-import { CreateDefaultPlayer } from "../shared/Player";
-import CmcCardDetailAbility from "./CMCComponents/Abilities";
+import { GetCardPrototype } from "../../shared/CMCCard";
+import CMCCardVisual from "../CMCComponents/Card";
+import { CreateDefaultPlayer } from "../../shared/Player";
+import CmcCardDetailAbility from "../CMCComponents/Abilities";
 
 const Test = () => {
   const cardids = [

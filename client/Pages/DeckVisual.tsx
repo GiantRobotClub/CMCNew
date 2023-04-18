@@ -1,8 +1,8 @@
 import React from "react";
-import { CMCPlayer } from "../shared/Player";
-import CMCCardVisual from "./CMCComponents/Card";
-import { GetCardPrototype } from "../shared/CMCCard";
-import { icons } from "./CMCComponents/Icons";
+import { CMCPlayer } from "../../shared/Player";
+import CMCCardVisual from "../CMCComponents/Card";
+import { GetCardPrototype } from "../../shared/CMCCard";
+import { icons } from "../CMCComponents/Icons";
 
 export interface decklistdefinition {
   deckid: string;
@@ -25,6 +25,7 @@ export function CreateDeckVisual(
           big={true}
           canClick={true}
           doClick={() => {
+            console.log("Clicked");
             gotodeck;
           }}
           activeCard={false}

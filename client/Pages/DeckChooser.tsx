@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CMCCardVisual from "./CMCComponents/Card";
+import CMCCardVisual from "../CMCComponents/Card";
 import {
   CMCPersonaCard,
   CreateBasicCard,
   GetCardPrototype,
-} from "../shared/CMCCard";
-import { CMCPlayer, CreateDefaultPlayer } from "../shared/Player";
-import { icons } from "./CMCComponents/Icons";
-import "./editor.css";
+} from "../../shared/CMCCard";
+import { CMCPlayer, CreateDefaultPlayer } from "../../shared/Player";
+import { icons } from "../CMCComponents/Icons";
+
 import { CreateDeckVisual, decklistdefinition } from "./DeckVisual";
-import { DbPlayer } from "../server/DbTypes";
+import { DbPlayer } from "../../server/DbTypes";
 
 const DeckChooser = () => {
   const nav = useNavigate();
@@ -28,6 +28,7 @@ const DeckChooser = () => {
   };
   const [DbPlayer, setDbPlayer] = useState(emptydb);
   function gotodeck(deckid: string) {
+    console.log("Going to " + deckid);
     if (deckid == "create") {
       fetch("/api/manage/decks/create/" + PlayerID).then(() => {
         setfetchflag(!fetchflag);
@@ -117,7 +118,9 @@ const DeckChooser = () => {
                 ? selected
                 : notselected(deck.deckid)}
             </div>
-            {CreateDeckVisual(player, deck, () => gotodeck(deck.deckid))}
+            <div className="deckvis" onClick={() => gotodeck(deck.deckid)}>
+              {CreateDeckVisual(player, deck, () => gotodeck(deck.deckid))}
+            </div>
           </div>
         );
       })}{" "}

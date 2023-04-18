@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { LobbyClient, LobbyClientError } from "boardgame.io/client";
 import { Link, matchRoutes } from "react-router-dom";
 import { LobbyAPI } from "boardgame.io/src/types";
-import { DbPlayer } from "../server/DbTypes";
+import { DbPlayer } from "../../server/DbTypes";
 import { useNavigate } from "react-router-dom";
 import { GiCoinsPile } from "react-icons/gi";
-import SessionHandler from "./SessionHandler";
-import { icons } from "./CMCComponents/Icons";
-import CMCPlayerVisual from "./CMCComponents/PlayerData";
+import SessionHandler from "../CMCComponents/SessionHandler";
+import { icons } from "../CMCComponents/Icons";
+import CMCPlayerVisual from "../CMCComponents/PlayerData";
 
 <SessionHandler />;
 const baseplayer: DbPlayer = {
