@@ -71,7 +71,9 @@ const DeckEditor = ({ deckid }: { deckid: string }) => {
       });
   };
   const selectpersona = (cardid: string) => {
-    FullDeck.deck.persona = cardid;
+    const newdeck = JSON.parse(JSON.stringify(FullDeck));
+    newdeck.deck.persona = cardid;
+    setFullDeck(newdeck);
   };
   const subDeck = (cardid: string) => {
     const newOwned = JSON.parse(JSON.stringify(OwnedCards));
@@ -218,7 +220,12 @@ const DeckEditor = ({ deckid }: { deckid: string }) => {
         </div>
         <div className="personapicker">
           <div className="deckname">
-            <input type="text" name="deckname" onChange={handletextchange} />
+            <input
+              type="text"
+              name="deckname"
+              onChange={handletextchange}
+              value={FullDeck.deck.deckname}
+            />
             <button
               onClick={() => {
                 savedeck();

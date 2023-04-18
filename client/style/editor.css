@@ -169,7 +169,7 @@
 #deckEditor .symbolpicker {
   display: flex;
   flex-wrap: wrap;
-  width: 10em;
+  width: 11em;
   border: 1px solid white;
   border-radius: 1em;
   padding: 1em;
@@ -185,6 +185,7 @@
 }
 #deckEditor .currentpersonabox {
   position: relative;
+  width: 7.5em;
 }
 #deckEditor .currentpersonabox .deckicon svg {
   position: absolute;
