@@ -9,6 +9,7 @@ import {
   DbDeckCard,
   DbCraftingMats,
   DbCraftingMat,
+  DbCompletion,
 } from "./DbTypes";
 
 let database: Database;
@@ -293,6 +294,48 @@ function LoadJsonDeck(premade: string): DbFullDeck | undefined {
   return fulldeck;
 }
 
+function AddCompletionData(completion: DbCompletion) {
+  const insert = database.prepare(
+    "INSERT OR IGNORE into completion (playerid, completiontype,completionname, info) VALUES (?,?,?,?) "
+  );
+  insert.run(
+    completion.playerid,
+    completion.completiontype,
+    completion.completionname,
+    completion.info
+  );
+}
+
+function GetCompletionData(
+  playerid: string,
+  completiontype?: string
+): DbCompletion[] {
+  const completions: DbCompletion[] = [];
+  console.log(
+    "SELECT playerid, completiontype, completionname, info from completion where playerid=(?)" +
+      (completiontype ? " AND completiontype=(?)" : "")
+  );
+  const stmt = database.prepare(
+    "SELECT playerid, completiontype,completionname, info from completion where playerid=(?)" +
+      (completiontype ? " AND completiontype=(?)" : "")
+  );
+  console.dir("stmt", stmt);
+
+  const args = [playerid];
+  if (completiontype) args.push(completiontype);
+  const rows = stmt.all(...args);
+  if (!rows) {
+    return completions;
+  }
+  for (const row of rows) {
+    if (!row) break;
+    const completion = row as DbCompletion;
+    completions.push(completion);
+  }
+
+  return completions;
+}
+
 export {
   CreateDeck,
   CreatePlayer,
@@ -312,4 +355,6 @@ export {
   DbPlayer,
   SaveOwned,
   SetDeck,
+  AddCompletionData,
+  GetCompletionData,
 };

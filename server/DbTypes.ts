@@ -39,6 +39,14 @@ interface DbCraftingMats {
   playerid: string;
   mats: DbCraftingMat[];
 }
+
+interface DbCompletion {
+  playerid: string;
+  completiontype: string;
+  completionname: string;
+  info: string;
+}
+
 export {
   DbDeck,
   DbFullDeck,
@@ -47,4 +55,5 @@ export {
   DbDeckCard,
   DbCraftingMat,
   DbCraftingMats,
+  DbCompletion,
 };

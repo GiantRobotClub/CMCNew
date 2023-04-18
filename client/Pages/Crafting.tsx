@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { DbCraftingMats } from "../../server/DbTypes";
+import { DbCompletion, DbCraftingMats } from "../../server/DbTypes";
 import { DbPlayer } from "../../server/DbTypes";
 import React from "react";
 import { icons } from "../CMCComponents/Icons";
@@ -26,6 +26,7 @@ const Craft = () => {
   const [Word, setWord] = useState("");
   const [Card, setCard] = useState(CreateBasicCard());
   const [CardsGiven, setCardsGiven] = useState(["empty"]);
+  const [Known, setKnown] = useState([""]);
 
   useEffect(() => {
     fetch("/api/manage/player/getsession")
@@ -38,6 +39,18 @@ const Craft = () => {
             .then((response) => response.json())
             .then((data) => {
               setMats(data.mats);
+              fetch("/api/manage/completions/get/" + playerid + "/craft")
+                .then((response) => response.json())
+                .then((data) => {
+                  const knownrecipes: string[] = [];
+                  for (const completion of data.completions) {
+                    knownrecipes.push(
+                      (completion as DbCompletion).completionname
+                    );
+                  }
+                  console.dir(data);
+                  setKnown(knownrecipes);
+                });
             });
         }
       });
@@ -53,6 +66,9 @@ const Craft = () => {
           console.dir(data);
           setCardsGiven(data.given);
           setWord("");
+          if (data.type == "R") {
+            if (!Known.includes(data.recipe)) Known.push(data.recipe);
+          }
         }
       });
   }
@@ -137,7 +153,17 @@ const Craft = () => {
       </div>
     </div>
   );
-
+  const known = (
+    <div className="knownrecipes">
+      <div className="recipe recipetitle">
+        KNOWN
+        <br /> RECIPES
+      </div>
+      {Known.map((recipe) => {
+        return <div className="recipe recipetext">{recipe}</div>;
+      })}
+    </div>
+  );
   const letterbox = (
     <div className="letterbox">
       {Mats.mats.map((mat) => {
@@ -180,6 +206,7 @@ const Craft = () => {
       <div className="cardgoeshere">{cardbox}</div>
       <div className="entrybox">{entrybox}</div>
       <div className="letters">{letterbox}</div>
+      <div className="known">{known}</div>
     </div>
   );
 };

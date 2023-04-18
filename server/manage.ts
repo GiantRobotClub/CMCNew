@@ -2,9 +2,11 @@ import Router from "@koa/router";
 import type { PlayerID, Server, Server as ServerTypes } from "boardgame.io";
 import { authenticator } from "@otplib/preset-default";
 import {
+  AddCompletionData,
   CreateDeck,
   CreatePlayer,
   DeleteDeck,
+  GetCompletionData,
   GetDeckList,
   GetFullDeck,
   GetMats,
@@ -19,6 +21,7 @@ import {
   SetMats,
 } from "./db";
 import {
+  DbCompletion,
   DbCraftingMat,
   DbCraftingMats,
   DbDeckCard,
@@ -30,6 +33,7 @@ import { nanoid } from "nanoid";
 import bodyParser from "koa-bodyparser";
 import crafting from "../shared/data/crafting.json";
 import packs from "../shared/data/packs.json";
+import { TbReceiptRefund } from "react-icons/tb";
 export const Manage = new Router<any, Server.AppCtx>();
 Manage.get("/mats/get/:playerid", (ctx, next) => {
   const mats: DbCraftingMats | undefined = GetMats(ctx.params.playerid);
@@ -57,6 +61,26 @@ function AddCard(owned: DbOwnedCard[], cardid: string, pid: string) {
   owned.push(newownedcard);
 }
 
+Manage.get("/completions/get/:playerid/:completiontype", (ctx, next) => {
+  console.dir(ctx.params);
+  const completiontype = ctx.params.completiontype;
+  const playerid = ctx.params.playerid;
+  const completions = GetCompletionData(playerid, completiontype);
+  ctx.response.body = { completions: completions };
+});
+
+Manage.get(
+  "/completions/add/:playerid/:completiontype/:completionname/:info",
+  (ctx, next) => {
+    const completion: DbCompletion = {
+      playerid: ctx.params.playerid,
+      completiontype: ctx.params.completiontype,
+      info: ctx.params.info,
+      completionname: ctx.params.completionname,
+    };
+    AddCompletionData(completion);
+  }
+);
 Manage.get("/mats/craft/:playerid/:letters", (ctx, next) => {
   const lettercode = ctx.params.letters;
   const playerid = ctx.params.playerid;
@@ -100,11 +124,22 @@ Manage.get("/mats/craft/:playerid/:letters", (ctx, next) => {
     return next();
   }
   const cardsgiven: string[] = [];
+  let recipetype = "";
   if (crafting.crafting.hasOwnProperty(lettercode)) {
     // give the card result and return the card id
-    const cardtogive = crafting.crafting[lettercode];
-    cardsgiven.push(cardtogive);
-    AddCard(owned, cardtogive, playerid);
+    const cardstogive = crafting.crafting[lettercode];
+    for (const cardtogive of cardstogive) {
+      cardsgiven.push(cardtogive);
+      AddCard(owned, cardtogive, playerid);
+    }
+    const completiondata: DbCompletion = {
+      playerid: playerid,
+      completiontype: "craft",
+      completionname: lettercode,
+      info: cardstogive,
+    };
+    AddCompletionData(completiondata);
+    recipetype = "R";
   } else {
     // 4 common two uncommon one rare
     const totalnumber = lettercode.length;
@@ -135,10 +170,15 @@ Manage.get("/mats/craft/:playerid/:letters", (ctx, next) => {
       AddCard(owned, randomElement, playerid);
       cardsgiven.push(randomElement);
     }
+    recipetype = "P";
   }
   SetMats(curmats);
   SaveOwned(playerid, owned);
-  ctx.response.body = { given: cardsgiven };
+  ctx.response.body = {
+    given: cardsgiven,
+    recipe: lettercode,
+    type: recipetype,
+  };
 });
 Manage.post("/mats/give", bodyParser(), (ctx, next) => {
   let victoryinfo = ctx.request.body as {

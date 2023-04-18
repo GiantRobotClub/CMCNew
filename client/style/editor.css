@@ -359,3 +359,44 @@
 
 .verticaldeckslice {
 }
+
+.knownrecipes {
+  display: flex;
+  border: 1px solid white;
+  border-radius: 2em;
+  padding: 1em;
+}
+.knownrecipes .recipe {
+  display: block;
+  border: 1px solid white;
+  border-radius: 1em;
+
+  transform: rotate(-45deg);
+  line-height: 50%;
+  color: black;
+  background-color: rgb(183, 196, 152);
+  height: 100%;
+}
+
+.knownrecipes .recipe.recipetext {
+  display: block;
+  border: 1px solid white;
+  border-radius: 1em;
+
+  padding: 0.4em;
+  transform: translateY(1em) rotate(-45deg);
+
+  line-height: 50%;
+  color: black;
+  background-color: rgb(183, 196, 152);
+  height: 100%;
+}
+
+.knownrecipes .recipe.recipetitle {
+  border: 1px solid white;
+  border-radius: 1em;
+  padding: 0.2em;
+  line-height: unset;
+  margin-right: 2em;
+  background-color: grey;
+}

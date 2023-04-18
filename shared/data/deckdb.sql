@@ -26,7 +26,8 @@ CREATE TABLE IF NOT EXISTS player (
     username text UNIQUE NOT NULL,
     visualname text,
     authenticationcode text,
-    selecteddeck text
+    selecteddeck text,
+    metadata text,
 );
 
 CREATE TABLE IF NOT EXISTS materials (
@@ -36,3 +37,11 @@ CREATE TABLE IF NOT EXISTS materials (
     PRIMARY KEY(playerid,letter)
     )
     ;
+
+CREATE TABLE if NOT EXISTS completion (
+    playerid text,
+    completiontype text,
+    completionname text,
+    info text,
+    PRIMARY KEY(playerid,completiontype,completionname)
+);

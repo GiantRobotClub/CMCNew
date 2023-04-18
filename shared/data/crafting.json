@@ -1,10 +1,11 @@
 {
   "crafting": {
-    "AAA": "debugslime",
-    "VAP": "debugloc",
-    "GEN": "debuggen",
-    "ZOP": "debugspell",
-    "CARDM": "debugpersona"
+    "AAAA": ["debugslime"],
+    "DDD": ["debugslime"],
+    "VAP": ["debugloc"],
+    "GEN": ["debuggen"],
+    "ZOP": ["debugspell"],
+    "CARDM": ["debugpersona"]
   },
   "rewardrates": {
     "A": 5,
@@ -33,5 +34,33 @@
     "X": 1,
     "Y": 1,
     "Z": 1
+  },
+  "matnames": {
+    "A": "Aether",
+    "B": "Bo staff",
+    "C": "Computer chip",
+    "D": "Dragon Scale",
+    "E": "Eye of Newt",
+    "F": "Fusion inhibitor",
+    "G": "Graviton",
+    "H": "Holy relic",
+    "I": "Ion canister",
+    "J": "Joltaic wiring",
+    "K": "Kraken bile",
+    "L": "Luminite Ingot",
+    "M": "Mythril",
+    "N": "Nythril",
+    "O": "Obsidian",
+    "P": "Plasma cell",
+    "Q": "Quantum lattice",
+    "R": "Radium",
+    "S": "Skyrian Wine",
+    "T": "Temporal flux",
+    "U": "Unobtanium",
+    "V": "Vial of poison",
+    "W": "Wood",
+    "X": "Xylophone",
+    "Y": "Yellow thing",
+    "Z": "Zircon"
   }
 }
