@@ -400,3 +400,27 @@
   margin-right: 2em;
   background-color: grey;
 }
+
+.enemyselector {
+  width: 50%;
+  border: 1px solid purple;
+  border-radius: 1em;
+  display: flex;
+  padding: 1em;
+}
+
+.enemyselector .enemyportrait {
+  margin: 1em;
+  border: 1px solid purple;
+  border-radius: 1em;
+  padding: 0.5em;
+  background-color: rgba(100, 100, 100, 50);
+}
+
+.enemyselector .enemyportrait.completed {
+  transform: scale(1);
+  opacity: 0.5;
+}
+.enemyselector .enemyportrait.uncompleted {
+  transform: scale(1.2);
+}
