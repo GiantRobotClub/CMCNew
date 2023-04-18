@@ -83,7 +83,7 @@ function Home() {
             Craft materials into new cards and packs
           </div>
         </Link>
-        <Link to="/Craft" className="menuoption">
+        <Link to="/1P" className="menuoption">
           <div className="play-icon">{icons.cpu}</div>
           <div className="play-text">
             <div className="play-name">SINGLE PLAYER</div>

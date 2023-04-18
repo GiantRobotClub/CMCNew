@@ -1,12 +1,13 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 import type { Ctx, Game, Move } from "boardgame.io";
 import { Stage, TurnOrder } from "boardgame.io/core";
-import crypto from "crypto";
+import premadeDecks from "../shared/data/premade.json";
 import {
   CMCCard,
   CMCLocationCard,
   CreateBasicCard,
   CreateInitialLocationCard,
+  GetCardPrototype,
 } from "./CMCCard";
 import { CMCPlayer, CreateDefaultPlayer, ParseDbPlayer } from "./Player";
 
@@ -59,11 +60,12 @@ import {
   PlayerDecks,
 } from "./Decks";
 import { isModuleDeclaration } from "typescript";
-import { DbFullDeck, DbPlayer } from "../server/DbTypes";
+import { DbDeck, DbDeckCard, DbFullDeck, DbPlayer } from "../server/DbTypes";
 import { GetPlayer } from "../server/DbWrapper";
 import { GetFullDeck } from "../server/DbWrapper";
 import ai from "./ai";
 
+import bosses from "../shared/data/singleplayer.json";
 export interface CMCGameState {
   playerData: {
     "0": CMCPlayer;
@@ -121,22 +123,13 @@ export const CardmasterConflict: Game<CMCGameState> = {
     let gameStarted = false;
     let playerData: any;
     let isMulti = false;
-    if (!setupData || setupData.multi == false) {
-      isMulti = false;
-      setupData = CreateDebugSetupData();
-      decks = ParseDecks(CreateDebugSetupData().decks);
-      playerData = {
-        "0": CreateDefaultPlayer("0", setupData.decks),
-        "1": CreateDefaultPlayer("1", setupData.decks),
-      };
-    } else {
-      isMulti = true;
-      // put in blank info, then set decks later whne game starts.
-      playerData = {
-        "0": CreateDefaultPlayer("0"),
-        "1": CreateDefaultPlayer("1"),
-      };
-    }
+
+    isMulti = true;
+    // put in blank info, then set decks later whne game starts.
+    playerData = {
+      "0": CreateDefaultPlayer("0"),
+      "1": CreateDefaultPlayer("1"),
+    };
 
     return {
       ready: 0,
@@ -216,6 +209,78 @@ export const CardmasterConflict: Game<CMCGameState> = {
         maxMoves: 1,
       },
       moves: {
+        // performed by singleplayer client to load you and cpu player data.
+        cpu: (
+          { G, ctx, events },
+          gameplayerid: string,
+          dbplayerid: string,
+          cpuopponent: string,
+          deck: DbFullDeck,
+          player: DbPlayer
+        ) => {
+          if (player == undefined) {
+            // game is in an error state :( we need a way to handle these.
+            console.log("COULDNT LOAD PLAYER");
+            return INVALID_MOVE;
+          }
+
+          if (deck == undefined) {
+            console.log("COULDNT LOAD DECK");
+            return INVALID_MOVE;
+          }
+          console.dir(deck);
+          const deckholder = {};
+          deckholder[gameplayerid] = deck.deck;
+          ParseDbPlayer(G, gameplayerid, deck, player);
+
+          ParseDbDeck(gameplayerid, JSON.parse(JSON.stringify(deck)), G);
+
+          console.log("PLAYER HAS JOINED : " + player.username);
+
+          // load  character
+          const bossplayer = bosses.bosses[cpuopponent];
+          const bosscard = GetCardPrototype(bossplayer.persona);
+          const cpuPlayer: DbPlayer = {
+            playerid: cpuopponent,
+            selecteddeck: bossplayer.deck,
+            username: bosscard.name,
+            visualname: bosscard.name,
+            authenticationcode: "",
+          };
+
+          const cpucards: DbDeckCard[] = [];
+          const premade = premadeDecks.premadeDecks[bossplayer.deck];
+          premade.cards.map((premadecard) => {
+            const amount: number = premadecard.amount;
+            const cardid: string = premadecard.cardid;
+            const dcard: DbDeckCard = {
+              amount: amount,
+              cardid: cardid,
+              deckid: bossplayer.deck,
+            };
+            cpucards.push(dcard);
+          });
+          const cpudeck: DbFullDeck = {
+            deck: {
+              deckid: bossplayer.deck,
+              ownerid: bossplayer,
+              deckicon: "",
+              deckname: bosscard.name,
+              persona: bossplayer.persona,
+            },
+
+            cards: cpucards,
+          };
+
+          ParseDbPlayer(G, "1", cpudeck, cpuPlayer);
+
+          ParseDbDeck("1", cpudeck, G);
+
+          G.gameStarted = true;
+          //time to start the game
+          events.endPhase();
+        },
+
         // move performed by a multiplayer client automatically to load decks/etc.
         ready: (
           { G, ctx, events },
@@ -260,7 +325,7 @@ export const CardmasterConflict: Game<CMCGameState> = {
         G.gameStarted = true;
         // sjhuffle decks
         G.secret.decks["0"] = random.Shuffle(G.secret.decks["0"]);
-        G.secret.decks["0"] = random.Shuffle(G.secret.decks["1"]);
+        G.secret.decks["1"] = random.Shuffle(G.secret.decks["1"]);
 
         // go through every card and reset the guids to something random
         for (const playerno in PlayerIDs) {

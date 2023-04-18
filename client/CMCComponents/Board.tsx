@@ -1,4 +1,4 @@
-import React, { CSSProperties, useState, MouseEvent } from "react";
+import React, { CSSProperties, useState, MouseEvent, useEffect } from "react";
 import CMCCardVisual from "./Card";
 import { CMCGameState } from "../../shared/CardmasterGame";
 import type { BoardProps } from "boardgame.io/react";
@@ -10,9 +10,14 @@ import { OtherPlayer } from "../../shared/Util";
 import { FilteredMetadata } from "boardgame.io";
 import { icons } from "./Icons";
 import useMousePosition from "./UseMousePosition";
+import { DbFullDeck } from "../../server/DbTypes";
 
 interface CMCProps extends BoardProps<CMCGameState> {
   // Additional custom properties for your component
+
+  goesfirst?: string;
+  dbplayerid?: string;
+  cpuopponent?: string;
 }
 
 export function CMCBoard(props: CMCProps) {
@@ -25,7 +30,7 @@ export function CMCBoard(props: CMCProps) {
   if (props.G.wait == false && !GameStarted) {
     setGameStarted(true);
   }
-  if (!Waiting) {
+  if (!Waiting && !props.cpuopponent) {
     if (
       !GameStarted &&
       props.matchData !== undefined &&
@@ -41,6 +46,31 @@ export function CMCBoard(props: CMCProps) {
       setdbid(matchdata[props.playerID || "0"].data.dbPlayerId);
       setWaiting(true);
     }
+  } else {
+    // set up vs cpu game
+
+    // load your deck and send as a move
+    useEffect(() => {
+      fetch("/api/manage/player/getbyid/" + props.dbplayerid)
+        .then((response) => response.json())
+        .then((data) => {
+          const dbplayer = data.player;
+          fetch("/api/manage/decks/get/" + data.player.selecteddeck)
+            .then((response) => response.json())
+            .then((data) => {
+              const fulldeck = data.decks as DbFullDeck;
+
+              props.moves.cpu(
+                props.playerID,
+                props.dbplayerid,
+                props.cpuopponent,
+                fulldeck,
+                dbplayer
+              );
+              setGameStarted(true);
+            });
+        });
+    }, []);
   }
 
   const [inspectMode, setInspectMode] = useState(false);
@@ -490,4 +520,7 @@ export function CMCBoard(props: CMCProps) {
       </div>
     );
   }
+}
+function setDbPlayer(player: any) {
+  throw new Error("Function not implemented.");
 }

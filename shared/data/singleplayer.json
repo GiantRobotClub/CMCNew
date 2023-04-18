@@ -1,12 +1,13 @@
 {
   "bosses": {
-    "justica": {
-      "deck": "premade-justica",
-      "persona": "justica"
+    "farisin": {
+      "deck": "premade-farisin",
+      "persona": "farisin"
     },
-    "protagonist": {
-      "deck": "premade-protagonist",
-      "persona": "protagonist"
+
+    "test": {
+      "deck": "premade-farisin",
+      "persona": "farisin"
     }
   }
 }

@@ -165,15 +165,16 @@ function CanActivateAbility(
   ctx: Ctx,
   random?: RandomAPI,
   events?: EventsAPI,
-  target?: CMCCard
-): boolean {
+  target?: Targets
+): Targets {
+  const successTargets: Targets = [];
   const cardowner = OwnerOf(card, G);
   if (
     ![TriggerType.ACTIVATED_TARGETED, TriggerType.ACTIVATED].includes(
       ability.triggerType
     )
   ) {
-    return false;
+    return [];
   }
 
   // is the card a spell in your hand
@@ -185,52 +186,64 @@ function CanActivateAbility(
       }
     });
     if (!found) {
-      return false;
+      return [];
     }
   }
   // is the trigger target valid
-  if (
-    target &&
-    ability.triggerType == TriggerType.ACTIVATED_TARGETED &&
-    ability.targetCode
-  ) {
-    const targetFunc: Function = CardFunctions[ability.targetCode];
-    const args: AbilityFunctionArgs = {
-      card: card,
-      ability: ability,
-      cardowner: cardowner,
-      G: G,
-      ctx: ctx,
-      random: random,
-      events: events,
-      target: target,
-      dry: true,
-    };
-    if (!targetFunc(args)) {
-      return false;
-    }
-  }
+  const targets: (CMCCard | undefined)[] = Array.isArray(target)
+    ? target
+    : [target];
 
-  // can pay
-  if (ability.costCode) {
-    const costFunc: Function = CardFunctions[ability.costCode];
-    const args: AbilityFunctionArgs = {
-      card: card,
-      ability: ability,
-      cardowner: cardowner,
-      G: G,
-      ctx: ctx,
-      random: random,
-      events: events,
-      target: undefined,
-      dry: true,
-    };
-    // do dry run of cost.  will run the actual one afterwards.
-    if (!costFunc(args)) {
-      return false; // cant afford
+  let found = false;
+  for (const target of targets) {
+    if (
+      target &&
+      ability.triggerType == TriggerType.ACTIVATED_TARGETED &&
+      ability.targetCode
+    ) {
+      const targetFunc: Function = CardFunctions[ability.targetCode];
+      const args: AbilityFunctionArgs = {
+        card: card,
+        ability: ability,
+        cardowner: cardowner,
+        G: G,
+        ctx: ctx,
+        random: random,
+        events: events,
+        target: target,
+        dry: true,
+      };
+      if (targetFunc(args)) {
+        found = true;
+        continue;
+      }
+    }
+    if (!found) {
+      return [];
+    }
+    // can pay
+    if (ability.costCode) {
+      const costFunc: Function = CardFunctions[ability.costCode];
+      const args: AbilityFunctionArgs = {
+        card: card,
+        ability: ability,
+        cardowner: cardowner,
+        G: G,
+        ctx: ctx,
+        random: random,
+        events: events,
+        target: target,
+        dry: true,
+      };
+      successTargets.push(card);
+      // do dry run of cost.  will run the actual one afterwards.
+      const result = costFunc(args);
+      if (!result || result.length == 0) {
+        continue; // cant afford
+      }
     }
   }
-  return true;
+  return successTargets;
 }
 function ResolveStack(
   G: CMCGameState,
@@ -244,6 +257,18 @@ function ResolveStack(
     const stacked = G.abilityStack.pop();
     if (!stacked) {
       break;
+    }
+    if (
+      !CanActivateAbility(
+        stacked.card,
+        stacked.ability,
+        G,
+        ctx,
+        random,
+        events,
+        stacked.target
+      )
+    ) {
     }
     if (
       !ActivateAbility(
@@ -295,7 +320,8 @@ function ActivateAbility(
       target: undefined,
       dry: true,
     };
-    if (!costFunc(args)) {
+    const result = costFunc(args);
+    if (!result || result.length == 0) {
       console.error("Did not pass " + costFunc);
       return false; // cant afford
     }
@@ -336,7 +362,8 @@ function ActivateAbility(
         dry: false,
       };
       // actually pay mana
-      if (!costFunc(args)) {
+      const result = costFunc(args);
+      if (!result || result.length == 0) {
         console.error("Did not pass " + costFunc);
         return false; // cant afford
       }

@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS player (
     visualname text,
     authenticationcode text,
     selecteddeck text,
-    metadata text,
+    metadata text
 );
 
 CREATE TABLE IF NOT EXISTS materials (

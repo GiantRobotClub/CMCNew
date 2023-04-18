@@ -5,15 +5,21 @@
       "persona": "debugpersona",
       "deckicon": "default",
       "cards": [
-        { "cardid": "debugslime", "amount": 10 },
+        { "cardid": "debugslime", "amount": 50 },
 
-        { "cardid": "debugspell", "amount": 10 },
+        { "cardid": "debugspell", "amount": 50 },
 
-        { "cardid": "debugloc", "amount": 10 },
+        { "cardid": "debugloc", "amount": 50 },
 
-        { "cardid": "debuggen", "amount": 10 },
+        { "cardid": "debuggen", "amount": 50 },
         { "cardid": "debugpersona", "amount": 1 }
       ]
+    },
+    "premade-farisin": {
+      "deckname": "Debug Deck",
+      "persona": "farisin",
+      "deckicon": "default",
+      "cards": [{ "cardid": "debugslime", "amount": 75 }]
     }
   }
 }

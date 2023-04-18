@@ -301,7 +301,7 @@ function PlayEntity(
   };
   let success_pay = CardFunctions[card.costFunction](args);
 
-  if (!success_pay) {
+  if (!success_pay || success_pay.length == 0) {
     console.error("cannot play entity due to price");
     return false;
   }
@@ -452,7 +452,9 @@ function CanClickCard(
       target: undefined,
       dry: true,
     };
-    if (!CardFunctions[card.costFunction](args)) {
+    const costresult = CardFunctions[card.costFunction](args);
+
+    if (!costresult || costresult.length == 0) {
       return false;
     }
     return true;
@@ -497,7 +499,8 @@ function CanClickCard(
         target: undefined,
         dry: true,
       };
-      if (!CardFunctions[G.activeCard.costFunction](args)) {
+      const result = CardFunctions[G.activeCard.costFunction](args);
+      if (!result || result.length == 0) {
         // cant afford this card?
         return false;
       }

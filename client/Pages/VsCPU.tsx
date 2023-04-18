@@ -5,12 +5,12 @@ import { CardmasterConflict } from "../../shared/CardmasterGame";
 import { CMCBoard } from "../CMCComponents/Board";
 import { Local } from "boardgame.io/multiplayer";
 import { MCTSBot } from "boardgame.io/ai";
+import { useParams } from "react-router-dom";
 
 const Config = {
   depth: 5,
   iterations: 3,
 };
-
 class MyBot extends MCTSBot {
   constructor({
     enumerate,
@@ -41,10 +41,20 @@ const Cmcpu = Client({
   multiplayer: Local({ bots: { 1: MyBot } }),
 });
 
-const CPUClient = () => (
-  <div>
-    <Cmcpu playerID="0" />
-  </div>
-);
+const CPUClient = () => {
+  const { pid, enemy } = useParams();
+  const playerid = pid ? pid : "";
+  const enemyid = enemy ? enemy : "none";
+  return (
+    <div>
+      <Cmcpu
+        dbplayerid={playerid}
+        goesfirst="0"
+        cpuopponent={enemyid}
+        playerID="0"
+      />
+    </div>
+  );
+};
 
 export default CPUClient;

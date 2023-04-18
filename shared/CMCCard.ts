@@ -195,6 +195,9 @@ function LoadCardPrototype(json: string | object): CMCCard {
 }
 
 function ApplyStat(mod: {}, orig: {}): any {
+  if (!orig) {
+    return {};
+  }
   const modified: {} = orig;
   Object.entries(mod).forEach(([index, submod]) => {
     if (typeof submod === "number") {
