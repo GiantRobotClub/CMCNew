@@ -346,11 +346,14 @@
   letter-spacing: 1em;
   text-align: center;
 }
-
+.gotacard {
+  width: 100dvw;
+}
 .gotcards {
   display: flex;
   width: 100%;
   overflow-x: scroll;
+  overflow-y: hidden;
 }
 
 .verticaldeckslice {

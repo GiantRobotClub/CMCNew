@@ -27,7 +27,7 @@ function SetMats(mats: DbCraftingMats) {
   stmt.run(mats.playerid);
 
   const insert = database.prepare(
-    "INSERT into MATERIALS (playerid, letter, amount) VALUES (?,?,?)"
+    "INSERT into MATERIALS (playerid, letter, amount) VALUES (?,?,?) ON CONFLICT do update set amount = amount + excluded.amount "
   );
   for (const mat of mats.mats) {
     insert.run(mats.playerid, mat.letter, mat.amount);
@@ -263,9 +263,10 @@ function CreatePlayer(
 function SaveOwned(playerid: string, ownedcards: DbOwnedCard[]) {
   const delstmt = database.prepare("DELETE FROM owned_card WHERE playerid=(?)");
   delstmt.run(playerid);
+  console.dir(ownedcards);
   ownedcards.forEach((card) => {
     const cardstmt = database.prepare(
-      "INSERT into owned_card (playerid, cardid, amount) values (?, ?, ?)"
+      "INSERT into owned_card (playerid, cardid, amount) values (?, ?, ?) ON CONFLICT do update set amount = amount + excluded.amount "
     );
     cardstmt.run(playerid, card.cardid, card.amount);
   });

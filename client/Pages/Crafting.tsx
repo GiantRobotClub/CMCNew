@@ -23,7 +23,7 @@ const Craft = () => {
   const [Player, setPlayer] = useState(CreateDefaultPlayer(""));
   const [PlayerID, setPlayerID] = useState("");
   const [Mats, setMats] = useState(emptym);
-  const [Word, setWord] = useState("CRAFTING");
+  const [Word, setWord] = useState("");
   const [Card, setCard] = useState(CreateBasicCard());
   const [CardsGiven, setCardsGiven] = useState(["empty"]);
 
@@ -52,6 +52,7 @@ const Craft = () => {
         } else {
           console.dir(data);
           setCardsGiven(data.given);
+          setWord("");
         }
       });
   }
@@ -142,6 +143,7 @@ const Craft = () => {
       {Mats.mats.map((mat) => {
         return (
           <div
+            key={mat.letter}
             className="letter"
             style={mat.amount > 0 ? { display: "block" } : { display: "none" }}
           >
@@ -159,7 +161,7 @@ const Craft = () => {
           </div>
         );
       })}
-      <div className="letter">
+      <div key="cauldron" className="letter">
         <button
           className="selectletter"
           onClick={() => {

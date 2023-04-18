@@ -16,6 +16,7 @@ import {
   NewEmptyDeck,
   SaveOwned,
   SetDeck,
+  SetMats,
 } from "./db";
 import {
   DbCraftingMat,
@@ -40,12 +41,20 @@ Manage.get("/mats/get/:playerid", (ctx, next) => {
   return true;
 });
 
-function AddCard(owned: DbOwnedCard[], cardid: string) {
+function AddCard(owned: DbOwnedCard[], cardid: string, pid: string) {
+  let found = false;
   for (const ownedcard of owned) {
     if (ownedcard.cardid == cardid) {
-      ownedcard.cardid = ownedcard.cardid + 1;
+      found = true;
+      ownedcard.amount = ownedcard.amount + 1;
     }
   }
+  const newownedcard: DbOwnedCard = {
+    cardid: cardid,
+    amount: 1,
+    playerid: pid,
+  };
+  owned.push(newownedcard);
 }
 
 Manage.get("/mats/craft/:playerid/:letters", (ctx, next) => {
@@ -72,14 +81,17 @@ Manage.get("/mats/craft/:playerid/:letters", (ctx, next) => {
     for (const mat of curmats.mats) {
       if (mat.letter == lettercount[0]) {
         mat.amount = mat.amount - 1;
+        console.log("reducing " + mat.letter + " to " + mat.amount);
         if (mat.amount < 0) {
           ctx.response.body = { error: "missing mat: " + mat.letter };
+          console.error(ctx.response.body);
           return next();
         }
       }
     }
   }
 
+  console.dir(curmats);
   // get owned cards
 
   const owned: DbOwnedCard[] | undefined = GetOwnedCards(playerid);
@@ -92,35 +104,39 @@ Manage.get("/mats/craft/:playerid/:letters", (ctx, next) => {
     // give the card result and return the card id
     const cardtogive = crafting.crafting[lettercode];
     cardsgiven.push(cardtogive);
-    AddCard(owned, cardtogive);
+    AddCard(owned, cardtogive, playerid);
   } else {
     // 4 common two uncommon one rare
-
-    for (let i = 0; i < 4; i++) {
+    const totalnumber = lettercode.length;
+    const commons = Math.floor(totalnumber / 2);
+    const uncommon = totalnumber - Math.ceil(commons / 2);
+    const rare = totalnumber - Math.floor(uncommon / 2) - commons;
+    for (let i = 0; i < commons; i++) {
       const randomElement =
         packs.packs.base.common[
           Math.floor(Math.random() * packs.packs.base.common.length)
         ];
-      AddCard(owned, randomElement);
+      AddCard(owned, randomElement, playerid);
       cardsgiven.push(randomElement);
     }
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < uncommon; i++) {
       const randomElement =
         packs.packs.base.uncommon[
           Math.floor(Math.random() * packs.packs.base.uncommon.length)
         ];
-      AddCard(owned, randomElement);
+      AddCard(owned, randomElement, playerid);
       cardsgiven.push(randomElement);
     }
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < rare; i++) {
       const randomElement =
         packs.packs.base.rare[
           Math.floor(Math.random() * packs.packs.base.rare.length)
         ];
-      AddCard(owned, randomElement);
+      AddCard(owned, randomElement, playerid);
       cardsgiven.push(randomElement);
     }
   }
+  SetMats(curmats);
   SaveOwned(playerid, owned);
   ctx.response.body = { given: cardsgiven };
 });
