@@ -11,6 +11,7 @@ import { FilteredMetadata } from "boardgame.io";
 import { icons } from "./Icons";
 import useMousePosition from "./UseMousePosition";
 import { DbFullDeck } from "../../server/DbTypes";
+import Chat from "./Chat";
 
 interface CMCProps extends BoardProps<CMCGameState> {
   // Additional custom properties for your component
@@ -18,6 +19,7 @@ interface CMCProps extends BoardProps<CMCGameState> {
   goesfirst?: string;
   dbplayerid?: string;
   cpuopponent?: string;
+  showChat?: boolean;
 }
 
 export function CMCBoard(props: CMCProps) {
@@ -516,6 +518,16 @@ export function CMCBoard(props: CMCProps) {
             canClick={false}
             key={"player" + otherPlayer}
           />
+        </div>
+        <div className={"chatwindow"}>
+          {props.showChat ? (
+            <Chat
+              onSend={this.props.sendChatMessage}
+              messages={this.props.chatMessages}
+            />
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     );

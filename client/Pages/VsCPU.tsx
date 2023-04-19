@@ -52,6 +52,7 @@ const CPUClient = () => {
         goesfirst="0"
         cpuopponent={enemyid}
         playerID="0"
+        showChat={false}
       />
     </div>
   );

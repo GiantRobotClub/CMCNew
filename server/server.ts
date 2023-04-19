@@ -1,5 +1,5 @@
 /// <reference types="koa__router" />
-import { Server, Origins } from "boardgame.io/server";
+import { Server, Origins, FlatFile } from "boardgame.io/server";
 import { CardmasterConflict } from "../shared/CardmasterGame";
 
 import { Manage } from "./manage";
@@ -8,6 +8,10 @@ import session from "koa-session";
 const games = [CardmasterConflict];
 const server = Server({
   games: games,
+  db: new FlatFile({
+    dir: "./storage",
+    logging: true,
+  }),
   origins: [
     Origins.LOCALHOST_IN_DEVELOPMENT,
     Origins.LOCALHOST,

@@ -23,6 +23,7 @@ const Cmc = () => {
         credentials={cred ? JSON.parse(cred).playerCredentials : ""}
         matchID={mid}
         playerID={pid == "-1" ? undefined : pid}
+        showChat={true}
       />
     </div>
   );
