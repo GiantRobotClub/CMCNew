@@ -34,6 +34,8 @@ import bodyParser from "koa-bodyparser";
 import crafting from "../shared/data/crafting.json";
 import packs from "../shared/data/packs.json";
 import { TbReceiptRefund } from "react-icons/tb";
+import { GetCardPrototype } from "../shared/CMCCard";
+import { CardType } from "../shared/Constants";
 export const Manage = new Router<any, Server.AppCtx>();
 Manage.get("/mats/get/:playerid", (ctx, next) => {
   const mats: DbCraftingMats | undefined = GetMats(ctx.params.playerid);
@@ -84,6 +86,7 @@ Manage.get(
 Manage.get("/mats/craft/:playerid/:letters", (ctx, next) => {
   const lettercode = ctx.params.letters;
   const playerid = ctx.params.playerid;
+  const givenletters: string[] = [];
 
   const curmats = GetMats(playerid);
   if (curmats == undefined) {
@@ -127,11 +130,67 @@ Manage.get("/mats/craft/:playerid/:letters", (ctx, next) => {
   let recipetype = "";
   if (crafting.crafting.hasOwnProperty(lettercode)) {
     // give the card result and return the card id
+
     const cardstogive = crafting.crafting[lettercode];
+    const numcards = cardstogive.length;
+    //remove personas you already own
+    for (const ownedcard of owned) {
+      if (cardstogive.includes(ownedcard.cardid)) {
+        // if the card is a persona,
+        if (GetCardPrototype(ownedcard.cardid).type == CardType.PERSONA) {
+          cardstogive.splice(cardstogive.indexof(ownedcard.cardid));
+        }
+      }
+    }
+
     for (const cardtogive of cardstogive) {
       cardsgiven.push(cardtogive);
       AddCard(owned, cardtogive, playerid);
     }
+
+    // consolation prizes - give mats for every persona you already had.
+    const nummats = numcards - cardsgiven.length;
+
+    const letterrewardsall: string[] = [];
+    Object.entries(crafting.rewardrates).forEach((entry) => {
+      const [reward, amount] = entry;
+      for (let i = 0; i < amount; i++) {
+        letterrewardsall.push(reward);
+      }
+    });
+    for (let i = 0; i < nummats * 2; i++) {
+      givenletters.push(
+        letterrewardsall[~~(Math.random() * letterrewardsall.length)]
+      );
+    }
+
+    const newmats: DbCraftingMats = {
+      playerid: playerid,
+      mats: [],
+    };
+
+    givenletters.forEach((letter) => {
+      let found: boolean = false;
+      for (const mat of newmats.mats) {
+        if (mat.letter == letter) {
+          mat.amount = mat.amount + 1;
+          found = true;
+          continue;
+        }
+      }
+      if (!found) {
+        const newmat: DbCraftingMat = {
+          playerid: playerid,
+          letter: letter,
+          amount: 1,
+        };
+        newmats.mats.push(newmat);
+      }
+    });
+
+    //give the player their rewards
+    GiveMats(newmats);
+
     const completiondata: DbCompletion = {
       playerid: playerid,
       completiontype: "craft",
@@ -141,7 +200,31 @@ Manage.get("/mats/craft/:playerid/:letters", (ctx, next) => {
     AddCompletionData(completiondata);
     recipetype = "R";
   } else {
-    // 4 common two uncommon one rare
+    // get list of already owned personas and remove them from possible packs.
+    const packsetting = JSON.parse(JSON.stringify(packs.packs.base));
+    for (const ownedcard of owned) {
+      if (GetCardPrototype(ownedcard.cardid).type == CardType.PERSONA) {
+        if (packsetting.common.includes(ownedcard.cardid)) {
+          packsetting.common.splice(
+            packsetting.common.indexof(ownedcard.cardid),
+            1
+          );
+        }
+        if (packsetting.uncommon.includes(ownedcard.cardid)) {
+          packsetting.uncommon.splice(
+            packsetting.uncommon.indexof(ownedcard.cardid),
+            1
+          );
+        }
+        if (packsetting.rare.includes(ownedcard.cardid)) {
+          packsetting.rare.splice(
+            packsetting.rare.indexof(ownedcard.cardid),
+            1
+          );
+        }
+      }
+    }
+    // figure out pack size
     const totalnumber = lettercode.length;
     const commons = Math.floor(totalnumber / 2);
     const uncommon = totalnumber - Math.ceil(commons / 2);
@@ -178,6 +261,7 @@ Manage.get("/mats/craft/:playerid/:letters", (ctx, next) => {
     given: cardsgiven,
     recipe: lettercode,
     type: recipetype,
+    letters: givenletters,
   };
 });
 Manage.post("/mats/give", bodyParser(), (ctx, next) => {
@@ -228,6 +312,7 @@ Manage.post("/mats/give", bodyParser(), (ctx, next) => {
         letter: letter,
         amount: 1,
       };
+      newmats.mats.push(newmat);
     }
   });
 
