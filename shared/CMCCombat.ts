@@ -75,7 +75,11 @@ function ResolveCombat(G: CMCGameState, ctx: Ctx, random: RandomAPI) {
       resisted: 0,
       overage: 0,
     };
-    const modatk = GetModifiedStatCard(resolution.attacker) as CMCMonsterCard;
+    const modatk = GetModifiedStatCard(
+      resolution.attacker,
+      G,
+      ctx
+    ) as CMCMonsterCard;
     // phase zero, trigger
     // check if card is dead yet
     if (resolution.attacker.destroyed) {
@@ -90,7 +94,11 @@ function ResolveCombat(G: CMCGameState, ctx: Ctx, random: RandomAPI) {
 
       // check card state
       //  defender->attacker damage
-      const moddef = GetModifiedStatCard(resolution.defender) as CMCMonsterCard;
+      const moddef = GetModifiedStatCard(
+        resolution.defender,
+        G,
+        ctx
+      ) as CMCMonsterCard;
       let dresult: DamageResult = DealDamage(
         resolution.attacker,
         resolution.defender,

@@ -1,4 +1,5 @@
 import { Ctx } from "boardgame.io";
+import { nanoid } from "nanoid";
 import { couldStartTrivia } from "typescript";
 import {
   Ability,
@@ -14,6 +15,8 @@ import {
   CMCEntityCard,
   CMCMonsterCard,
   CMCPersonaCard,
+  CreateBasicCard,
+  GetCardPrototype,
   GetModifiedStatCard,
 } from "./CMCCard";
 import { CardType } from "./Constants";
@@ -26,6 +29,7 @@ import {
   IsMonster,
   IsPersona,
   OwnerOf,
+  PlaceCard,
   PlayerAddResource,
   PlayerPay,
 } from "./LogicFunctions";
@@ -86,7 +90,7 @@ export function DizzyCost(args: AbilityFunctionArgs): Targets {
 
 // defaultcost checks everything in the player.resources against the card.cost.
 export function DefaultCost(args: AbilityFunctionArgs): Targets {
-  const { card, G, cardowner, random, events, dry } = args;
+  const { card, G, ctx, cardowner, random, events, dry } = args;
 
   const fullplayer: CMCPlayer = G.playerData[cardowner];
 
@@ -94,7 +98,7 @@ export function DefaultCost(args: AbilityFunctionArgs): Targets {
     console.log("no full player");
     return [];
   }
-  const modcard = GetModifiedStatCard(card);
+  const modcard = GetModifiedStatCard(card, G, ctx);
   for (const check in modcard.cost) {
     for (const sub in modcard.cost[check]) {
       if (fullplayer.resources[check][sub] < modcard.cost[check][sub]) {
@@ -111,6 +115,48 @@ export function DefaultCost(args: AbilityFunctionArgs): Targets {
     }
   }
   return modcard;
+}
+
+function ApplyRecursion(target: any, stats: any, add: boolean) {
+  if (typeof stats == "object") {
+    for (const [key, value] of Object.entries(stats)) {
+      ApplyRecursion(target[key], value, add);
+    }
+  } else if (typeof stats == "number") {
+    target = stats + (add ? target : 0);
+  } else {
+    target = stats;
+  }
+  return target;
+}
+export function ApplyStats(args: AbilityFunctionArgs): Targets {
+  const { card, G, target, ability } = args;
+  const targets: CMCCard[] = [];
+  if (!ability) {
+    return [];
+  }
+  if (!target) {
+    // no base target so let's do it to everyone
+
+    targets.push(...AllCards(G).allinplay);
+  } else {
+    targets.push(...(Array.isArray(target) ? target : [target]));
+  }
+  const realtargets: CMCCard[] = [];
+  for (const target of targets) {
+    if (ability.metadata.statmod) {
+      const stats = ability.metadata.statmod;
+      //go through entire tree and apply
+      ApplyRecursion(target, stats, true);
+      realtargets.push(target);
+    } else if (ability.metadata.statset) {
+      const stats = ability.metadata.statmod;
+      // go through entir etree and set
+      ApplyRecursion(target, stats, false);
+      realtargets.push(target);
+    }
+  }
+  return realtargets;
 }
 
 export function IsDamagable(args: AbilityFunctionArgs): Targets {
@@ -187,6 +233,7 @@ export function TriggerStage(args: AbilityFunctionArgs): Targets {
   }
   return G.location;
 }
+
 export function LifeGain(args: AbilityFunctionArgs): Targets {
   const { target, card, ability, G } = args;
   if (!ability) {
@@ -211,6 +258,28 @@ export function LifeGain(args: AbilityFunctionArgs): Targets {
 
   return realtargets;
 }
+
+export function SpawnEntity(args: AbilityFunctionArgs): Targets {
+  const realtargs: CMCCard[] = [];
+  const { target, card, ability, G } = args;
+  if (!ability) {
+    return [];
+  }
+  const playablecard = GetCardPrototype(ability.metadata.cardid);
+  const targets: CMCCard[] = ValidTargets(args, AllCards(G).field);
+  for (const target of targets) {
+    if (target.type != CardType.EMPTY) {
+      return [];
+    }
+    const thiscard: CMCEntityCard = JSON.parse(JSON.stringify(playablecard));
+    thiscard.guid = nanoid();
+    thiscard.status.token = true;
+
+    PlaceCard(card, target, OwnerOf(target, G), G);
+  }
+  return realtargs;
+}
+
 export function DamageTarget(args: AbilityFunctionArgs): Targets {
   const { target, card, ability, G } = args;
   if (!ability) {
@@ -233,6 +302,33 @@ export function DamageTarget(args: AbilityFunctionArgs): Targets {
   }
   return realtargets;
 }
+
+export function Bounce(args: AbilityFunctionArgs): Targets {
+  const { target, card, ability, G } = args;
+  if (!ability) {
+    return [];
+  }
+  const targets: CMCCard[] = ValidTargets(args, AllCards(G).allinplay);
+  const realtargets: CMCCard[] = [];
+  let found = false;
+  for (const target of targets) {
+    if (![CardType.PERSONA, CardType.MONSTER].includes(target.type)) {
+      console.log("isnt persona or");
+      continue;
+    }
+    if (IsMonster(target) || IsPersona(target)) {
+      G.players[OwnerOf(target, G)].hand.push(
+        JSON.parse(JSON.stringify(target))
+      );
+      Object.assign(target, CreateBasicCard());
+      realtargets.push(target);
+    } else {
+      console.error("isnt persona or monster");
+    }
+  }
+  return realtargets;
+}
+
 export function Always(
   card: CMCCard,
   cardowner: string,

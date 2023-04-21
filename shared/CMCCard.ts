@@ -12,17 +12,15 @@ import {
 import {
   Ability,
   AbilitySpeed,
+  GetModifiedCopy,
   TriggeringTrigger,
   TriggerNames,
   TriggerPlayerType,
   TriggerType,
 } from "./Abilities";
 import { GiConsoleController } from "react-icons/gi";
+import { CMCGameState } from "./CardmasterGame";
 
-interface StatMod {
-  sourceGuid: string;
-  mods: [{}];
-}
 interface CMCCardBase {
   expansion: string;
   guid: string;
@@ -31,7 +29,6 @@ interface CMCCardBase {
   alignment: Alignment;
   subtype: string;
   cardtext: string;
-  statmods?: StatMod[]; // applies to getters
   original?: CMCCard;
   cost: {
     mana: {
@@ -158,7 +155,7 @@ function CreatePersonaCard(playerID: string): CMCPersonaCard {
 function CreateEntityCard(): CMCEntityCard {
   const card: CMCEntityCard = {
     dizzy: false,
-    status: {},
+    status: { token: false },
     destroyed: false,
     ...CreateBasicCard(),
   };
@@ -210,22 +207,12 @@ function ApplyStat(mod: {}, orig: {}): any {
   return modified;
 }
 
-function GetModifiedStatCard(card: CMCCard): CMCCard {
-  let newCard: CMCCard = JSON.parse(JSON.stringify(card));
-  if (newCard.original) {
-    newCard = newCard.original;
-  }
-  if (!("statmods" in card) || card.statmods === undefined || !card.statmods) {
-    return card;
-  }
-  card.statmods.forEach((mod) => {
-    mod.mods.forEach((modding) => {
-      // apply stats
-      newCard = ApplyStat(modding, newCard);
-    });
-  });
-  newCard.statmods = undefined;
-  return newCard;
+function GetModifiedStatCard(
+  card: CMCCard,
+  G: CMCGameState,
+  ctx: Ctx
+): CMCCard {
+  return GetModifiedCopy(card, G, ctx);
 }
 
 export {
@@ -245,6 +232,5 @@ export {
   GetCardPrototype,
   GetModifiedStatCard,
   LoadCardPrototype,
-  StatMod,
   ApplyStat,
 };

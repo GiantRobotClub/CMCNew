@@ -734,7 +734,7 @@ function Sacrifice(
   if (![CardType.EFFECT, CardType.MONSTER].includes(card.type)) {
     return false;
   }
-  const modcard = GetModifiedStatCard(card);
+  const modcard = GetModifiedStatCard(card, G, ctx);
   PlayerAddResource(OwnerOf(card, G), modcard.sac, G);
 
   for (const slotplayer in G.slots) {

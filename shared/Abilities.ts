@@ -1,6 +1,6 @@
 import { Ctx } from "boardgame.io";
 import { CMCGameState } from "./CardmasterGame";
-import { CMCCard, StatMod } from "./CMCCard";
+import { CMCCard } from "./CMCCard";
 import * as CardFunctions from "./CardFunctions";
 import {
   AddToGraveyard,
@@ -454,75 +454,13 @@ function TriggerAuto(
   }
 }
 
-function ApplyStatChangesToThisCard(
-  card: CMCCard,
-  tcard: CMCCard,
-  ctx: Ctx,
-  G: CMCGameState
-) {
-  // wipe out existing ones from this source
-  if (tcard.statmods) {
-    tcard.statmods = tcard.statmods.filter(
-      (mod: StatMod) => mod.sourceGuid != card.guid
-    );
-  }
-
-  card.abilities.forEach((ability) => {
-    if (ability.triggerType != TriggerType.CONSTANT_FILTERED) {
-      return;
-    }
-    if (!ability.metadata.statmod) {
-      return;
-    }
-    if (!ability.targetCode) {
-      return;
-    }
-    const targetcard: Targets = tcard;
-    const args: AbilityFunctionArgs = {
-      card: card,
-      ability: ability,
-      cardowner: OwnerOf(card, G),
-      G: G,
-      ctx: ctx,
-      target: targetcard,
-      dry: false,
-    };
-    const targetFunc: Function = CardFunctions[ability.targetCode];
-    if (!targetFunc(args)) {
-      return;
-    }
-    const statmod: StatMod = {
-      sourceGuid: card.guid,
-      mods: [ability.metadata.statmod],
-    };
-    if (!tcard.statmods) {
-      tcard.statmods = [];
-    }
-    tcard.statmods.push(statmod);
-  });
-}
-
-function ApplyStatChanges(card: CMCCard, ctx: Ctx, G: CMCGameState) {
-  const allcards = AllCards(G).all;
-
-  for (const tcard of allcards) {
-    ApplyStatChangesToThisCard(card, tcard, ctx, G);
-  }
-}
-function ApplyAllStatChanges(ctx: Ctx, G: CMCGameState) {
-  const allcards = AllCards(G).all;
-  allcards.forEach((card) => {
-    ApplyStatChanges(card, ctx, G);
-  });
-}
-
 interface StackedAbility {
   card: CMCCard;
   ability: Ability;
   target?: Targets;
 }
 
-function ValidTargets(args, possible: CMCCard[]) {
+function ValidTargets(args: AbilityFunctionArgs, possible: CMCCard[]) {
   const { target, ability, G } = args;
   if (!ability) {
     console.error("no ability");
@@ -538,6 +476,38 @@ function ValidTargets(args, possible: CMCCard[]) {
   }
   return targets;
 }
+
+function GetModifiedCopy(card: CMCCard, G: CMCGameState, ctx: Ctx) {
+  const newcard = JSON.parse(JSON.stringify(card));
+  // check if there are any abilities that could affect this card
+  const allinplay = AllCards(G).allinplay;
+  for (const play of allinplay) {
+    for (const ability of play.abilities) {
+      if (ability.triggerType == TriggerType.CONSTANT_FILTERED) {
+        if (!ability.targetCode || !ability.activateCode) {
+          continue;
+        }
+        const args: AbilityFunctionArgs = {
+          card: card,
+          ability: ability,
+          cardowner: OwnerOf(card, G),
+          G: G,
+          ctx: ctx,
+          target: newcard,
+          dry: false,
+        };
+        const targetFunc: Function = CardFunctions[ability.targetCode];
+        if (targetFunc(args)) {
+          const applyFunc: Function = CardFunctions[ability.activateCode];
+          applyFunc(args);
+        }
+      }
+    }
+  }
+
+  return newcard;
+}
+
 export {
   Ability,
   Ability_Trigger,
@@ -551,8 +521,7 @@ export {
   StackedAbility,
   AbilitySpeed,
   ResolveStack,
-  ApplyStatChanges,
-  ApplyAllStatChanges,
   Targets,
   ValidTargets,
+  GetModifiedCopy,
 };
