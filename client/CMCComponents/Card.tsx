@@ -58,8 +58,8 @@ function CMCCardVisual({
     case Alignment.VENERATED:
       alignstyle = "color-venerated";
       break;
-    case Alignment.GOLDEN:
-      alignstyle = "color-golden";
+    case Alignment.VAP:
+      alignstyle = "color-venerated-anodyne-profane";
       break;
     case Alignment.VA:
       alignstyle = "color-venerated-anodyne";

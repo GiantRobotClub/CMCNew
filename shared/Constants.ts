@@ -48,7 +48,7 @@ enum Alignment {
   AP = "AP",
   PV = "PV",
   VA = "VA",
-  GOLDEN = "GOLDEN",
+  VAP = "VAP",
 }
 
 const PlayerIDs = ["0", "1"];

@@ -128,53 +128,7 @@
       ],
       "expansion": "base"
     },
-    "debugslime": {
-      "life": 10,
-      "attack": 10,
-      "dizzy": true,
-      "status": {},
-      "destroyed": false,
-      "alignment": "ANODYNE",
-      "guid": "TEMPORARY",
-      "subtype": "slime",
-      "costFunction": "DefaultCost",
-      "playFunction": "DefaultPlay",
-      "name": "SLIME",
-      "picture": "slime.jpg",
-      "cardtext": " Just a debug slime ",
-      "type": "MONSTER",
 
-      "sac": {
-        "mana": {
-          "V": 0,
-          "A": 2,
-          "P": 0
-        }
-      },
-      "cost": {
-        "mana": {
-          "V": 0,
-          "A": 1,
-          "P": 0
-        }
-      },
-      "abilities": [
-        {
-          "costCode": "DizzyCost",
-          "triggerType": "ACTIVATED",
-          "activateCode": "ManaGenerate",
-          "metadata": {
-            "color": "A",
-            "amount": 1
-          },
-          "speed": 1,
-          "abilityName": "Generate Mana",
-          "abilityText": "Add (A)",
-          "abilityCostText": "(dizzy)"
-        }
-      ],
-      "expansion": "base"
-    },
     "debugpersona": {
       "playerID": "0",
       "startingResource": {
@@ -260,140 +214,6 @@
           "speed": 2
         }
       ],
-      "expansion": "base"
-    },
-    "farisin": {
-      "playerID": "0",
-      "startingResource": {
-        "mana": {
-          "V": 1,
-          "A": 0,
-          "P": 1
-        },
-        "intrinsic": {
-          "health": 400
-        }
-      },
-      "resourcePerTurn": {
-        "mana": {
-          "V": 1,
-          "A": 0,
-          "P": 0
-        }
-      },
-      "startingHand": 0,
-      "drawPerTurn": 1,
-      "maxHand": 7,
-      "alignment": "VENERATED",
-      "guid": "TEMPORARY",
-      "subtype": "",
-      "costFunction": "DefaultCost",
-      "playFunction": "DefaultPlay",
-      "name": "Farisin, PALADIN CEO",
-      "picture": "farisin.png",
-      "cardtext": "We're your societal solutions company.",
-      "type": "PERSONA",
-      "sac": {
-        "mana": {
-          "V": 0,
-          "A": 0,
-          "P": 0
-        }
-      },
-      "cost": {
-        "mana": {
-          "V": 0,
-          "A": 0,
-          "P": 0
-        }
-      },
-      "abilities": [
-        {
-          "triggerType": "CONSTANT_FILTERED",
-          "targetCode": "Match",
-          "activateCode": "DamageTarget",
-          "metadata": {
-            "matchplayer": "OWNER",
-            "matchpattern": {
-              "type": "EFFECT"
-            },
-            "statmod": {
-              "cost": {
-                "mana": {
-                  "V": -1
-                }
-              }
-            }
-          },
-          "abilityName": "Security through Supremacy",
-          "abilityText": "Your effects take 1(V) less to cast",
-          "speed": 2
-        },
-        {
-          "triggerType": "AUTOMATIC_POSTCOMBAT",
-          "targetCode": "Match",
-          "activateCode": "GainLife",
-
-          "metadata": {
-            "matchplayer": "OWNER",
-            "matchpattern": {
-              "type": "MONSTER"
-            },
-            "amount": 10
-          },
-          "abilityName": "Peace through Domination",
-          "abilityText": "After combat, your monsters gain 10(life)",
-          "speed": 2
-        }
-      ],
-      "expansion": "base"
-    },
-    "slimesorceress": {
-      "playerID": "0",
-      "startingResource": {
-        "mana": {
-          "V": 2,
-          "A": 1,
-          "P": 2
-        },
-        "intrinsic": {
-          "health": 300
-        }
-      },
-      "resourcePerTurn": {
-        "mana": {
-          "V": 0,
-          "A": 1,
-          "P": 0
-        }
-      },
-      "startingHand": 2,
-      "drawPerTurn": 1,
-      "maxHand": 5,
-      "alignment": "ANODYNE",
-      "guid": "TEMPORARY",
-      "subtype": "",
-      "costFunction": "DefaultCost",
-      "playFunction": "DefaultPlay",
-      "name": "Sluissa, Slime Sorceress",
-      "picture": "slimesorceress.png",
-      "cardtext": "This cauldron is my brewing one, THIS one is for sleeping.",
-      "type": "PERSONA",
-      "sac": {
-        "mana": {
-          "V": 0,
-          "A": 0,
-          "P": 0
-        }
-      },
-      "cost": {
-        "mana": {
-          "V": 0,
-          "A": 0,
-          "P": 0
-        }
-      },
-      "abilities": [],
       "expansion": "base"
     },
 
@@ -494,36 +314,51 @@
       "status": {}
     },
     "debugslime": {
-      "expansion": "base",
+      "life": 10,
+      "attack": 10,
+      "dizzy": true,
+      "status": {},
+      "destroyed": false,
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
-      "subtype": "",
+      "subtype": "slime",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "debug slime",
+      "name": "SLIME",
       "picture": "slime.jpg",
-      "cardtext": "something wonky?",
+      "cardtext": " Just a debug slime ",
       "type": "MONSTER",
+
       "sac": {
         "mana": {
-          "V": "5",
-          "A": "0",
-          "P": "5"
+          "V": 0,
+          "A": 2,
+          "P": 0
         }
       },
       "cost": {
         "mana": {
-          "V": "",
-          "A": "5",
-          "P": ""
+          "V": 0,
+          "A": 1,
+          "P": 0
         }
       },
-      "abilities": [],
-      "attack": "33",
-      "life": "33",
-      "dizzy": true,
-      "destroyed": false,
-      "status": {}
+      "abilities": [
+        {
+          "costCode": "DizzyCost",
+          "triggerType": "ACTIVATED",
+          "activateCode": "ManaGenerate",
+          "metadata": {
+            "color": "A",
+            "amount": 1
+          },
+          "speed": 1,
+          "abilityName": "Generate Mana",
+          "abilityText": "Add (A)",
+          "abilityCostText": "(dizzy)"
+        }
+      ],
+      "expansion": "base"
     },
     "ooze": {
       "expansion": "base",
@@ -1404,6 +1239,7 @@
       "abilities": [],
       "expansion": "base"
     },
+
     "esecutore": {
       "playerID": "",
       "startingResource": {},
@@ -1451,6 +1287,2315 @@
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
       "name": "Mr Ears- Skyrian Detective",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "PERSONA",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "necro": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "melrak necrocultist",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "2"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "1"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "necrom": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "melrak necromancer",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "4"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "3"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "blackhat": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "melrak black hat",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "6"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "5"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "unmaker": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "melrak unmaker",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "6"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "5"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "economist": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "melrak economist",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "5"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "4"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "gravedigger": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "melrak gravedigger",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "4"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "3"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "recruiter": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "melrak recruiter",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "4"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "3"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "scientist": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "melrak scientist",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "8"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "7"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "skeleton": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "skeleton",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "2"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "1"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "doggo": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "skeleton doggo",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "2"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "1"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "horseo": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "skeletal horse",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "2"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "1"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "abomo": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "skeletal abomination",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "4"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "3"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "sgz": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "skeleghozombie",
+      "picture": "placeholder.jpg",
+      "cardtext": "just a guy",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "3"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "3"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "skeldragon": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "skeletal dragon",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "7"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "6"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "zombie": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "zombie",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "5"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "5"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "bonewall": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "bone wall",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "0"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "3"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "spider": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "skeletal spider",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "0"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "1"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "empty": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "profane egg",
+      "picture": "placeholder.jpg",
+      "cardtext": "creates a monster- leaves a shell that can be destroyed to boost another monster",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "0"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "0"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "terror": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Creeping Terror",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "2"
+        }
+      },
+      "abilities": []
+    },
+    "death": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Touch of Death",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "3"
+        }
+      },
+      "abilities": []
+    },
+    "sermon": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "melrak sermon",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "4"
+        }
+      },
+      "abilities": []
+    },
+    "outlook": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "bleak outlook",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "4"
+        }
+      },
+      "abilities": []
+    },
+    "convert": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "convert",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "4"
+        }
+      },
+      "abilities": []
+    },
+    "blight": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "blight",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "5"
+        }
+      },
+      "abilities": []
+    },
+    "reanimate": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "reanimate",
+      "picture": "placeholder.jpg",
+      "cardtext": "from grave",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "6"
+        }
+      },
+      "abilities": []
+    },
+    "altar": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "blasphemous altar",
+      "picture": "placeholder.jpg",
+      "cardtext": "gen",
+      "type": "EFFECT",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "2"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "1"
+        }
+      },
+      "abilities": [],
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "vial": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "blasphemous vial",
+      "picture": "placeholder.jpg",
+      "cardtext": "sac",
+      "type": "EFFECT",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "5"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "1"
+        }
+      },
+      "abilities": [],
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "massgave": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "mass grave",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "EFFECT",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "4"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "4"
+        }
+      },
+      "abilities": [],
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "blighted": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "blighted lands",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "LOCATION",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "owner": "0"
+    },
+    "experimental": {
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "melrak experimental lab",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "LOCATION",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "owner": "0"
+    },
+    "melrak": {
+      "playerID": "",
+      "startingResource": {},
+      "resourcePerTurn": {},
+      "startingHand": 1,
+      "drawPerTurn": 1,
+      "maxHand": 1,
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "melrak- necromantic god",
+      "picture": "placeholder.jpg",
+      "cardtext": "something something skeletons",
+      "type": "PERSONA",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "rattles": {
+      "playerID": "",
+      "startingResource": {},
+      "resourcePerTurn": {},
+      "startingHand": 1,
+      "drawPerTurn": 1,
+      "maxHand": 1,
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "sir rattles- skeletal emperor",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "PERSONA",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "protagonist": {
+      "playerID": "",
+      "startingResource": {},
+      "resourcePerTurn": {},
+      "startingHand": 1,
+      "drawPerTurn": 1,
+      "maxHand": 1,
+      "expansion": "base",
+      "alignment": "PROFANE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "protagonist- bloody heroine",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "PERSONA",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "paladin": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "PALADIN beat cop",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "0",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "1",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "sqd": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Status Quo Defender",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "2",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "3",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "peacekeeper": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "PALADIN peacekeeper",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "3",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "4",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "smiting": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "smiting PALADIN",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "3",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "4",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "hunter": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "PALADIN hunter",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "4",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "5",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "l32": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "PALADIN L-32",
+      "picture": "placeholder.jpg",
+      "cardtext": "mech",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "5",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "6",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "sub": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "fae subroutine",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "2",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "1",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "cor": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "fae coroutine",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "3",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "2",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "process": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "fae process",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "4",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "3",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "code": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "codesworn fary",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "5",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "4",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "firewall": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "fae firewall",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "6",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "5",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "virus": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "fae virus",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "7",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "6",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "flare": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "solar flare",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "3",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "pacificism": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "pacificism",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "4",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "pacifism": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "pacifism",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "4",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "light": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "blinding light",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "1",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "download": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "download",
+      "picture": "placeholder.jpg",
+      "cardtext": "from hand to play",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "2",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "upload": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "upload",
+      "picture": "placeholder.jpg",
+      "cardtext": "bounce to hand",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "2",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "basilica": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "holy basilica",
+      "picture": "placeholder.jpg",
+      "cardtext": "gen",
+      "type": "EFFECT",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "2",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "1",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "trinket": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "holy trinket",
+      "picture": "placeholder.jpg",
+      "cardtext": "sac",
+      "type": "EFFECT",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "5",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "1",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "server": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "central server",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "EFFECT",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "4",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "3",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "checkpoint": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "paladin checkpoint",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "EFFECT",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "5",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "4",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "breakpoint": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "fae breakpoint",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "EFFECT",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "5",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "4",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "hq": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "PALADIN HQ",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "LOCATION",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "6",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "owner": "0"
+    },
+    "infosphere": {
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "infosphere",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "LOCATION",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "5",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "owner": "0"
+    },
+    "farisin": {
+      "playerID": "0",
+      "startingResource": {
+        "mana": {
+          "V": 1,
+          "A": 0,
+          "P": 1
+        },
+        "intrinsic": {
+          "health": 400
+        }
+      },
+      "resourcePerTurn": {
+        "mana": {
+          "V": 1,
+          "A": 0,
+          "P": 0
+        }
+      },
+      "startingHand": 0,
+      "drawPerTurn": 1,
+      "maxHand": 7,
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Farisin, PALADIN CEO",
+      "picture": "farisin.png",
+      "cardtext": "We're your societal solutions company.",
+      "type": "PERSONA",
+      "sac": {
+        "mana": {
+          "V": 0,
+          "A": 0,
+          "P": 0
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": 0,
+          "A": 0,
+          "P": 0
+        }
+      },
+      "abilities": [
+        {
+          "triggerType": "CONSTANT_FILTERED",
+          "targetCode": "Match",
+          "activateCode": "DamageTarget",
+          "metadata": {
+            "matchplayer": "OWNER",
+            "matchpattern": {
+              "type": "EFFECT"
+            },
+            "statmod": {
+              "cost": {
+                "mana": {
+                  "V": -1
+                }
+              }
+            }
+          },
+          "abilityName": "Security through Supremacy",
+          "abilityText": "Your effects take 1(V) less to cast",
+          "speed": 2
+        },
+        {
+          "triggerType": "AUTOMATIC_POSTCOMBAT",
+          "targetCode": "Match",
+          "activateCode": "GainLife",
+
+          "metadata": {
+            "matchplayer": "OWNER",
+            "matchpattern": {
+              "type": "MONSTER"
+            },
+            "amount": 10
+          },
+          "abilityName": "Peace through Domination",
+          "abilityText": "After combat, your monsters gain 10(life)",
+          "speed": 2
+        }
+      ],
+      "expansion": "base"
+    },
+    "justica": {
+      "playerID": "",
+      "startingResource": {},
+      "resourcePerTurn": {},
+      "startingHand": 1,
+      "drawPerTurn": 1,
+      "maxHand": 1,
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "justica- mistaken savior",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "PERSONA",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "faeexe": {
+      "playerID": "",
+      "startingResource": {},
+      "resourcePerTurn": {},
+      "startingHand": 1,
+      "drawPerTurn": 1,
+      "maxHand": 1,
+      "expansion": "base",
+      "alignment": "VENERATED",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "FAE.EXE",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "PERSONA",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "spawn": {
+      "expansion": "base",
+      "alignment": "VA",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "eldrich spawn",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": "4"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "2",
+          "A": "1",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "incursor": {
+      "expansion": "base",
+      "alignment": "AP",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "eldrich incursor",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "4",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "2",
+          "P": "1"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "starchild": {
+      "expansion": "base",
+      "alignment": "PV",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "eldrich starchild",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "4",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "1",
+          "A": "",
+          "P": "2"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "eldrichdragon": {
+      "expansion": "base",
+      "alignment": "VAP",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "eldrich dragon",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "6",
+          "A": "6",
+          "P": "6"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "5",
+          "A": "5",
+          "P": "5"
+        }
+      },
+      "abilities": [],
+      "attack": "",
+      "life": "",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "consumption": {
+      "expansion": "base",
+      "alignment": "AP",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "consumpion",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "2",
+          "A": "2",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "curiosity": {
+      "expansion": "base",
+      "alignment": "VA",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "curiosity",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "2",
+          "P": "2"
+        }
+      },
+      "abilities": []
+    },
+    "confusion": {
+      "expansion": "base",
+      "alignment": "AP",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "confusion",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "2",
+          "A": "",
+          "P": "2"
+        }
+      },
+      "abilities": []
+    },
+    "gateway": {
+      "expansion": "base",
+      "alignment": "VAP",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "eldrich gateway",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "EFFECT",
+      "sac": {
+        "mana": {
+          "V": "2",
+          "A": "2",
+          "P": "2"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "1",
+          "A": "1",
+          "P": "1"
+        }
+      },
+      "abilities": [],
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "cube": {
+      "expansion": "base",
+      "alignment": "VAP",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "eldrich cube",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "EFFECT",
+      "sac": {
+        "mana": {
+          "V": "4",
+          "A": "4",
+          "P": "4"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "1",
+          "A": "1",
+          "P": "1"
+        }
+      },
+      "abilities": [],
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "impossibility": {
+      "expansion": "base",
+      "alignment": "NONE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "eldrich impossibility",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "EFFECT",
+      "sac": {
+        "mana": {
+          "V": "-1",
+          "A": "-1",
+          "P": "-1"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "0",
+          "A": "0",
+          "P": "0"
+        }
+      },
+      "abilities": [],
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "mooon": {
+      "expansion": "base",
+      "alignment": "VAP",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "eldrich moon",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "EFFECT",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "3",
+          "A": "3",
+          "P": "3"
+        }
+      },
+      "abilities": [],
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "nadrimegus": {
+      "playerID": "",
+      "startingResource": {},
+      "resourcePerTurn": {},
+      "startingHand": 1,
+      "drawPerTurn": 1,
+      "maxHand": 1,
+      "expansion": "base",
+      "alignment": "VAP",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Nadri Megus- Bounty Hunter",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "PERSONA",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "beyondinfinity": {
+      "playerID": "",
+      "startingResource": {},
+      "resourcePerTurn": {},
+      "startingHand": 1,
+      "drawPerTurn": 1,
+      "maxHand": 1,
+      "expansion": "base",
+      "alignment": "NONE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "BEYOND ∞",
       "picture": "placeholder.jpg",
       "cardtext": "",
       "type": "PERSONA",

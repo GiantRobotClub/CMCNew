@@ -90,6 +90,75 @@ button:focus-visible {
     ),
     url("/assets/anodyne.jpg");
   background-size: contain;
+  background-position: center;
+}
+.cardStyle.color-venerated {
+  background-image: linear-gradient(
+      rgba(155, 155, 155, 0.5),
+      rgba(155, 155, 155, 0.5)
+    ),
+    url("/assets/venerated.jpg");
+  background-size: stretch;
+  background-position: center;
+}
+.cardStyle.color-profane {
+  background-image: linear-gradient(
+      rgba(155, 155, 155, 0.5),
+      rgba(155, 155, 155, 0.5)
+    ),
+    url("/assets/profane.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.cardStyle.color-venerated-anodyne {
+  background-image: linear-gradient(
+      rgba(155, 155, 155, 0.5),
+      rgba(155, 155, 155, 0.5)
+    ),
+    url("/assets/AV.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.cardStyle.color-anodyne-profane {
+  background-image: linear-gradient(
+      rgba(155, 155, 155, 0.5),
+      rgba(155, 155, 155, 0.5)
+    ),
+    url("/assets/AP.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.cardStyle.color-profane-venerated {
+  background-image: linear-gradient(
+      rgba(155, 155, 155, 0.5),
+      rgba(155, 155, 155, 0.5)
+    ),
+    url("/assets/VP.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.cardStyle.color-venerated-anodyne-profane {
+  background-image: linear-gradient(
+      rgba(155, 155, 155, 0.5),
+      rgba(155, 155, 155, 0.5)
+    ),
+    url("/assets/VAP.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.cardStyle.color-none {
+  background-image: linear-gradient(
+      rgba(155, 155, 155, 0.5),
+      rgba(155, 155, 155, 0.5)
+    ),
+    url("/assets/none.jpg");
+  background-position: center;
+  background-size: cover;
 }
 
 .sacline svg {
