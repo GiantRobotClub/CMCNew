@@ -94,8 +94,8 @@ button:focus-visible {
 }
 .cardStyle.color-venerated {
   background-image: linear-gradient(
-      rgba(155, 155, 155, 0.5),
-      rgba(155, 155, 155, 0.5)
+      rgba(233, 233, 233, 0.5),
+      rgba(226, 245, 149, 0.5)
     ),
     url("/assets/venerated.jpg");
   background-size: stretch;
@@ -103,8 +103,8 @@ button:focus-visible {
 }
 .cardStyle.color-profane {
   background-image: linear-gradient(
-      rgba(155, 155, 155, 0.5),
-      rgba(155, 155, 155, 0.5)
+      rgba(78, 78, 78, 0.5),
+      rgba(68, 38, 64, 0.5)
     ),
     url("/assets/profane.jpg");
   background-size: cover;
@@ -113,8 +113,8 @@ button:focus-visible {
 
 .cardStyle.color-venerated-anodyne {
   background-image: linear-gradient(
-      rgba(155, 155, 155, 0.5),
-      rgba(155, 155, 155, 0.5)
+      rgba(209, 245, 49, 0.5),
+      rgba(98, 220, 236, 0.5)
     ),
     url("/assets/AV.jpg");
   background-size: cover;
@@ -123,8 +123,8 @@ button:focus-visible {
 
 .cardStyle.color-anodyne-profane {
   background-image: linear-gradient(
-      rgba(155, 155, 155, 0.5),
-      rgba(155, 155, 155, 0.5)
+      rgba(110, 197, 190, 0.5),
+      rgba(92, 25, 83, 0.5)
     ),
     url("/assets/AP.jpg");
   background-size: cover;
@@ -133,8 +133,8 @@ button:focus-visible {
 
 .cardStyle.color-profane-venerated {
   background-image: linear-gradient(
-      rgba(155, 155, 155, 0.5),
-      rgba(155, 155, 155, 0.5)
+      rgba(255, 233, 137, 0.5),
+      rgba(81, 37, 85, 0.5)
     ),
     url("/assets/VP.jpg");
   background-size: cover;
@@ -143,8 +143,8 @@ button:focus-visible {
 
 .cardStyle.color-venerated-anodyne-profane {
   background-image: linear-gradient(
-      rgba(155, 155, 155, 0.5),
-      rgba(155, 155, 155, 0.5)
+      rgba(255, 255, 255, 0.5),
+      rgba(0, 0, 0, 0.5)
     ),
     url("/assets/VAP.jpg");
   background-size: cover;
@@ -153,8 +153,8 @@ button:focus-visible {
 
 .cardStyle.color-none {
   background-image: linear-gradient(
-      rgba(155, 155, 155, 0.5),
-      rgba(155, 155, 155, 0.5)
+      rgba(0, 0, 0, 0.5),
+      rgba(255, 255, 255, 0.5)
     ),
     url("/assets/none.jpg");
   background-position: center;
