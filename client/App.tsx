@@ -19,6 +19,7 @@ import AllCards from "./Pages/AllCards";
 import DeckManager from "./Pages/Decks";
 import Craft from "./Pages/Crafting";
 import OnePlayer from "./Pages/OnePlayer";
+import Importer from "./Pages/CardImporter";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path="/1P" element={<OnePlayer />} />
         <Route path="/1P/:pid/:enemy" element={<CPUClient />} />
 
+        <Route path="/import" element={<Importer />} />
         <Route path="/test" element={<Test />} />
         <Route path="/allcards" element={<AllCards />} />
         <Route path="/edit" element={<CardEdit />} />

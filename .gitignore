@@ -24,3 +24,4 @@ dist-ssr
 *.sw?
 *.sqlite
 *timestamp*mjs
+public/assets/cards/placeholderjpg.jpg:Zone.Identifier

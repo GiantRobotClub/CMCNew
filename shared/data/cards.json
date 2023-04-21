@@ -347,6 +347,1128 @@
         }
       ],
       "expansion": "base"
+    },
+    "slimesorceress": {
+      "playerID": "0",
+      "startingResource": {
+        "mana": {
+          "V": 2,
+          "A": 1,
+          "P": 2
+        },
+        "intrinsic": {
+          "health": 300
+        }
+      },
+      "resourcePerTurn": {
+        "mana": {
+          "V": 0,
+          "A": 1,
+          "P": 0
+        }
+      },
+      "startingHand": 2,
+      "drawPerTurn": 1,
+      "maxHand": 5,
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Sluissa, Slime Sorceress",
+      "picture": "slimesorceress.png",
+      "cardtext": "This cauldron is my brewing one, THIS one is for sleeping.",
+      "type": "PERSONA",
+      "sac": {
+        "mana": {
+          "V": 0,
+          "A": 0,
+          "P": 0
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": 0,
+          "A": 0,
+          "P": 0
+        }
+      },
+      "abilities": [],
+      "expansion": "base"
+    },
+
+    "slime": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "slime",
+      "picture": "placeholder.jpg",
+      "cardtext": "basic french vanilla",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "2",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "1",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "10",
+      "life": "10",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "slimepunk": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "slimepunk",
+      "picture": "placeholder.jpg",
+      "cardtext": "cyberpunk slime",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "3",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "2",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "15",
+      "life": "15",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "slimewiz": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "slime wizard",
+      "picture": "placeholder.jpg",
+      "cardtext": "casts slime thing i dunno",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "5",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "4",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "20",
+      "life": "20",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "debugslime": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "debug slime",
+      "picture": "slime.jpg",
+      "cardtext": "something wonky?",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "5",
+          "A": "0",
+          "P": "5"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "5",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "33",
+      "life": "33",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "ooze": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "ooze",
+      "picture": "placeholder.jpg",
+      "cardtext": "splits",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "0",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "3",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "20",
+      "life": "20",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "scommando": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "slime commando",
+      "picture": "placeholder.jpg",
+      "cardtext": "slime in tactical gear",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "3",
+          "P": "2"
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "5",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "30",
+      "life": "30",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "sdragon": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "slime dragon",
+      "picture": "placeholder.jpg",
+      "cardtext": "big ol dragon made o slime",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "7",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "7",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "60",
+      "life": "60",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "swall": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "slime wall",
+      "picture": "placeholder.jpg",
+      "cardtext": "defensive",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "3",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "3",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "0",
+      "life": "60",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "ssoldier": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "skyrian soldier",
+      "picture": "placeholder.jpg",
+      "cardtext": "damages both target monster- and (less amount) player",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "7",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "6",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "30",
+      "life": "30",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "sspy": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "skyrian spy",
+      "picture": "placeholder.jpg",
+      "cardtext": "invisible attack",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "7",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "6",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "15",
+      "life": "15",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "sscout": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "skyrian scout",
+      "picture": "placeholder.jpg",
+      "cardtext": "get info on your next card? something like that?",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "7",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "6",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "20",
+      "life": "20",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "sengineer": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "skyrian engineer",
+      "picture": "placeholder.jpg",
+      "cardtext": "builds turrets",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "7",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "6",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "1",
+      "life": "20",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "sdemoman": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "skyrian demolitionist",
+      "picture": "placeholder.jpg",
+      "cardtext": "deal damage based on some other metric- return to hand",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "7",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "6",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "40",
+      "life": "40",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "smana": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "skyrian manamancer",
+      "picture": "placeholder.jpg",
+      "cardtext": "mana gen",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "5",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "3",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "40",
+      "life": "40",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "sphisher": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "skyrian phisher",
+      "picture": "placeholder.jpg",
+      "cardtext": "something to do with other players cards or hand? discard? steal mana?",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "5",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "4",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "30",
+      "life": "30",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "slimetime": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "It's Slime Time!",
+      "picture": "placeholder.jpg",
+      "cardtext": "- spell- fills ALL monster slots with slimes",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "6",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "thundermancy": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Thundermancy",
+      "picture": "placeholder.jpg",
+      "cardtext": "(small damage + lower attack)",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "3",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "pyromancy": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Pyromancy",
+      "picture": "placeholder.jpg",
+      "cardtext": "(small damage + deal owner damage)",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "3",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "cryomancy": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Cryomancy",
+      "picture": "placeholder.jpg",
+      "cardtext": "(small damaage + )",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "3",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "zoop": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Zoop",
+      "picture": "placeholder.jpg",
+      "cardtext": "(target creature takes X damage- gains Y attack- and undizzies)",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "2",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "hacking": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "hacking",
+      "picture": "placeholder.jpg",
+      "cardtext": "card draw",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "6",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "centralserver": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "central server",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "5",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "slimemold": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "slime mold",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "7",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "manasplosion": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "manasplosion",
+      "picture": "placeholder.jpg",
+      "cardtext": "gain A- lose PV",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "1",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "slimefaucet": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "slime faucet",
+      "picture": "placeholder.jpg",
+      "cardtext": "slime valley equiv",
+      "type": "EFFECT",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "5",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "4",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "manatap": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "mana tap -",
+      "picture": "placeholder.jpg",
+      "cardtext": "generator",
+      "type": "EFFECT",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "2",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "1",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "manacrystal": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "mana crystal -",
+      "picture": "placeholder.jpg",
+      "cardtext": "sac",
+      "type": "EFFECT",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "3",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "1",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "manafurnace": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "mana furnace",
+      "picture": "placeholder.jpg",
+      "cardtext": "burns your cards for mana",
+      "type": "EFFECT",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "0",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "3",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "skyrianoutpost": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "skyrian outpost",
+      "picture": "placeholder.jpg",
+      "cardtext": "increases defense of skyrian cards",
+      "type": "EFFECT",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "6",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "4",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "warezserver": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "warez server",
+      "picture": "placeholder.jpg",
+      "cardtext": "becomes a copy of an effect",
+      "type": "EFFECT",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "0",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "0",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "skyria": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "skyria",
+      "picture": "placeholder.jpg",
+      "cardtext": "over ocean",
+      "type": "LOCATION",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "4",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "owner": "0"
+    },
+    "slimevalley": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "slime valley",
+      "picture": "placeholder.jpg",
+      "cardtext": "industrialized",
+      "type": "LOCATION",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "6",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "owner": "0"
+    },
+    "slimesorceress": {
+      "playerID": "0",
+      "startingResource": {
+        "mana": {
+          "V": 2,
+          "A": 1,
+          "P": 2
+        },
+        "intrinsic": {
+          "health": 300
+        }
+      },
+      "resourcePerTurn": {
+        "mana": {
+          "V": 0,
+          "A": 1,
+          "P": 0
+        }
+      },
+      "startingHand": 2,
+      "drawPerTurn": 1,
+      "maxHand": 5,
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Sluissa, Slime Sorceress",
+      "picture": "slimesorceress.png",
+      "cardtext": "This cauldron is my brewing one, THIS one is for sleeping.",
+      "type": "PERSONA",
+      "sac": {
+        "mana": {
+          "V": 0,
+          "A": 0,
+          "P": 0
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": 0,
+          "A": 0,
+          "P": 0
+        }
+      },
+      "abilities": [],
+      "expansion": "base"
+    },
+    "esecutore": {
+      "playerID": "",
+      "startingResource": {},
+      "resourcePerTurn": {},
+      "startingHand": 1,
+      "drawPerTurn": 1,
+      "maxHand": 1,
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "esecutore- reliable narrator",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "PERSONA",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": []
+    },
+    "cyberdruid": {
+      "playerID": "",
+      "startingResource": {},
+      "resourcePerTurn": {},
+      "startingHand": 1,
+      "drawPerTurn": 1,
+      "maxHand": 1,
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Mr Ears- Skyrian Detective",
+      "picture": "placeholder.jpg",
+      "cardtext": "",
+      "type": "PERSONA",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "abilities": []
     }
   }
 }
