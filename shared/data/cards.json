@@ -1242,20 +1242,35 @@
 
     "esecutore": {
       "playerID": "",
-      "startingResource": {},
-      "resourcePerTurn": {},
+      "startingResource": {
+        "mana": {
+          "V": 1,
+          "A": 1,
+          "P": 1
+        },
+        "intrinsic": {
+          "health": 300
+        }
+      },
+      "resourcePerTurn": {
+        "mana": {
+          "V": 1,
+          "A": 1,
+          "P": 1
+        }
+      },
       "startingHand": 1,
       "drawPerTurn": 1,
-      "maxHand": 1,
+      "maxHand": 5,
       "expansion": "base",
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
       "subtype": "",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "esecutore- reliable narrator",
-      "picture": "placeholder.jpg",
-      "cardtext": "",
+      "name": "esecutore, narrator",
+      "picture": "persona.jpg",
+      "cardtext": "It was a dark and stormy night, where our tale begins",
       "type": "PERSONA",
       "sac": {
         "mana": {
@@ -1275,19 +1290,34 @@
     },
     "cyberdruid": {
       "playerID": "",
-      "startingResource": {},
-      "resourcePerTurn": {},
+      "startingResource": {
+        "mana": {
+          "V": 1,
+          "A": 1,
+          "P": 1
+        },
+        "intrinsic": {
+          "health": 300
+        }
+      },
+      "resourcePerTurn": {
+        "mana": {
+          "V": 1,
+          "A": 1,
+          "P": 1
+        }
+      },
       "startingHand": 1,
       "drawPerTurn": 1,
-      "maxHand": 1,
+      "maxHand": 5,
       "expansion": "base",
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
       "subtype": "",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "Mr Ears- Skyrian Detective",
-      "picture": "placeholder.jpg",
+      "name": "Mx Ears, Skyrian P.I.",
+      "picture": "persona.jpg",
       "cardtext": "",
       "type": "PERSONA",
       "sac": {
@@ -1850,7 +1880,7 @@
       "destroyed": false,
       "status": {}
     },
-    "empty": {
+    "egg": {
       "expansion": "base",
       "alignment": "PROFANE",
       "guid": "TEMPORARY",
@@ -2219,11 +2249,26 @@
     },
     "melrak": {
       "playerID": "",
-      "startingResource": {},
-      "resourcePerTurn": {},
+      "startingResource": {
+        "mana": {
+          "V": 1,
+          "A": 1,
+          "P": 1
+        },
+        "intrinsic": {
+          "health": 300
+        }
+      },
+      "resourcePerTurn": {
+        "mana": {
+          "V": 1,
+          "A": 1,
+          "P": 1
+        }
+      },
       "startingHand": 1,
       "drawPerTurn": 1,
-      "maxHand": 1,
+      "maxHand": 5,
       "expansion": "base",
       "alignment": "PROFANE",
       "guid": "TEMPORARY",
@@ -2231,7 +2276,7 @@
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
       "name": "melrak- necromantic god",
-      "picture": "placeholder.jpg",
+      "picture": "persona.jpg",
       "cardtext": "something something skeletons",
       "type": "PERSONA",
       "sac": {
@@ -2252,11 +2297,26 @@
     },
     "rattles": {
       "playerID": "",
-      "startingResource": {},
-      "resourcePerTurn": {},
+      "startingResource": {
+        "mana": {
+          "V": 1,
+          "A": 1,
+          "P": 1
+        },
+        "intrinsic": {
+          "health": 300
+        }
+      },
+      "resourcePerTurn": {
+        "mana": {
+          "V": 1,
+          "A": 1,
+          "P": 1
+        }
+      },
       "startingHand": 1,
       "drawPerTurn": 1,
-      "maxHand": 1,
+      "maxHand": 5,
       "expansion": "base",
       "alignment": "PROFANE",
       "guid": "TEMPORARY",
@@ -2264,7 +2324,7 @@
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
       "name": "sir rattles- skeletal emperor",
-      "picture": "placeholder.jpg",
+      "picture": "persona.jpg",
       "cardtext": "",
       "type": "PERSONA",
       "sac": {
@@ -2285,11 +2345,26 @@
     },
     "protagonist": {
       "playerID": "",
-      "startingResource": {},
-      "resourcePerTurn": {},
+      "startingResource": {
+        "mana": {
+          "V": 1,
+          "A": 1,
+          "P": 1
+        },
+        "intrinsic": {
+          "health": 300
+        }
+      },
+      "resourcePerTurn": {
+        "mana": {
+          "V": 1,
+          "A": 1,
+          "P": 1
+        }
+      },
       "startingHand": 1,
       "drawPerTurn": 1,
-      "maxHand": 1,
+      "maxHand": 5,
       "expansion": "base",
       "alignment": "PROFANE",
       "guid": "TEMPORARY",
@@ -2297,7 +2372,7 @@
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
       "name": "protagonist- bloody heroine",
-      "picture": "placeholder.jpg",
+      "picture": "persona.jpg",
       "cardtext": "",
       "type": "PERSONA",
       "sac": {
@@ -2329,8 +2404,8 @@
       "type": "MONSTER",
       "sac": {
         "mana": {
-          "V": "",
-          "A": "0",
+          "V": "0",
+          "A": "",
           "P": ""
         }
       },
@@ -2361,8 +2436,8 @@
       "type": "MONSTER",
       "sac": {
         "mana": {
-          "V": "",
-          "A": "2",
+          "V": "2",
+          "A": "0",
           "P": ""
         }
       },
@@ -2393,8 +2468,8 @@
       "type": "MONSTER",
       "sac": {
         "mana": {
-          "V": "",
-          "A": "3",
+          "V": "3",
+          "A": "",
           "P": ""
         }
       },
@@ -2425,8 +2500,8 @@
       "type": "MONSTER",
       "sac": {
         "mana": {
-          "V": "",
-          "A": "3",
+          "V": "3",
+          "A": "",
           "P": ""
         }
       },
@@ -2457,8 +2532,8 @@
       "type": "MONSTER",
       "sac": {
         "mana": {
-          "V": "",
-          "A": "4",
+          "V": "4",
+          "A": "",
           "P": ""
         }
       },
@@ -2489,8 +2564,8 @@
       "type": "MONSTER",
       "sac": {
         "mana": {
-          "V": "",
-          "A": "5",
+          "V": "5",
+          "A": "",
           "P": ""
         }
       },
@@ -2521,8 +2596,8 @@
       "type": "MONSTER",
       "sac": {
         "mana": {
-          "V": "",
-          "A": "2",
+          "V": "2",
+          "A": "",
           "P": ""
         }
       },
@@ -2553,8 +2628,8 @@
       "type": "MONSTER",
       "sac": {
         "mana": {
-          "V": "",
-          "A": "3",
+          "V": "3",
+          "A": "",
           "P": ""
         }
       },
@@ -2585,8 +2660,8 @@
       "type": "MONSTER",
       "sac": {
         "mana": {
-          "V": "",
-          "A": "4",
+          "V": "4",
+          "A": "",
           "P": ""
         }
       },
@@ -2617,8 +2692,8 @@
       "type": "MONSTER",
       "sac": {
         "mana": {
-          "V": "",
-          "A": "5",
+          "V": "5",
+          "A": "",
           "P": ""
         }
       },
@@ -2649,8 +2724,8 @@
       "type": "MONSTER",
       "sac": {
         "mana": {
-          "V": "",
-          "A": "6",
+          "V": "6",
+          "A": "",
           "P": ""
         }
       },
@@ -2681,8 +2756,8 @@
       "type": "MONSTER",
       "sac": {
         "mana": {
-          "V": "",
-          "A": "7",
+          "V": "7",
+          "A": "",
           "P": ""
         }
       },
@@ -2875,8 +2950,8 @@
       "type": "EFFECT",
       "sac": {
         "mana": {
-          "V": "",
-          "A": "2",
+          "V": "2",
+          "A": "",
           "P": ""
         }
       },
@@ -2905,8 +2980,8 @@
       "type": "EFFECT",
       "sac": {
         "mana": {
-          "V": "",
-          "A": "5",
+          "V": "5",
+          "A": "",
           "P": ""
         }
       },
@@ -2935,8 +3010,8 @@
       "type": "EFFECT",
       "sac": {
         "mana": {
-          "V": "",
-          "A": "4",
+          "V": "4",
+          "A": "",
           "P": ""
         }
       },
@@ -2965,8 +3040,8 @@
       "type": "EFFECT",
       "sac": {
         "mana": {
-          "V": "",
-          "A": "5",
+          "V": "5",
+          "A": "",
           "P": ""
         }
       },
@@ -2995,8 +3070,8 @@
       "type": "EFFECT",
       "sac": {
         "mana": {
-          "V": "",
-          "A": "5",
+          "V": "5",
+          "A": "",
           "P": ""
         }
       },
@@ -3156,11 +3231,26 @@
     },
     "justica": {
       "playerID": "",
-      "startingResource": {},
-      "resourcePerTurn": {},
+      "startingResource": {
+        "mana": {
+          "V": 1,
+          "A": 1,
+          "P": 1
+        },
+        "intrinsic": {
+          "health": 300
+        }
+      },
+      "resourcePerTurn": {
+        "mana": {
+          "V": 1,
+          "A": 1,
+          "P": 1
+        }
+      },
       "startingHand": 1,
       "drawPerTurn": 1,
-      "maxHand": 1,
+      "maxHand": 5,
       "expansion": "base",
       "alignment": "VENERATED",
       "guid": "TEMPORARY",
@@ -3189,11 +3279,26 @@
     },
     "faeexe": {
       "playerID": "",
-      "startingResource": {},
-      "resourcePerTurn": {},
+      "startingResource": {
+        "mana": {
+          "V": 1,
+          "A": 1,
+          "P": 1
+        },
+        "intrinsic": {
+          "health": 300
+        }
+      },
+      "resourcePerTurn": {
+        "mana": {
+          "V": 1,
+          "A": 1,
+          "P": 1
+        }
+      },
       "startingHand": 1,
       "drawPerTurn": 1,
-      "maxHand": 1,
+      "maxHand": 5,
       "expansion": "base",
       "alignment": "VENERATED",
       "guid": "TEMPORARY",
@@ -3551,11 +3656,26 @@
     },
     "nadrimegus": {
       "playerID": "",
-      "startingResource": {},
-      "resourcePerTurn": {},
+      "startingResource": {
+        "mana": {
+          "V": 1,
+          "A": 1,
+          "P": 1
+        },
+        "intrinsic": {
+          "health": 300
+        }
+      },
+      "resourcePerTurn": {
+        "mana": {
+          "V": 1,
+          "A": 1,
+          "P": 1
+        }
+      },
       "startingHand": 1,
       "drawPerTurn": 1,
-      "maxHand": 1,
+      "maxHand": 5,
       "expansion": "base",
       "alignment": "VAP",
       "guid": "TEMPORARY",
@@ -3584,11 +3704,26 @@
     },
     "beyondinfinity": {
       "playerID": "",
-      "startingResource": {},
-      "resourcePerTurn": {},
+      "startingResource": {
+        "mana": {
+          "V": 1,
+          "A": 1,
+          "P": 1
+        },
+        "intrinsic": {
+          "health": 300
+        }
+      },
+      "resourcePerTurn": {
+        "mana": {
+          "V": 1,
+          "A": 1,
+          "P": 1
+        }
+      },
       "startingHand": 1,
       "drawPerTurn": 1,
-      "maxHand": 1,
+      "maxHand": 5,
       "expansion": "base",
       "alignment": "NONE",
       "guid": "TEMPORARY",
