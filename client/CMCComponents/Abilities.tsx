@@ -43,11 +43,15 @@ function CmcCardDetailAbility({
         let costitems: string | ReactNodeArray = "";
         let textitems: string | ReactNodeArray = "";
         if (ability.abilityCostText) {
-          costitems = scanForIcons(ability.abilityCostText);
+          costitems = scanForIcons(
+            ability.abilityCostText,
+            ability,
+            cardObject
+          );
           console.dir(ability.abilityCostText, costitems);
         }
         if (ability.abilityText) {
-          textitems = scanForIcons(ability.abilityText);
+          textitems = scanForIcons(ability.abilityText, ability, cardObject);
         }
         return (
           <div

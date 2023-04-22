@@ -666,6 +666,9 @@ function CheckState(G: CMCGameState) {
 function IsMonster(card: CMCCard): card is CMCMonsterCard {
   return (card as CMCMonsterCard).life !== undefined;
 }
+function IsEffect(card: CMCCard): card is CMCMonsterCard {
+  return (card as CMCEffectCard).status !== undefined;
+}
 function IsPersona(card: CMCCard): card is CMCPersonaCard {
   return (card as CMCPersonaCard).playerID !== undefined;
 }
@@ -852,4 +855,5 @@ export {
   Undizzy,
   DizzyOne,
   GainLife,
+  IsEffect,
 };

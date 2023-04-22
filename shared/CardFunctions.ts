@@ -27,6 +27,7 @@ import {
   DrawCard,
   ForceDiscard,
   GainLife,
+  IsEffect,
   IsMonster,
   IsPersona,
   OwnerOf,
@@ -35,7 +36,7 @@ import {
   PlayerPay,
 } from "./LogicFunctions";
 import { CMCPlayer } from "./Player";
-import { GetActivePlayer } from "./Util";
+import { GetActivePlayer, OtherPlayer } from "./Util";
 import { Random, RandomAPI } from "boardgame.io/src/plugins/random/random";
 import { EventsAPI } from "boardgame.io/src/plugins/plugin-events";
 
@@ -155,6 +156,28 @@ export function DefaultCost(args: AbilityFunctionArgs): Targets {
   return modcard;
 }
 
+// defaultcost checks everything in the player.resources against the card.cost.
+export function ResourceCost(args: AbilityFunctionArgs): Targets {
+  const { card, G, ctx, cardowner, random, events, dry, ability } = args;
+
+  const fullplayer: CMCPlayer = G.playerData[cardowner];
+
+  if (!fullplayer) {
+    console.log("no full player");
+    return [];
+  }
+  if (!ability || !ability.metadata || !ability.metadata.cost) {
+    return [];
+  }
+  // if we are actually calling to check
+  if (!dry) {
+    if (!PlayerPay(cardowner, ability.metadata.cost, G, random, events)) {
+      return [];
+    }
+  }
+  return card;
+}
+
 function ApplyRecursion(target: any, stats: any, add: boolean) {
   if (typeof stats == "object") {
     for (const [key, value] of Object.entries(stats)) {
@@ -217,9 +240,36 @@ export function IsDamagable(args: AbilityFunctionArgs): Targets {
     AllCards(G).allinplay.forEach((card) => {
       if (card.guid == target.guid && card.type == CardType.MONSTER) {
         realtargets.push(card);
-      } else if (card.guid == target.guid && card.type == CardType.EFFECT) {
-        realtargets.push(card);
       } else if (card.guid == target.guid && card.type == CardType.PERSONA) {
+        realtargets.push(card);
+      }
+    });
+
+    // is it a damagable type
+  }
+  return realtargets;
+}
+
+export function IsDestroyable(args: AbilityFunctionArgs): Targets {
+  const { target, G } = args;
+  const targets: CMCCard[] = [];
+  if (!target) {
+    // no base target so let's create it based on the 'truth'
+
+    targets.push(...AllCards(G).field);
+  } else {
+    targets.push(...(Array.isArray(target) ? target : [target]));
+  }
+
+  const realtargets: CMCCard[] = [];
+
+  for (const target of targets) {
+    // can only damage in field
+
+    AllCards(G).allinplay.forEach((card) => {
+      if (card.guid == target.guid && card.type == CardType.MONSTER) {
+        realtargets.push(card);
+      } else if (card.guid == target.guid && card.type == CardType.EFFECT) {
         realtargets.push(card);
       }
     });
@@ -249,13 +299,23 @@ export function ManaGenerate(args: AbilityFunctionArgs): Targets {
 }
 
 export function DrawACard(args: AbilityFunctionArgs): Targets {
-  const { card, G, ability, ctx } = args;
+  const { card, G, ability, ctx, target } = args;
   if (!ability) {
     return [];
   }
-  let playerid = OwnerOf(card, G);
 
-  DrawCard(playerid, ability.metadata.amount, G);
+  const doyou: boolean =
+    ability.metadata.owner ||
+    (!ability.metadata.opponent && !ability.metadata.owner);
+  const doop: boolean = ability.metadata.opponent;
+  let playerid = OwnerOf(card, G);
+  if (doyou) {
+    DrawCard(playerid, ability.metadata.amount, G);
+  }
+  if (doop) {
+    DrawCard(OtherPlayer(playerid), ability.metadata.amount, G);
+  }
+
   return card;
 }
 
@@ -281,6 +341,26 @@ export function TriggerStage(args: AbilityFunctionArgs): Targets {
     return [];
   }
   return G.location;
+}
+
+export function TriggerIntoPlay(args: AbilityFunctionArgs): Targets {
+  const { trigger, ability, ctx, cardowner, G } = args;
+  if (!trigger) {
+    return [];
+  }
+  if (!ability) {
+    return [];
+  }
+  if (!trigger.triggeringcard) {
+    return [];
+  }
+  if (cardowner != GetActivePlayer(ctx)) {
+    return [];
+  }
+  if (trigger.name != ability.metadata.triggername) {
+    return [];
+  }
+  return trigger.triggeringcard;
 }
 
 export function LifeGain(args: AbilityFunctionArgs): Targets {
@@ -372,6 +452,31 @@ export function DamageTarget(args: AbilityFunctionArgs): Targets {
       realtargets.push(target);
     } else {
       console.error("isnt persona or monster");
+    }
+  }
+  return realtargets;
+}
+
+export function DestroyTarget(args: AbilityFunctionArgs): Targets {
+  const { target, card, ability, G } = args;
+  if (!ability) {
+    return [];
+  }
+  const targets: CMCCard[] = ValidTargets(args, AllCards(G).allinplay);
+  const realtargets: CMCCard[] = [];
+  let found = false;
+  for (const target of targets) {
+    if (![CardType.EFFECT, CardType.MONSTER].includes(target.type)) {
+      console.error("isnt effect or monster");
+      continue;
+    }
+    if (IsMonster(target) || IsEffect(target)) {
+      if (!target.destroyed) {
+        target.destroyed = true;
+        realtargets.push(target);
+      }
+    } else {
+      console.error("isnt pereffectsona or monster");
     }
   }
   return realtargets;

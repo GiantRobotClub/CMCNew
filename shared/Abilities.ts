@@ -19,23 +19,20 @@ import { AbilityFunctionArgs } from "./CardFunctions";
 enum TriggerType {
   ACTIVATED = "ACTIVATED",
   ACTIVATED_TARGETED = "ACTIVATED_TARGETED",
-  AUTOMATIC_STAGE = "AUTOMATIC_STAGE",
-  AUTOMATIC_RESPONSE = "AUTOMATIC_RESPONSE",
-  AUTOMATIC_POSTCOMBAT = "AUTOMATIC_POSTCOMBAT",
-  AUTOMATIC_PRECOMBAT = "AUTOMATIC_PRECOMBAT",
-  AUTOMATIC_TRIGGERED = "AUTOMATIC_TRIGGERED",
+  AUTOMATIC = "AUTOMATIC",
   CONSTANT_FILTERED = "CONSTANT_FILTERED",
   ACTIVATED_CHAIN = "ACTIVATED_CHAIN",
+  COMBAT_MODIFIER = "COMBAT_MODIFIER",
 }
 
 enum AbilitySpeed {
-  S = -99,
-  A = 1,
-  B = 2,
-  C = 3,
-  D = 4,
-  E = 5,
-  F = 99,
+  "S" = -99,
+  "A" = 1,
+  "B" = 2,
+  "C" = 3,
+  "D" = 4,
+  "E" = 5,
+  "F" = 99,
 }
 enum TriggerNames {
   START_TURN = "start_turn",
@@ -47,11 +44,22 @@ enum TriggerNames {
   PRECOMBAT = "precombat",
   POSTCOMBAT = "postcombat",
 }
+
+interface CombatCode {
+  DEFENDER: "DEFENDER"; // cannot attack
+  STEALTH: "STEALTH"; // cannot be defended against
+  AGGRESSIVE: "AGGRESSIVE"; // cannot defend
+  SLIPPERY: "SLIPPERY"; //Cannot be attacked
+  DAM: "DAM"; // no overage damage when blocking
+  VISION: "VISION"; // can block stealth
+  TRACKING: "TRACKING"; // can attack creatures with slippery
+}
 interface Ability {
   triggerType: TriggerType;
   targetCode?: string;
   triggerCode?: string;
   activateCode?: string | string[];
+  combatCodes?: CombatCode[];
   costCode?: string;
   metadata: any;
   speed?: AbilitySpeed;
