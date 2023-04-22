@@ -29,7 +29,6 @@ interface CMCCardBase {
   alignment: Alignment;
   subtype: string;
   cardtext: string;
-  original?: CMCCard;
   cost: {
     mana: {
       V: Number;
@@ -50,6 +49,7 @@ interface CMCCardBase {
 interface CMCCard extends CMCCardBase {
   abilities: Ability[];
   picture: string;
+  picturecredit?: string;
   costFunction: string;
   playFunction: string;
 }

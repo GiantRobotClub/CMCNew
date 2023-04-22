@@ -609,7 +609,7 @@
       "expansion": "base",
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
-      "subtype": "skyrian soldier",
+      "subtype": "Skyrian Soldier",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
       "name": "skyrian soldier",

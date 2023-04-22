@@ -126,8 +126,13 @@ export const icons = {
 
 const statscan = {
   "#amount": function (ability, card) {
-    console.dir(card);
-    console.dir(ability);
+    if (
+      !ability ||
+      !ability.hasOwnProperty("metadata") ||
+      !ability.metadata.hasOwnProperty("amount")
+    ) {
+      return 0;
+    }
     return ability.metadata.amount;
   },
   "#br": function (ability, card) {
@@ -150,9 +155,13 @@ export function scanForIcons(
   if (ability && card) {
     for (const stat of Object.keys(statscan)) {
       const matchstring = "(" + stat + ")";
-      if (!returnstring.includes(matchstring)) {
+      if (
+        typeof returnstring == "string" &&
+        !returnstring.includes(matchstring)
+      ) {
         continue;
       }
+
       const amount = statscan[stat](ability, card);
       returnstring = reactStringReplace(
         returnstring,
