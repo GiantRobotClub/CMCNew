@@ -13,7 +13,7 @@ import {
   AiFillCloseCircle,
   AiFillEye,
 } from "react-icons/ai";
-import { FaBalanceScale } from "react-icons/fa";
+import { FaBalanceScale, FaSkull } from "react-icons/fa";
 import {
   BsFillDropletFill,
   BsFillCpuFill,
@@ -75,6 +75,7 @@ export const icons = {
   eye: <AiFillEye />,
   sword: <GiBroadsword />,
   life: <GiHealthNormal />,
+  skull: <FaSkull />,
 
   cpu: <BsFillCpuFill />,
   cauldron: <GiCauldron />,

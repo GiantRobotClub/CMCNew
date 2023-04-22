@@ -42,8 +42,9 @@ function CmcCardDetailAbility({
 
         let costitems: string | ReactNodeArray = "";
         let textitems: string | ReactNodeArray = "";
-        if (showbutton && ability.abilityCostText) {
+        if (ability.abilityCostText) {
           costitems = scanForIcons(ability.abilityCostText);
+          console.dir(ability.abilityCostText, costitems);
         }
         if (ability.abilityText) {
           textitems = scanForIcons(ability.abilityText);
@@ -62,7 +63,7 @@ function CmcCardDetailAbility({
             >
               {
                 <span className="abilityCostText">
-                  {showbutton && ability.abilityCostText && costitems
+                  {ability.abilityCostText && costitems
                     ? Array.isArray(costitems)
                       ? costitems.map((item, index) => {
                           return <span key={index}>{item}</span>;
@@ -72,7 +73,7 @@ function CmcCardDetailAbility({
                   {ability.abilityCostText ? ":" : ""}
                 </span>
               }
-              <span className="abilityCostText">
+              <span className="abilityActiveText">
                 {ability.abilityText && textitems
                   ? Array.isArray(textitems)
                     ? textitems.map((item) => {

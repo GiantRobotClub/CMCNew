@@ -51,7 +51,7 @@ interface Ability {
   triggerType: TriggerType;
   targetCode?: string;
   triggerCode?: string;
-  activateCode?: string;
+  activateCode?: string | string[];
   costCode?: string;
   metadata: any;
   speed?: AbilitySpeed;
@@ -135,20 +135,28 @@ function handleTrigger(
       };
       if (triggerFunc(args)) {
         if (ability.activateCode) {
-          const abilityFunc: Function = CardFunctions[ability.activateCode];
-          const args: AbilityFunctionArgs = {
-            card: card,
-            ability: ability,
-            trigger: trigger_data,
-            cardowner: owner,
-            G: newG,
-            ctx: ctx,
-            random: random,
-            events: events,
-            target: undefined,
-            dry: false,
-          };
-          abilityFunc(args);
+          var codearray: string[] = [];
+          if (Array.isArray(ability.activateCode)) {
+            codearray = ability.activateCode;
+          } else {
+            codearray = [ability.activateCode];
+          }
+          for (const code of codearray) {
+            const abilityFunc: Function = CardFunctions[code];
+            const args: AbilityFunctionArgs = {
+              card: card,
+              ability: ability,
+              trigger: trigger_data,
+              cardowner: owner,
+              G: newG,
+              ctx: ctx,
+              random: random,
+              events: events,
+              target: undefined,
+              dry: false,
+            };
+            abilityFunc(args);
+          }
           //console.log(newG);
         }
       }
@@ -329,22 +337,31 @@ function ActivateAbility(
 
   if (resolveStack || ability.speed == AbilitySpeed.S) {
     if (ability.activateCode) {
-      const abilityFunc: Function = CardFunctions[ability.activateCode];
-      const args: AbilityFunctionArgs = {
-        card: card,
-        ability: ability,
-        cardowner: cardowner,
-        G: G,
-        ctx: ctx,
-        random: random,
-        events: events,
-        target: target,
-        dry: false,
-      };
-      if (!abilityFunc(args)) {
-        console.error("Did not pass " + abilityFunc);
-        return false;
+      var codearray: string[] = [];
+      if (Array.isArray(ability.activateCode)) {
+        codearray = ability.activateCode;
+      } else {
+        codearray = [ability.activateCode];
       }
+      for (const code of codearray) {
+        const abilityFunc: Function = CardFunctions[code];
+        const args: AbilityFunctionArgs = {
+          card: card,
+          ability: ability,
+          cardowner: cardowner,
+          G: G,
+          ctx: ctx,
+          random: random,
+          events: events,
+          target: target,
+          dry: false,
+        };
+        if (!abilityFunc(args)) {
+          console.error("Did not pass " + abilityFunc);
+          return false;
+        }
+      }
+      //console.log(newG);
     }
 
     // actually pay mana
@@ -498,8 +515,13 @@ function GetModifiedCopy(card: CMCCard, G: CMCGameState, ctx: Ctx) {
         };
         const targetFunc: Function = CardFunctions[ability.targetCode];
         if (targetFunc(args)) {
-          const applyFunc: Function = CardFunctions[ability.activateCode];
-          applyFunc(args);
+          const activatecode = Array.isArray(ability.activateCode)
+            ? ability.activateCode
+            : [ability.activateCode];
+          for (const code in activatecode) {
+            const applyFunc: Function = CardFunctions[code];
+            applyFunc(args);
+          }
         }
       }
     }

@@ -24,6 +24,7 @@ import {
   AllCards,
   DealDamage,
   DizzyOne,
+  DrawCard,
   ForceDiscard,
   GainLife,
   IsMonster,
@@ -84,6 +85,43 @@ export function DizzyCost(args: AbilityFunctionArgs): Targets {
 
   if (!dry) {
     DizzyOne(card as CMCEntityCard, G);
+  }
+  return card;
+}
+
+export function DestroyCost(args: AbilityFunctionArgs): Targets {
+  const { card, G, dry } = args;
+  if (card.type != CardType.EFFECT && card.type != CardType.MONSTER) {
+    console.error("not the right type");
+    return [];
+  }
+
+  let found: boolean = false;
+  for (const playcard of AllCards(G).field) {
+    if (card.guid == playcard.guid) {
+      found = true;
+      break;
+    }
+  }
+  if (!found) {
+    console.error("card not found " + card);
+    return [];
+  }
+  if ("dizzy" in card && "destroyed" in card && "status" in card) {
+    const entitycard: CMCEntityCard = card as CMCEntityCard;
+    if (entitycard.destroyed) {
+      console.error(
+        "card is already destroyed ",
+        card.name,
+        entitycard.dizzy,
+        entitycard
+      );
+      return [];
+    }
+  }
+
+  if (!dry) {
+    (card as CMCEntityCard).destroyed = true;
   }
   return card;
 }
@@ -150,7 +188,7 @@ export function ApplyStats(args: AbilityFunctionArgs): Targets {
       ApplyRecursion(target, stats, true);
       realtargets.push(target);
     } else if (ability.metadata.statset) {
-      const stats = ability.metadata.statmod;
+      const stats = ability.metadata.statset;
       // go through entir etree and set
       ApplyRecursion(target, stats, false);
       realtargets.push(target);
@@ -207,6 +245,17 @@ export function ManaGenerate(args: AbilityFunctionArgs): Targets {
   PlayerAddResource(playerid, resource, G);
 
   G.playerData[ctx.currentPlayer] = player;
+  return card;
+}
+
+export function DrawACard(args: AbilityFunctionArgs): Targets {
+  const { card, G, ability, ctx } = args;
+  if (!ability) {
+    return [];
+  }
+  let playerid = OwnerOf(card, G);
+
+  DrawCard(playerid, ability.metadata.amount, G);
   return card;
 }
 
@@ -274,6 +323,31 @@ export function SpawnEntity(args: AbilityFunctionArgs): Targets {
     const thiscard: CMCEntityCard = JSON.parse(JSON.stringify(playablecard));
     thiscard.guid = nanoid();
     thiscard.status.token = true;
+
+    PlaceCard(card, target, OwnerOf(target, G), G);
+  }
+  return realtargs;
+}
+
+export function SpawnCopy(args: AbilityFunctionArgs): Targets {
+  const realtargs: CMCCard[] = [];
+  const { target, card, ability, G } = args;
+  if (!ability) {
+    return [];
+  }
+  const targets: CMCCard[] = ValidTargets(args, AllCards(G).field);
+  for (const target of targets) {
+    if (target.type != CardType.EMPTY) {
+      return [];
+    }
+    const thiscard: CMCEntityCard = JSON.parse(JSON.stringify(card));
+    thiscard.guid = nanoid();
+    thiscard.status.token = true;
+    if (ability.metadata.split && thiscard.type == CardType.MONSTER) {
+      const origlife = (thiscard as CMCMonsterCard).life;
+      (thiscard as CMCMonsterCard).life = Math.ceil(origlife / 2);
+      (card as CMCMonsterCard).life = Math.ceil(origlife / 2);
+    }
 
     PlaceCard(card, target, OwnerOf(target, G), G);
   }
@@ -360,6 +434,11 @@ function MatchState(original: {}, match: {}) {
   return returnval;
 }
 
+export function Self(args: AbilityFunctionArgs): Targets {
+  const { card } = args;
+  return card;
+}
+
 export function Match(args: AbilityFunctionArgs): Targets {
   const { ability, G, target, cardowner, ctx } = args;
   if (!ability) {
@@ -379,7 +458,7 @@ export function Match(args: AbilityFunctionArgs): Targets {
         if (cardowner == OwnerOf(target, G)) {
           continue;
         }
-      } else if (ability.metadata.matchplayer == TriggerPlayerType.ACTIVE) {
+      } else if (ability.metadata.matchplayer == TriggerPlayerType.INACTIVE) {
         if (GetActivePlayer(ctx) == OwnerOf(target, G)) {
           continue;
         }
@@ -388,14 +467,32 @@ export function Match(args: AbilityFunctionArgs): Targets {
           continue;
         }
       }
-      realtargets.push(target);
     }
-
-    if (ability.metadata.matchPattern) {
-      if (!MatchState(target, ability.metadata.matchPattern)) {
-        return [];
+    if (ability.metadata.matchType) {
+      if (!target.subtype.includes(ability.metadata.matchType)) {
+        continue;
       }
     }
+    if (ability.metadata.matchPattern) {
+      if (!MatchState(target, ability.metadata.matchPattern)) {
+        continue;
+      }
+    }
+    if (ability.metadata.allCardsPattern) {
+      const allcards = AllCards(G)[
+        ability.metadata.allCardsPattern
+      ] as CMCCard[];
+      found = false;
+      for (const allcard of allcards) {
+        if (allcard.guid == target.guid) {
+          found = true;
+        }
+      }
+      if (!found) {
+        continue;
+      }
+    }
+    realtargets.push(target);
   }
   return realtargets;
 }

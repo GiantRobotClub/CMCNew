@@ -221,12 +221,12 @@
       "expansion": "base",
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
-      "subtype": "",
+      "subtype": "slime",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "slime",
+      "name": "Slime",
       "picture": "placeholder.jpg",
-      "cardtext": "basic french vanilla",
+      "cardtext": "With all the pollution, they thrived.",
       "type": "MONSTER",
       "sac": {
         "mana": {
@@ -242,7 +242,19 @@
           "P": ""
         }
       },
-      "abilities": [],
+      "abilities": [
+        {
+          "costCode": "DizzyCost",
+          "triggerType": "ACTIVATED",
+          "activateCode": "Bounce",
+          "triggerCode": "Self",
+          "metadata": {},
+          "speed": 5,
+          "abilityName": "SLIME ran away!",
+          "abilityText": "Return to hand",
+          "abilityCostText": "(dizzy)"
+        }
+      ],
       "attack": "10",
       "life": "10",
       "dizzy": true,
@@ -253,12 +265,12 @@
       "expansion": "base",
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
-      "subtype": "",
+      "subtype": "slime punk",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "slimepunk",
+      "name": "Slyberpunk",
       "picture": "placeholder.jpg",
-      "cardtext": "cyberpunk slime",
+      "cardtext": "Evolved for their new habitats",
       "type": "MONSTER",
       "sac": {
         "mana": {
@@ -274,39 +286,72 @@
           "P": ""
         }
       },
-      "abilities": [],
+      "abilities": [
+        {
+          "costCode": "DestroyCost",
+          "triggerType": "ACTIVATED",
+          "activateCode": "DrawACard",
+          "triggerCode": "Self",
+          "metadata": {},
+          "speed": 2,
+          "abilityName": "Between the Cracks",
+          "abilityText": "Draw (card)",
+          "abilityCostText": "(skull)"
+        }
+      ],
       "attack": "15",
       "life": "15",
       "dizzy": true,
       "destroyed": false,
       "status": {}
     },
-    "slimewiz": {
+    "bugslime": {
       "expansion": "base",
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
-      "subtype": "",
+      "subtype": "slime dataform",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "slime wizard",
+      "name": "Bug Slime",
       "picture": "placeholder.jpg",
-      "cardtext": "casts slime thing i dunno",
+      "cardtext": "S̳̰̫̖͔̄͗͘Ļ̻̠̞̖̹͎͔̦̾̐̿I͉͂̐͜ͅM̹̟̣̤̫͚̗̾͘E̯͇͖̮͙̦̓̅ͥ͢",
       "type": "MONSTER",
       "sac": {
         "mana": {
           "V": "",
-          "A": "5",
+          "A": "1",
           "P": ""
         }
       },
       "cost": {
         "mana": {
           "V": "",
-          "A": "4",
+          "A": "1",
           "P": ""
         }
       },
-      "abilities": [],
+      "abilities": [
+        {
+          "triggerType": "AUTOMATIC_STAGE",
+          "activateCode": "ApplyStats",
+          "triggerCode": "TriggerStage",
+          "metadata": {
+            "triggername": "start_turn",
+            "triggerstage": "initial",
+            "color": "A",
+            "amount": 1,
+            "statmod": {
+              "sac": {
+                "mana": {
+                  "A": 1
+                }
+              }
+            }
+          },
+          "abilityName": "Infovore",
+          "abilityText": "Sac increased by (A) every turn."
+        }
+      ],
       "attack": "20",
       "life": "20",
       "dizzy": true,
@@ -321,12 +366,12 @@
       "destroyed": false,
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
-      "subtype": "slime",
+      "subtype": "slime soldier",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "SLIME",
+      "name": "Debug Slime",
       "picture": "slime.jpg",
-      "cardtext": " Just a debug slime ",
+      "cardtext": "Desliming is a sought after skill. ",
       "type": "MONSTER",
 
       "sac": {
@@ -353,7 +398,7 @@
             "amount": 1
           },
           "speed": 1,
-          "abilityName": "Generate Mana",
+          "abilityName": "Mana Glitch",
           "abilityText": "Add (A)",
           "abilityCostText": "(dizzy)"
         }
@@ -367,9 +412,9 @@
       "subtype": "",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "ooze",
+      "name": "Ooze",
       "picture": "placeholder.jpg",
-      "cardtext": "splits",
+      "cardtext": "Make like a banana and...",
       "type": "MONSTER",
       "sac": {
         "mana": {
@@ -385,7 +430,26 @@
           "P": ""
         }
       },
-      "abilities": [],
+      "abilities": [
+        {
+          "costCode": "DizzyCost",
+          "triggerType": "ACTIVATED_TARGETED",
+          "targetCode": "Match",
+          "activateCode": "SpawnCopy",
+          "metadata": {
+            "matchplayer": "OWNER",
+            "matchPattern": {
+              "type": "EMPTY"
+            },
+            "allCardsPattern": "monsters",
+            "ability.metadata.split": true
+          },
+          "speed": 4,
+          "abilityName": "Split",
+          "abilityText": "Split into target spot",
+          "abilityCostText": "(dizzy)"
+        }
+      ],
       "attack": "20",
       "life": "20",
       "dizzy": true,
@@ -399,9 +463,9 @@
       "subtype": "",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "slime commando",
+      "name": "Slime Commando",
       "picture": "placeholder.jpg",
-      "cardtext": "slime in tactical gear",
+      "cardtext": "Slime Commando!? Hrm.",
       "type": "MONSTER",
       "sac": {
         "mana": {
@@ -418,8 +482,8 @@
         }
       },
       "abilities": [],
-      "attack": "30",
-      "life": "30",
+      "attack": "45",
+      "life": "45",
       "dizzy": true,
       "destroyed": false,
       "status": {}

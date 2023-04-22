@@ -212,7 +212,9 @@ function GetModifiedStatCard(
   G: CMCGameState,
   ctx: Ctx
 ): CMCCard {
-  return GetModifiedCopy(card, G, ctx);
+  if (G && ctx) {
+    return GetModifiedCopy(card, G, ctx);
+  } else return card;
 }
 
 export {
