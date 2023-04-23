@@ -26,13 +26,13 @@ enum TriggerType {
 }
 
 enum AbilitySpeed {
-  "S" = -99,
+  "S" = 0,
   "A" = 1,
   "B" = 2,
   "C" = 3,
   "D" = 4,
   "E" = 5,
-  "F" = 99,
+  "F" = 10,
 }
 enum TriggerNames {
   START_TURN = "start_turn",
@@ -60,7 +60,7 @@ interface Ability {
   triggerCode?: string;
   activateCode?: string | string[];
   combatCodes?: CombatCode[];
-  costCode?: string;
+  costCode?: string | string[];
   metadata: any;
   speed?: AbilitySpeed;
   abilityName: string;
@@ -238,8 +238,13 @@ function CanActivateAbility(
       return [];
     }
     // can pay
-    if (ability.costCode) {
-      const costFunc: Function = CardFunctions[ability.costCode];
+    const costcodes = ability.costCode
+      ? Array.isArray(ability.costCode)
+        ? ability.costCode
+        : [ability.costCode]
+      : [];
+    for (const costcode of costcodes) {
+      const costFunc: Function = CardFunctions[costcode];
       const args: AbilityFunctionArgs = {
         card: card,
         ability: ability,
@@ -255,7 +260,7 @@ function CanActivateAbility(
       // do dry run of cost.  will run the actual one afterwards.
       const result = costFunc(args);
       if (!result || result.length == 0) {
-        continue; // cant afford
+        return []; // cant afford
       }
     }
   }
@@ -323,8 +328,13 @@ function ActivateAbility(
     return false;
   }
 
-  if (ability.costCode) {
-    const costFunc: Function = CardFunctions[ability.costCode];
+  const costcodes = ability.costCode
+    ? Array.isArray(ability.costCode)
+      ? ability.costCode
+      : [ability.costCode]
+    : [];
+  for (const costcode of costcodes) {
+    const costFunc: Function = CardFunctions[costcode];
     const args: AbilityFunctionArgs = {
       card: card,
       ability: ability,
@@ -373,8 +383,13 @@ function ActivateAbility(
     }
 
     // actually pay mana
-    if (ability.costCode) {
-      const costFunc: Function = CardFunctions[ability.costCode];
+    const costcodes = ability.costCode
+      ? Array.isArray(ability.costCode)
+        ? ability.costCode
+        : [ability.costCode]
+      : [];
+    for (const costcode of costcodes) {
+      const costFunc: Function = CardFunctions[costcode];
       const args: AbilityFunctionArgs = {
         card: card,
         ability: ability,

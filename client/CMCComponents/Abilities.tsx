@@ -53,39 +53,50 @@ function CmcCardDetailAbility({
         if (ability.abilityText) {
           textitems = scanForIcons(ability.abilityText, ability, cardObject);
         }
+        let speedbox = <></>;
+        if (ability.speed !== undefined) {
+          speedbox = (
+            <div className={"speedbox speed" + ability.speed}>
+              {icons["speed" + ability.speed]}
+            </div>
+          );
+        }
         return (
           <div
             className="ability"
             key={cardObject.guid + ability.abilityName + index}
           >
-            <div className="abilityName">{ability.abilityName}</div>
+            {speedbox}
+            <div className="abilityDesc">
+              <div className="abilityName">{ability.abilityName}</div>
 
-            <div
-              className={
-                "abilityText " + (showbutton ? " abilityHasButton" : "")
-              }
-            >
-              {
-                <span className="abilityCostText">
-                  {ability.abilityCostText && costitems
-                    ? Array.isArray(costitems)
-                      ? costitems.map((item, index) => {
-                          return <span key={index}>{item}</span>;
+              <div
+                className={
+                  "abilityText " + (showbutton ? " abilityHasButton" : "")
+                }
+              >
+                {
+                  <span className="abilityCostText">
+                    {ability.abilityCostText && costitems
+                      ? Array.isArray(costitems)
+                        ? costitems.map((item, index) => {
+                            return <span key={index}>{item}</span>;
+                          })
+                        : costitems
+                      : ""}
+                    {ability.abilityCostText ? ":" : ""}
+                  </span>
+                }
+                <span className="abilityActiveText">
+                  {ability.abilityText && textitems
+                    ? Array.isArray(textitems)
+                      ? textitems.map((item) => {
+                          return <span key={item}>{item}</span>;
                         })
-                      : costitems
+                      : textitems
                     : ""}
-                  {ability.abilityCostText ? ":" : ""}
                 </span>
-              }
-              <span className="abilityActiveText">
-                {ability.abilityText && textitems
-                  ? Array.isArray(textitems)
-                    ? textitems.map((item) => {
-                        return <span key={item}>{item}</span>;
-                      })
-                    : textitems
-                  : ""}
-              </span>
+              </div>
             </div>
             {ownerId == playerId && showbutton ? (
               <button

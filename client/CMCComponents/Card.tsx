@@ -13,6 +13,8 @@ import { CMCPlayer } from "../../shared/Player";
 import { icons } from "./Icons";
 import { GiBroadsword, GiHealthNormal } from "react-icons/gi";
 import CmcCardDetailAbility from "./Abilities";
+import { CMCGameState } from "../../shared/CardmasterGame";
+import { Ctx } from "boardgame.io";
 function CMCCardVisual({
   card,
   canClick,
@@ -26,6 +28,8 @@ function CMCCardVisual({
   owner,
   showplayer = true,
   hover = undefined,
+  G = undefined,
+  ctx = undefined,
 }: {
   card: CMCCard;
   canClick: boolean;
@@ -39,6 +43,8 @@ function CMCCardVisual({
   owner?: string;
   showplayer?: boolean;
   hover?: any;
+  G?: CMCGameState;
+  ctx?: Ctx;
 }) {
   const isDetail: boolean = detail ?? false;
   const showabilitybutton: boolean = clickability ?? false;
@@ -74,7 +80,7 @@ function CMCCardVisual({
   function hoverOnCard(card: CMCCard | undefined) {
     if (hover !== undefined) hover(card);
   }
-  const cardObject: CMCCard = GetModifiedStatCard(card);
+  const cardObject: CMCCard = GetModifiedStatCard(card, G, ctx);
   let costLine = <div style={noshow}></div>;
   let attackLine = <div style={noshow}></div>;
   let sacLine = <div style={noshow}></div>;

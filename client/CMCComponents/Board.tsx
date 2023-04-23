@@ -233,6 +233,8 @@ export function CMCBoard(props: CMCProps) {
           <div className="playerBox">
             <div className="playerCardBox">
               <CMCCardVisual
+                G={props.G}
+                ctx={props.ctx}
                 big={true}
                 activeCard={false}
                 player={props.G.playerData[otherPlayer]}
@@ -257,6 +259,8 @@ export function CMCBoard(props: CMCProps) {
             </div>
             <div className="locationBox">
               <CMCCardVisual
+                G={props.G}
+                ctx={props.ctx}
                 big={true}
                 activeCard={false}
                 player={props.G.playerData[props.G.location.owner]}
@@ -278,6 +282,8 @@ export function CMCBoard(props: CMCProps) {
             </div>
             <div className="playerCardBox">
               <CMCCardVisual
+                G={props.G}
+                ctx={props.ctx}
                 big={true}
                 activeCard={false}
                 player={props.G.playerData[you]}
@@ -303,6 +309,8 @@ export function CMCBoard(props: CMCProps) {
               {state.slots[otherPlayer].monsters.map(
                 (card: CMCCard, index: number) => (
                   <CMCCardVisual
+                    G={props.G}
+                    ctx={props.ctx}
                     big={false}
                     hover={hoverOnCard}
                     activeCard={false}
@@ -328,6 +336,8 @@ export function CMCBoard(props: CMCProps) {
               {state.slots[otherPlayer].effects.map(
                 (card: CMCCard, index: number) => (
                   <CMCCardVisual
+                    G={props.G}
+                    ctx={props.ctx}
                     big={false}
                     hover={hoverOnCard}
                     activeCard={false}
@@ -352,6 +362,8 @@ export function CMCBoard(props: CMCProps) {
             <div style={flexStyle}>
               {state.slots[you].effects.map((card: CMCCard, index: number) => (
                 <CMCCardVisual
+                  G={props.G}
+                  ctx={props.ctx}
                   big={false}
                   hover={hoverOnCard}
                   activeCard={false}
@@ -375,6 +387,8 @@ export function CMCBoard(props: CMCProps) {
             <div style={flexStyle}>
               {state.slots[you].monsters.map((card: CMCCard, index: number) => (
                 <CMCCardVisual
+                  G={props.G}
+                  ctx={props.ctx}
                   big={false}
                   hover={hoverOnCard}
                   activeCard={false}
@@ -399,6 +413,8 @@ export function CMCBoard(props: CMCProps) {
           <div className="detailCardContainer">
             <div className="inspectCard">
               <CMCCardVisual
+                G={props.G}
+                ctx={props.ctx}
                 card={inspectCard}
                 lookingplayer={you}
                 clickability={clickableInspect}
@@ -450,6 +466,8 @@ export function CMCBoard(props: CMCProps) {
             <div className="handspacerx"></div>
             {state.players[you].hand.map((card: CMCCard, index: number) => (
               <CMCCardVisual
+                G={props.G}
+                ctx={props.ctx}
                 big={false}
                 player={props.G.playerData[you]}
                 card={card}
@@ -475,6 +493,8 @@ export function CMCBoard(props: CMCProps) {
             {state.playerData[you].graveyard.map(
               (card: CMCCard, index: number) => (
                 <CMCCardVisual
+                  G={props.G}
+                  ctx={props.ctx}
                   big={false}
                   player={props.G.playerData[you]}
                   card={card}
@@ -510,6 +530,8 @@ export function CMCBoard(props: CMCProps) {
           }}
         >
           <CMCCardVisual
+            G={props.G}
+            ctx={props.ctx}
             big={true}
             activeCard={false}
             player={props.G.playerData[OwnerOf(hoverCard, props.G)]}

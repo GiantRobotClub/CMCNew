@@ -59,6 +59,13 @@ import {
   TbSquareRoundedLetterX,
   TbSquareRoundedLetterY,
   TbSquareRoundedLetterZ,
+  TbLetterA,
+  TbLetterB,
+  TbLetterC,
+  TbLetterD,
+  TbLetterE,
+  TbLetterF,
+  TbLetterS,
 } from "react-icons/tb";
 import { CMCCard } from "../../shared/CMCCard";
 import { Ability } from "../../shared/Abilities";
@@ -120,6 +127,14 @@ export const icons = {
   letterx: <TbSquareRoundedLetterX />,
   lettery: <TbSquareRoundedLetterY />,
   letterz: <TbSquareRoundedLetterZ />,
+
+  speed0: <TbLetterS />,
+  speed1: <TbLetterA />,
+  speed2: <TbLetterB />,
+  speed3: <TbLetterC />,
+  speed4: <TbLetterD />,
+  speed5: <TbLetterE />,
+  speed6: <TbLetterF />,
 
   backspace: <BsFillBackspaceFill />,
 };

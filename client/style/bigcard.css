@@ -68,6 +68,7 @@
   vertical-align: sub;
   display: inline-block;
 }
+
 .detailCard .abilityCostText svg {
   vertical-align: middle;
   display: inline-block;
@@ -119,9 +120,11 @@
   font-size: 0.7em;
   height: 1.2em;
   justify-content: right;
+  top: -0.3em;
+  position: relative;
 }
 .detailCard .bottomline {
-  height: 1.2em;
+  height: 3em;
 }
 .detailCard .attackline .attack {
   color: rebeccapurple;
@@ -271,7 +274,60 @@
   text-align: left;
   position: relative;
   font-size: 0.5em;
+  line-height: 80%;
   width: 100%;
+  display: flex;
+}
+.detailCard .speedbox {
+  border-right: 1px solid black;
+  border-bottom: 1px solid black;
+  border-radius: 0.1em 0.3em;
+  vertical-align: middle;
+  height: 100%;
+  position: relative;
+}
+
+.detailCard .speedbox.speed0 {
+  color: black;
+  background: linear-gradient(
+    red,
+    orange,
+    yellow,
+    rgb(124, 233, 124),
+    rgb(124, 124, 243)
+  );
+}
+
+.detailCard .speedbox.speed1 {
+  color: rgb(0, 0, 0);
+  background: linear-gradient(gold, orange);
+}
+.detailCard .speedbox.speed2 {
+  color: rgb(0, 0, 0);
+  background: linear-gradient(silver, grey);
+}
+.detailCard .speedbox.speed3 {
+  color: rgb(0, 0, 0);
+  background: linear-gradient(chocolate, brown);
+}
+.detailCard .speedbox.speed4 {
+  color: rgb(0, 0, 0);
+  background: rgb(160, 160, 146);
+}
+.detailCard .speedbox.speed5 {
+  color: rgb(0, 0, 0);
+  background: rgb(112, 112, 108);
+}
+.detailCard .speedbox.speed6 {
+  color: black;
+}
+.detailCard .speedbox svg {
+  border-right: 1px solid black;
+  height: 100%;
+  vertical-align: middle;
+}
+.detailCard .speedBox.speed0 svg {
+  color: green;
 }
 .detailCard .abilityHasButton {
   padding-left: 0.2em;
@@ -390,21 +446,21 @@
   padding-left: 0.2em;
 }
 
-.dizzy {
+.cardRow .dizzy {
   opacity: 75%;
   position: absolute;
   top: 1.2em;
   left: 1em;
 }
-.dizzy svg {
+.cardRow .dizzy svg {
   color: orange;
   width: 5em;
   height: 5em;
 }
-.dizzy.dizzyvis {
+.cardRow .dizzy.dizzyvis {
   display: block;
 }
-.dizzy.dizzyunvis {
+.cardRow .dizzy.dizzyunvis {
   display: none;
 }
 

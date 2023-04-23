@@ -157,6 +157,33 @@ export function DefaultCost(args: AbilityFunctionArgs): Targets {
 }
 
 // defaultcost checks everything in the player.resources against the card.cost.
+export function DiscardCost(args: AbilityFunctionArgs): Targets {
+  const { card, G, ability, ctx, cardowner, random, events, dry } = args;
+
+  const fullplayer: CMCPlayer = G.playerData[cardowner];
+
+  if (!fullplayer) {
+    console.log("no full player");
+    return [];
+  }
+
+  const amount = ability?.metadata.costamount;
+
+  if (G.players[cardowner].hand.length < amount) {
+    // can't discard enough cards.
+    return [];
+  }
+  const newargs = {
+    ...args,
+    target: undefined,
+  };
+  Discard(newargs);
+  // if we are actually calling to check
+
+  return fullplayer.persona;
+}
+
+// defaultcost checks everything in the player.resources against the card.cost.
 export function ResourceCost(args: AbilityFunctionArgs): Targets {
   const { card, G, ctx, cardowner, random, events, dry, ability } = args;
 
@@ -482,6 +509,30 @@ export function DestroyTarget(args: AbilityFunctionArgs): Targets {
   return realtargets;
 }
 
+export function DizzyTarget(args: AbilityFunctionArgs): Targets {
+  const { target, card, ability, G } = args;
+  if (!ability) {
+    return [];
+  }
+  const targets: CMCCard[] = ValidTargets(args, AllCards(G).allinplay);
+  const realtargets: CMCCard[] = [];
+  let found = false;
+  for (const target of targets) {
+    if (![CardType.EFFECT, CardType.MONSTER].includes(target.type)) {
+      console.error("isnt effect or monster");
+      continue;
+    }
+    if (IsMonster(target) || IsEffect(target)) {
+      if (!target.dizzy) {
+        target.dizzy = true;
+        realtargets.push(target);
+      }
+    } else {
+      console.error("isnt pereffectsona or monster");
+    }
+  }
+  return realtargets;
+}
 export function Bounce(args: AbilityFunctionArgs): Targets {
   const { target, card, ability, G } = args;
   if (!ability) {
@@ -616,15 +667,26 @@ export function Discard(args: AbilityFunctionArgs) {
     : [target];
 
   let found = false;
-  for (const target of targets) {
-    let targeto = cardowner;
+  if (targets.length > 0) {
+    for (const target of targets) {
+      let targeto = cardowner;
 
-    if (!target) {
-      //assume owner
-      targeto = cardowner;
-    } else {
-      targeto = OwnerOf(target, G);
+      if (!target) {
+        //assume owner
+        targeto = cardowner;
+      } else {
+        targeto = OwnerOf(target, G);
+      }
+      let discardchoose = false;
+      if (ability.metadata && "discardchoose" in ability.metadata) {
+        discardchoose = ability.metadata.discardchoose;
+      }
+
+      found =
+        found && ForceDiscard(discardchoose, targeto, G, ctx, random, events);
     }
+  } else {
+    let targeto = cardowner;
     let discardchoose = false;
     if (ability.metadata && "discardchoose" in ability.metadata) {
       discardchoose = ability.metadata.discardchoose;

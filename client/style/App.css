@@ -335,11 +335,13 @@ button:focus-visible {
   width: 6.5em;
   background: rgba(255, 255, 255, 0.75);
   border: 1px solid grey;
-  width: 6.5em;
+  width: 7.1em;
   margin: auto;
   height: 2.4em;
+  font-size: 0.9em;
   overflow: hidden;
   text-align: bottom;
+  line-height: 80%;
 }
 .bigCardStyle .cardbox .cardtext {
   font-style: italic;
@@ -537,6 +539,10 @@ button:focus-visible {
 
 .resA {
   color: green;
+}
+
+.costhealth {
+  color: red;
 }
 
 .respower {

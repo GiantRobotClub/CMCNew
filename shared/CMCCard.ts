@@ -209,8 +209,8 @@ function ApplyStat(mod: {}, orig: {}): any {
 
 function GetModifiedStatCard(
   card: CMCCard,
-  G: CMCGameState,
-  ctx: Ctx
+  G?: CMCGameState,
+  ctx?: Ctx
 ): CMCCard {
   if (G && ctx) {
     return GetModifiedCopy(card, G, ctx);

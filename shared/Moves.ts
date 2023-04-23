@@ -178,34 +178,36 @@ const playCardFromHand: Move<CMCGameState> = (
     if (card.abilities.length == 0) {
       return INVALID_MOVE;
     }
-    const ability: Ability = card.abilities[0];
-    if (ability.triggerType == TriggerType.ACTIVATED_TARGETED) {
-      // move to pick target
 
-      G.returnStage.push(GetActiveStage(ctx));
-      events.setStage(Stages.pickAbilityTarget);
-      G.activeAbility = ability;
-      G.activeCard = card;
-    } else if (ability.triggerType == TriggerType.ACTIVATED) {
-      if (!CanActivateAbility(card, ability, G, ctx, undefined)) {
+    for (const ability of card.abilities) {
+      if (ability.triggerType == TriggerType.ACTIVATED_TARGETED) {
+        // move to pick target
+
+        G.returnStage.push(GetActiveStage(ctx));
+        events.setStage(Stages.pickAbilityTarget);
+        G.activeAbility = ability;
+        G.activeCard = card;
+      } else if (ability.triggerType == TriggerType.ACTIVATED) {
+        if (!CanActivateAbility(card, ability, G, ctx, undefined)) {
+          return INVALID_MOVE;
+        }
+        if (
+          !ActivateAbility(
+            card,
+            ability,
+            G,
+            ctx,
+            false,
+            random,
+            events,
+            undefined
+          )
+        ) {
+          return INVALID_MOVE;
+        }
+      } else {
         return INVALID_MOVE;
       }
-      if (
-        !ActivateAbility(
-          card,
-          ability,
-          G,
-          ctx,
-          false,
-          random,
-          events,
-          undefined
-        )
-      ) {
-        return INVALID_MOVE;
-      }
-    } else {
-      return INVALID_MOVE;
     }
   } else if (card.type == CardType.LOCATION) {
     let success_play = PlayEntity(

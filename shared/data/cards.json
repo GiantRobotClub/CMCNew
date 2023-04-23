@@ -609,10 +609,10 @@
       "expansion": "base",
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
-      "subtype": "Skyrian Soldier",
+      "subtype": "skyrian soldier",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "skyrian soldier",
+      "name": "Skyrian Trooper",
       "picture": "placeholder.jpg",
       "cardtext": "Just out of boot camp, and wing camp.",
       "type": "MONSTER",
@@ -655,7 +655,7 @@
       "subtype": "skyrian spy",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "Skyrian Spy",
+      "name": "Skyrian Agent",
       "picture": "placeholder.jpg",
       "cardtext": "Sacre bleu",
       "type": "MONSTER",
@@ -696,9 +696,9 @@
       "subtype": "skyrian scout",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "Skyrian Scout",
+      "name": "Skyrian Lookout",
       "picture": "placeholder.jpg",
-      "cardtext": "",
+      "cardtext": "BONK!",
       "type": "MONSTER",
       "sac": {
         "mana": {
@@ -741,7 +741,7 @@
       "subtype": "skyrian engineer",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "Skyrian Engineer",
+      "name": "Skyrian Builder",
       "picture": "placeholder.jpg",
       "cardtext": "I solve practical problems.",
       "type": "MONSTER",
@@ -832,7 +832,7 @@
       "expansion": "base",
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
-      "subtype": "",
+      "subtype": "skyrian economist",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
       "name": "Skyrian Manamancer",
@@ -867,12 +867,12 @@
               }
             },
             "color": "A",
-            "amount": 1,
-            "speed": "S"
+            "amount": 1
           },
           "abilityName": "Mana Exchange",
           "abilityText": "Add (A)",
-          "abilityCostText": "(V)(P)"
+          "abilityCostText": "(V)(P)",
+          "speed": "0"
         }
       ],
       "attack": "40",
@@ -885,7 +885,7 @@
       "expansion": "base",
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
-      "subtype": "",
+      "subtype": "skyrian hacker",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
       "name": "Skyrian Phisher",
@@ -934,12 +934,12 @@
       "expansion": "base",
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
-      "subtype": "",
+      "subtype": "slime",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
       "name": "It's Slime Time!",
       "picture": "placeholder.jpg",
-      "cardtext": "- spell- fills ALL monster slots with slimes",
+      "cardtext": "Oh would you look at the time",
       "type": "SPELL",
       "sac": {
         "mana": {
@@ -955,207 +955,36 @@
           "P": ""
         }
       },
-      "abilities": []
+      "abilities": [
+        {
+          "costCode": "DizzyCost",
+          "triggerType": "ACTIVATED",
+          "targetCode": "Match",
+          "activateCode": "SpawnEntity",
+          "metadata": {
+            "cardid": "timeslime",
+            "matchplayer": "BOTH",
+            "matchPattern": {
+              "type": "EMPTY"
+            },
+            "allCardsPattern": "monsters"
+          },
+          "speed": 4,
+          "abilityName": "Slime 'o Clock",
+          "abilityText": "Create a Time Slime in every open monster slot."
+        }
+      ]
     },
     "thundermancy": {
       "expansion": "base",
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
       "subtype": "",
-      "costFunction": "DefaultCost",
+      "costFunction": ["DefaultCost", "DiscardCost"],
       "playFunction": "DefaultPlay",
       "name": "Thundermancy",
       "picture": "placeholder.jpg",
-      "cardtext": "(small damage + lower attack)",
-      "type": "SPELL",
-      "sac": {
-        "mana": {
-          "V": "",
-          "A": "",
-          "P": ""
-        }
-      },
-      "cost": {
-        "mana": {
-          "V": "",
-          "A": "3",
-          "P": ""
-        }
-      },
-      "abilities": []
-    },
-    "pyromancy": {
-      "expansion": "base",
-      "alignment": "ANODYNE",
-      "guid": "TEMPORARY",
-      "subtype": "",
-      "costFunction": "DefaultCost",
-      "playFunction": "DefaultPlay",
-      "name": "Pyromancy",
-      "picture": "placeholder.jpg",
-      "cardtext": "(small damage + deal owner damage)",
-      "type": "SPELL",
-      "sac": {
-        "mana": {
-          "V": "",
-          "A": "",
-          "P": ""
-        }
-      },
-      "cost": {
-        "mana": {
-          "V": "",
-          "A": "3",
-          "P": ""
-        }
-      },
-      "abilities": []
-    },
-    "cryomancy": {
-      "expansion": "base",
-      "alignment": "ANODYNE",
-      "guid": "TEMPORARY",
-      "subtype": "",
-      "costFunction": "DefaultCost",
-      "playFunction": "DefaultPlay",
-      "name": "Cryomancy",
-      "picture": "placeholder.jpg",
-      "cardtext": "(small damaage + )",
-      "type": "SPELL",
-      "sac": {
-        "mana": {
-          "V": "",
-          "A": "",
-          "P": ""
-        }
-      },
-      "cost": {
-        "mana": {
-          "V": "",
-          "A": "3",
-          "P": ""
-        }
-      },
-      "abilities": []
-    },
-    "zoop": {
-      "expansion": "base",
-      "alignment": "ANODYNE",
-      "guid": "TEMPORARY",
-      "subtype": "",
-      "costFunction": "DefaultCost",
-      "playFunction": "DefaultPlay",
-      "name": "Zoop",
-      "picture": "placeholder.jpg",
-      "cardtext": "(target creature takes X damage- gains Y attack- and undizzies)",
-      "type": "SPELL",
-      "sac": {
-        "mana": {
-          "V": "",
-          "A": "",
-          "P": ""
-        }
-      },
-      "cost": {
-        "mana": {
-          "V": "",
-          "A": "2",
-          "P": ""
-        }
-      },
-      "abilities": []
-    },
-    "hacking": {
-      "expansion": "base",
-      "alignment": "ANODYNE",
-      "guid": "TEMPORARY",
-      "subtype": "",
-      "costFunction": "DefaultCost",
-      "playFunction": "DefaultPlay",
-      "name": "hacking",
-      "picture": "placeholder.jpg",
-      "cardtext": "card draw",
-      "type": "SPELL",
-      "sac": {
-        "mana": {
-          "V": "",
-          "A": "",
-          "P": ""
-        }
-      },
-      "cost": {
-        "mana": {
-          "V": "",
-          "A": "6",
-          "P": ""
-        }
-      },
-      "abilities": []
-    },
-    "centralserver": {
-      "expansion": "base",
-      "alignment": "ANODYNE",
-      "guid": "TEMPORARY",
-      "subtype": "",
-      "costFunction": "DefaultCost",
-      "playFunction": "DefaultPlay",
-      "name": "central server",
-      "picture": "placeholder.jpg",
-      "cardtext": "",
-      "type": "SPELL",
-      "sac": {
-        "mana": {
-          "V": "",
-          "A": "",
-          "P": ""
-        }
-      },
-      "cost": {
-        "mana": {
-          "V": "",
-          "A": "5",
-          "P": ""
-        }
-      },
-      "abilities": []
-    },
-    "slimemold": {
-      "expansion": "base",
-      "alignment": "ANODYNE",
-      "guid": "TEMPORARY",
-      "subtype": "",
-      "costFunction": "DefaultCost",
-      "playFunction": "DefaultPlay",
-      "name": "slime mold",
-      "picture": "placeholder.jpg",
-      "cardtext": "",
-      "type": "SPELL",
-      "sac": {
-        "mana": {
-          "V": "",
-          "A": "",
-          "P": ""
-        }
-      },
-      "cost": {
-        "mana": {
-          "V": "",
-          "A": "7",
-          "P": ""
-        }
-      },
-      "abilities": []
-    },
-    "manasplosion": {
-      "expansion": "base",
-      "alignment": "ANODYNE",
-      "guid": "TEMPORARY",
-      "subtype": "",
-      "costFunction": "DefaultCost",
-      "playFunction": "DefaultPlay",
-      "name": "manasplosion",
-      "picture": "placeholder.jpg",
-      "cardtext": "gain A- lose PV",
+      "cardtext": "Shocking, aint it?",
       "type": "SPELL",
       "sac": {
         "mana": {
@@ -1171,18 +1000,365 @@
           "P": ""
         }
       },
-      "abilities": []
+      "abilities": [
+        {
+          "triggerType": "ACTIVATED_TARGETED",
+          "targetCode": "IsDamagable",
+          "activateCode": "DamageTarget",
+          "metadata": {
+            "amount": 10
+          },
+          "abilityName": "Zap!",
+          "abilityText": "Deal 20 damage to target player or monster",
+          "abilityCostText": "Discard (card)",
+          "speed": 2
+        }
+      ]
     },
-    "slimefaucet": {
+    "pyromancy": {
       "expansion": "base",
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
       "subtype": "",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "slime faucet",
+      "name": "Pyromancy",
       "picture": "placeholder.jpg",
-      "cardtext": "slime valley equiv",
+      "cardtext": "Be careful, you might (will) get burned.",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "1",
+          "P": ""
+        },
+        "intrinsic": {
+          "health": "10"
+        }
+      },
+      "abilities": [
+        {
+          "triggerType": "ACTIVATED_TARGETED",
+          "targetCode": "IsDamagable",
+          "activateCode": "DamageTarget",
+          "metadata": {
+            "amount": 20
+          },
+          "abilityName": "Foom!",
+          "abilityText": "Deal 20 damage to target player or monster",
+          "speed": 2
+        }
+      ]
+    },
+    "cryomancy": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Cryomancy",
+      "picture": "placeholder.jpg",
+      "cardtext": "Brr.",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "1",
+          "P": ""
+        }
+      },
+      "abilities": [
+        {
+          "triggerType": "ACTIVATED_TARGETED",
+          "targetCode": "Match",
+          "activateCode": "DizzyTarget",
+          "metadata": {
+            "matchplayer": "OWNER",
+            "matchpattern": {
+              "type": "MONSTER"
+            }
+          },
+          "abilityName": "Blowback",
+          "abilityText": "(dizzy) all of your monsters. ",
+          "speed": 2
+        },
+
+        {
+          "triggerType": "ACTIVATED_TARGETED",
+          "targetCode": "IsDamagable",
+          "activateCode": "DamageTarget",
+          "metadata": {
+            "amount": 20
+          },
+          "abilityName": "Icicle",
+          "abilityText": "Deal 20 damage to target player or monster",
+          "speed": 2
+        }
+      ]
+    },
+    "zoop": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Zoop!",
+      "picture": "placeholder.jpg",
+      "cardtext": "What do they put in these things!?",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "2",
+          "P": ""
+        }
+      },
+      "abilities": [
+        {
+          "triggerType": "ACTIVATED_TARGETED",
+          "targetCode": "Match",
+          "activateCode": "DamageTarget",
+          "metadata": {
+            "amount": 10,
+            "matchplayer": "EITHER",
+            "matchpattern": {
+              "type": "MONSTER"
+            }
+          },
+          "abilityName": "Artificial sweetner",
+          "abilityText": "Deal 10 damage to target monster",
+          "speed": 2
+        },
+        {
+          "triggerType": "ACTIVATED_CHAIN",
+          "targetCode": "Match",
+          "activateCode": "ApplyStats",
+          "metadata": {
+            "matchplayer": "OWNER",
+            "matchpattern": {
+              "type": "MONSTER"
+            },
+            "triggername": "start_turn",
+            "triggerstage": "initial",
+
+            "statmod": {
+              "attack": 10
+            }
+          },
+          "abilityName": "Stimulant",
+          "abilityText": "Target monster gains 10 (sword)",
+          "speed": 2
+        },
+        {
+          "triggerType": "ACTIVATED_CHAIN",
+          "targetCode": "Match",
+          "activateCode": "DizzyTarget",
+          "metadata": {
+            "matchplayer": "EITHER",
+            "matchpattern": {
+              "type": "MONSTER"
+            }
+          },
+          "abilityName": "Sugar crash",
+          "abilityText": "(dizzy) target monster",
+          "speed": 2
+        }
+      ]
+    },
+    "hacking": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Magical Hack",
+      "picture": "placeholder.jpg",
+      "cardtext": "Hack the plane",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "6",
+          "P": ""
+        }
+      },
+      "abilities": [
+        {
+          "triggerType": "ACTIVATED",
+          "activateCode": "DrawACard",
+          "triggerCode": "Self",
+          "metadata": {},
+          "speed": 2,
+          "abilityName": "Jackpot",
+          "abilityText": "Draw (card)(card)(card)"
+        }
+      ]
+    },
+    "servercost": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Server Costs",
+      "picture": "placeholder.jpg",
+      "cardtext": "www.cardmaster conflict.com",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "1",
+          "P": ""
+        }
+      },
+      "abilities": [
+        {
+          "triggerType": "ACTIVATED_TARGET",
+          "activateCode": "ApplyStats",
+          "targetCode": "Match",
+          "metadata": {
+            "statmod": {
+              "sac": {
+                "mana": {
+                  "A": 6
+                }
+              }
+            }
+          },
+          "abilityName": "Domain registration",
+          "abilityText": "Sac increased by 6(A)"
+        }
+      ]
+    },
+    "slimemold": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "slime",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Slime Mold",
+      "picture": "placeholder.jpg",
+      "cardtext": "It'll grow on you.",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "0",
+          "P": ""
+        }
+      },
+      "abilities": [
+        {
+          "triggerType": "ACTIVATED_TARGET",
+          "activateCode": "ApplyStats",
+          "targetCode": "Match",
+          "metadata": {
+            "statmod": {
+              "life": 10,
+              "subtype": "slime"
+            }
+          },
+          "abilityName": "Slime coat",
+          "abilityText": "Target monster gains 10(life) and type becomes slime"
+        }
+      ]
+    },
+    "manasplosion": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Manasplosion",
+      "picture": "placeholder.jpg",
+      "cardtext": "Who needs to splash?",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "5",
+          "A": "1",
+          "P": "5"
+        }
+      },
+      "abilities": [
+        {
+          "triggerType": "ACTIVATED",
+          "activateCode": "ManaGenerate",
+          "metadata": {
+            "color": "A",
+            "amount": 7
+          },
+          "speed": 1,
+          "abilityName": "Instability",
+          "abilityText": "Add 7(A)"
+        }
+      ]
+    },
+    "slimefaucet": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "slime",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Slime Faucet",
+      "picture": "placeholder.jpg",
+      "cardtext": "Warm and warm running slimes.",
       "type": "EFFECT",
       "sac": {
         "mana": {
@@ -1198,40 +1374,73 @@
           "P": ""
         }
       },
-      "abilities": [],
+      "abilities": [
+        {
+          "costCode": "DizzyCost",
+          "triggerType": "ACTIVATED_TARGETED",
+          "targetCode": "Match",
+          "activateCode": "SpawnCopy",
+          "metadata": {
+            "cardid": "gloop",
+            "matchplayer": "OWNER",
+            "matchPattern": {
+              "type": "EMPTY"
+            },
+            "allCardsPattern": "monsters"
+          },
+          "speed": 3,
+          "abilityName": "Drip",
+          "abilityText": "Create a Gloop monster in target slot.",
+          "abilityCostText": "(dizzy)"
+        }
+      ],
       "dizzy": true,
       "destroyed": false,
       "status": {}
     },
     "manatap": {
-      "expansion": "base",
+      "dizzy": false,
+      "status": {},
+      "destroyed": false,
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
-      "subtype": "",
+      "subtype": "generator",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "mana tap -",
-      "picture": "placeholder.jpg",
-      "cardtext": "generator",
+      "name": "Mana Tap",
+      "picture": "generator.jpg",
+      "cardtext": "Mana: a sustainable resource",
       "type": "EFFECT",
       "sac": {
         "mana": {
-          "V": "",
-          "A": "2",
-          "P": ""
+          "V": 0,
+          "A": 2,
+          "P": 0
         }
       },
       "cost": {
         "mana": {
-          "V": "",
-          "A": "1",
-          "P": ""
+          "V": 0,
+          "A": 1,
+          "P": 0
         }
       },
-      "abilities": [],
-      "dizzy": true,
-      "destroyed": false,
-      "status": {}
+      "abilities": [
+        {
+          "triggerType": "AUTOMATIC_STAGE",
+          "activateCode": "ManaGenerate",
+          "triggerCode": "TriggerStage",
+          "metadata": {
+            "triggername": "start_turn",
+            "triggerstage": "initial",
+            "color": "A",
+            "amount": 1
+          },
+          "abilityName": "Harvest Mana",
+          "abilityText": "Adds (A) per turn"
+        }
+      ],
+      "expansion": "base"
     },
     "manacrystal": {
       "expansion": "base",
@@ -1240,9 +1449,9 @@
       "subtype": "",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "mana crystal -",
+      "name": "Mana Crystal",
       "picture": "placeholder.jpg",
-      "cardtext": "sac",
+      "cardtext": "From Concentrate",
       "type": "EFFECT",
       "sac": {
         "mana": {
@@ -1259,7 +1468,7 @@
         }
       },
       "abilities": [],
-      "dizzy": true,
+      "dizzy": false,
       "destroyed": false,
       "status": {}
     },
