@@ -71,7 +71,7 @@
       },
       "abilities": [
         {
-          "triggerType": "AUTOMATIC_STAGE",
+          "triggerType": "AUTOMATIC",
           "activateCode": "ManaGenerate",
           "triggerCode": "TriggerStage",
           "metadata": {
@@ -113,7 +113,7 @@
       },
       "abilities": [
         {
-          "triggerType": "AUTOMATIC_STAGE",
+          "triggerType": "AUTOMATIC",
           "activateCode": "ManaGenerate",
           "triggerCode": "TriggerStage",
           "metadata": {
@@ -332,7 +332,7 @@
       },
       "abilities": [
         {
-          "triggerType": "AUTOMATIC_STAGE",
+          "triggerType": "AUTOMATIC",
           "activateCode": "ApplyStats",
           "triggerCode": "TriggerStage",
           "metadata": {
@@ -632,7 +632,7 @@
       },
       "abilities": [
         {
-          "triggerType": "AUTOMATIC_ATTACKING",
+          "triggerType": "AUTOMATIC",
           "targetCode": "Match",
           "metadata": {
             "matchplayer": "OPPONENT",
@@ -1427,7 +1427,7 @@
       },
       "abilities": [
         {
-          "triggerType": "AUTOMATIC_STAGE",
+          "triggerType": "AUTOMATIC",
           "activateCode": "ManaGenerate",
           "triggerCode": "TriggerStage",
           "metadata": {
@@ -1481,7 +1481,7 @@
       "playFunction": "DefaultPlay",
       "name": "mana furnace",
       "picture": "placeholder.jpg",
-      "cardtext": "burns your cards for mana",
+      "cardtext": "Reduce, reuse, recycle",
       "type": "EFFECT",
       "sac": {
         "mana": {
@@ -1497,7 +1497,21 @@
           "P": ""
         }
       },
-      "abilities": [],
+      "abilities": [
+        {
+          "triggerType": "ACTIVATED",
+          "activateCode": "ManaGenerate",
+          "costCode": "DiscardCost",
+          "metadata": {
+            "color": "A",
+            "amount": 3
+          },
+          "abilityName": "Meltdown",
+          "abilityText": "Gain (A)(A)(A)",
+          "abilityCostText": "Discard (card)",
+          "speed": 5
+        }
+      ],
       "dizzy": true,
       "destroyed": false,
       "status": {}
@@ -1509,9 +1523,9 @@
       "subtype": "",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "skyrian outpost",
+      "name": "Skyrian Uppost",
       "picture": "placeholder.jpg",
-      "cardtext": "increases defense of skyrian cards",
+      "cardtext": "",
       "type": "EFFECT",
       "sac": {
         "mana": {
@@ -1527,8 +1541,30 @@
           "P": ""
         }
       },
-      "abilities": [],
-      "dizzy": true,
+      "abilities": [
+        {
+          "triggerType": "AUTOMATIC",
+          "activateCode": "ApplyStats",
+          "triggerCode": "Match",
+          "metadata": {
+            "triggername": "ON_PLAY",
+            "triggerstage": "initial",
+            "matchplayer": "OWNER",
+            "matchPattern": {
+              "type": "MONSTER"
+            },
+            "matchType": "skyrian",
+            "statmod": {
+              "attack": 15,
+              "life": 15
+            }
+          },
+          "abilityName": "Air superiority",
+          "abilityText": "When coming into play, your Skyrian monsters gain 15(sword) 15(life)"
+        }
+      ],
+
+      "dizzy": false,
       "destroyed": false,
       "status": {}
     },
@@ -1541,7 +1577,7 @@
       "playFunction": "DefaultPlay",
       "name": "warez server",
       "picture": "placeholder.jpg",
-      "cardtext": "becomes a copy of an effect",
+      "cardtext": "{{0day crackz}}",
       "type": "EFFECT",
       "sac": {
         "mana": {
@@ -1557,7 +1593,21 @@
           "P": ""
         }
       },
-      "abilities": [],
+      "abilities": [
+        {
+          "targetCode": "Match",
+          "activateCode": "CopyTarget",
+          "metadata": {
+            "matchpattern": {
+              "type": "EFFECT"
+            }
+          },
+
+          "abilityName": "You Wouldn't Download an Effect",
+          "abilityText": "Becomes copy of target effect",
+          "speed": 3
+        }
+      ],
       "dizzy": true,
       "destroyed": false,
       "status": {}
@@ -1569,9 +1619,9 @@
       "subtype": "",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "skyria",
+      "name": "Skyria",
       "picture": "placeholder.jpg",
-      "cardtext": "over ocean",
+      "cardtext": "Once people developed radar the lost continent couldn't remain lost",
       "type": "LOCATION",
       "sac": {
         "mana": {
@@ -3638,7 +3688,7 @@
           "speed": 2
         },
         {
-          "triggerType": "AUTOMATIC_POSTCOMBAT",
+          "triggerType": "AUTOMATIC",
           "targetCode": "Match",
           "activateCode": "GainLife",
 

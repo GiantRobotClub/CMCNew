@@ -2,6 +2,13 @@ const SERVER_PORT = 3030;
 const CLIENT_PORT = 3000;
 const GAME_PORT = 3050;
 
+enum GameMode {
+  NORMAL = "NORMAL",
+  BO3 = "BO3",
+  SPARECHANGE = "SPARECHANGE",
+  CLASSIC = "CLASSIC",
+}
+
 enum CardType {
   EMPTY = "EMPTY",
   DUMMY = "DUMMY",
@@ -61,4 +68,5 @@ export {
   Stages,
   Alignment,
   PlayerIDs,
+  GameMode,
 };

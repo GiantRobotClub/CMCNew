@@ -483,7 +483,37 @@ export function DamageTarget(args: AbilityFunctionArgs): Targets {
   }
   return realtargets;
 }
-
+export function CopyTarget(args: AbilityFunctionArgs): Targets {
+  const { target, card, ability, G } = args;
+  if (!ability) {
+    return [];
+  }
+  const targets: CMCCard[] = ValidTargets(args, AllCards(G).allinplay);
+  const realtargets: CMCCard[] = [];
+  // can only do one of these, naturally
+  for (const target of targets) {
+    if (![CardType.EFFECT, CardType.MONSTER].includes(target.type)) {
+      console.error("isnt effect or monster");
+      continue;
+    }
+    if (IsMonster(target) || IsEffect(target)) {
+      for (const slotplayer in G.slots) {
+        for (const subplayer in G.slots[slotplayer]) {
+          for (const subrow of G.slots[slotplayer][subplayer]) {
+            const foundcard: CMCEntityCard = subrow;
+            if (card.guid == foundcard.guid) {
+              G.slots[slotplayer][subplayer] = target;
+              return target;
+            }
+          }
+        }
+      }
+    } else {
+      console.error("isnt pereffectsona or monster");
+    }
+  }
+  return [];
+}
 export function DestroyTarget(args: AbilityFunctionArgs): Targets {
   const { target, card, ability, G } = args;
   if (!ability) {
