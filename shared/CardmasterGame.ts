@@ -20,7 +20,7 @@ import {
   TriggerNames,
   TriggerPlayerType,
 } from "./Abilities";
-import { CardType, ClickType, PlayerIDs, Stages } from "./Constants";
+import { CardType, ClickType, GameMode, PlayerIDs, Stages } from "./Constants";
 import {
   CanClickCard,
   CheckState,
@@ -58,7 +58,13 @@ import {
   PlayerDecks,
 } from "./Decks";
 import { isModuleDeclaration } from "typescript";
-import { DbDeck, DbDeckCard, DbFullDeck, DbPlayer } from "../server/DbTypes";
+import {
+  DbDeck,
+  DbDeckCard,
+  DbFullDeck,
+  DbOwnedCard,
+  DbPlayer,
+} from "../server/DbTypes";
 import { GetPlayer } from "../server/DbWrapper";
 import { GetFullDeck } from "../server/DbWrapper";
 import ai from "./ai";
@@ -108,6 +114,7 @@ export interface CMCGameState {
   abilityStack: StackedAbility[];
   lastAbilityStack: StackedAbility[];
   wait: boolean;
+  gamemode: GameMode;
 }
 
 // Initial game state
@@ -128,8 +135,12 @@ export const CardmasterConflict: Game<CMCGameState> = {
       "0": CreateDefaultPlayer("0"),
       "1": CreateDefaultPlayer("1"),
     };
-
+    let gamemode = GameMode.NORMAL;
+    if (setupData.hasOwnProperty("gamemode")) {
+      gamemode = setupData.gamemode;
+    }
     return {
+      gamemode: gamemode,
       ready: 0,
       wait: isMulti,
       abilityStack: [],
@@ -293,18 +304,57 @@ export const CardmasterConflict: Game<CMCGameState> = {
             console.log("COULDNT LOAD PLAYER");
             return INVALID_MOVE;
           }
-          const deck: DbFullDeck | undefined = GetFullDeck(player.selecteddeck);
-          if (deck == undefined) {
-            console.log("COULDNT LOAD DECK");
-            return INVALID_MOVE;
+
+          if (G.gamemode == GameMode.NORMAL) {
+            const deck: DbFullDeck | undefined = GetFullDeck(
+              player.selecteddeck
+            );
+            if (deck == undefined) {
+              console.log("COULDNT LOAD DECK");
+              return INVALID_MOVE;
+            }
+            // parse out your deck
+            const deckholder = {};
+            deckholder[gameplayerid] = deck.deck;
+            ParseDbPlayer(G, gameplayerid, deck, player);
+
+            ParseDbDeck(gameplayerid, deck, G);
+          } else if ((G.gamemode = GameMode.SPARECHANGE)) {
+            const owned: DbOwnedCard[] | undefined = GetFullDeck(
+              player.playerid
+            );
+            // create fake spare change deck
+
+            if (owned == undefined) {
+              console.log("COULDNT LOAD DECK");
+              return INVALID_MOVE;
+            }
+            const cards: DbDeckCard[] = owned.map((ownedcard) => {
+              const newcard: DbDeckCard = {
+                cardid: ownedcard.cardid,
+                amount: ownedcard.amount,
+                deckid: "",
+              };
+              return newcard;
+            });
+            const deck: DbFullDeck = {
+              deck: {
+                persona: "classicpersona",
+                deckid: "",
+                deckname: "SPARE CHANGE",
+                deckicon: "",
+                ownerid: player.playerid,
+              },
+              cards: [],
+            };
+
+            // parse out your deck
+            const deckholder = {};
+            deckholder[gameplayerid] = deck.deck;
+            ParseDbPlayer(G, gameplayerid, deck, player);
+
+            ParseDbDeck(gameplayerid, deck, G);
           }
-          // parse out your deck
-          const deckholder = {};
-          deckholder[gameplayerid] = deck.deck;
-          ParseDbPlayer(G, gameplayerid, deck, player);
-
-          ParseDbDeck(gameplayerid, deck, G);
-
           console.log("PLAYER HAS JOINED : " + player.username);
           G.ready += 1;
           if (G.ready == 2) {
