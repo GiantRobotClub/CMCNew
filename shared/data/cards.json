@@ -75,7 +75,7 @@
           "activateCode": "ManaGenerate",
           "triggerCode": "TriggerStage",
           "metadata": {
-            "triggername": "start_turn",
+            "triggername": "start_stage",
             "triggerstage": "initial",
             "color": "A",
             "amount": 1
@@ -117,7 +117,7 @@
           "activateCode": "ManaGenerate",
           "triggerCode": "TriggerStage",
           "metadata": {
-            "triggername": "start_turn",
+            "triggername": "start_stage",
             "triggerstage": "initial",
             "color": "A",
             "amount": 1
@@ -336,7 +336,7 @@
           "activateCode": "ApplyStats",
           "triggerCode": "TriggerStage",
           "metadata": {
-            "triggername": "start_turn",
+            "triggername": "start_stage",
             "triggerstage": "initial",
 
             "statmod": {
@@ -1161,7 +1161,7 @@
             "matchpattern": {
               "type": "MONSTER"
             },
-            "triggername": "start_turn",
+            "triggername": "start_stage",
             "triggerstage": "initial",
 
             "statmod": {
@@ -1431,7 +1431,7 @@
           "activateCode": "ManaGenerate",
           "triggerCode": "TriggerStage",
           "metadata": {
-            "triggername": "start_turn",
+            "triggername": "start_stage",
             "triggerstage": "initial",
             "color": "A",
             "amount": 1
@@ -1637,7 +1637,21 @@
           "P": ""
         }
       },
-      "abilities": [],
+      "abilities": [
+        {
+          "triggerType": "AUTOMATIC",
+          "activateCode": "ManaGenerate",
+          "triggerCode": "TriggerStage",
+          "metadata": {
+            "triggername": "start_stage",
+            "triggerstage": "resolve",
+            "color": "A",
+            "amount": 2
+          },
+          "abilityName": "Magical Army",
+          "abilityText": "At end of turn, gain 2(A)"
+        }
+      ],
       "owner": "0"
     },
     "slimevalley": {
@@ -1665,7 +1679,27 @@
           "P": ""
         }
       },
-      "abilities": [],
+      "abilities": [
+        {
+          "triggerType": "AUTOMATIC",
+          "targetCode": "Match",
+          "activateCode": "SpawnEntity",
+          "triggerCode": "TriggerStage",
+          "metadata": {
+            "triggername": "start_stage",
+            "triggerstage": "initial",
+            "matchplayer": "ACTIVE",
+            "matchpattern": {
+              "type": "EMPTY",
+              "allCardsPattern": "EFFECTS"
+            },
+            "cardid": "slimetrail"
+          },
+          "abilityName": "That's a lot of slime",
+          "abilityText": "At beginning of turn, spawn Slime Trails in every open effect slot.",
+          "speed": 2
+        }
+      ],
       "owner": "0"
     },
     "slimesorceress": {
@@ -1713,7 +1747,44 @@
           "P": 0
         }
       },
-      "abilities": [],
+      "abilities": [
+        {
+          "triggerType": "AUTOMATIC",
+          "targetCode": "Match",
+          "activateCode": "SpawnEntity",
+          "triggerCode": "TriggerStage",
+          "metadata": {
+            "triggername": "start_stage",
+            "triggerstage": "resolve",
+            "matchplayer": "ACTIVE",
+            "matchone": true,
+            "matchpattern": {
+              "type": "EMPTY",
+              "allCardsPattern": "MONSTER"
+            },
+            "cardid": "slimefriend"
+          },
+          "abilityName": "All My Slime Friends!",
+          "abilityText": "At the beginning of your turn, spawn a Slime Friend in an open monster slot",
+          "speed": 2
+        },
+        {
+          "triggerType": "COMBAT_MODIFIER",
+          "targetCode": "Match",
+          "metadata": {
+            "matchplayer": "OWNER",
+            "combatCodes": ["SLIPPERY"],
+            "matchpattern": {
+              "subtype": "SLIME",
+              "allCardsPattern": "MONSTER"
+            },
+            "cardid": "slimefriend"
+          },
+          "abilityName": "It's slurprisingly slimple",
+          "abilityText": "Slimes have (slippery) Slippery",
+          "speed": 2
+        }
+      ],
       "expansion": "base"
     },
 
@@ -1721,24 +1792,24 @@
       "playerID": "",
       "startingResource": {
         "mana": {
-          "V": 1,
-          "A": 1,
-          "P": 1
+          "V": 0,
+          "A": 0,
+          "P": 0
         },
         "intrinsic": {
-          "health": 300
+          "health": 250
         }
       },
       "resourcePerTurn": {
         "mana": {
-          "V": 1,
-          "A": 1,
-          "P": 1
+          "V": 0,
+          "A": 0,
+          "P": 0
         }
       },
-      "startingHand": 1,
-      "drawPerTurn": 1,
-      "maxHand": 5,
+      "startingHand": 5,
+      "drawPerTurn": 3,
+      "maxHand": 8,
       "expansion": "base",
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
@@ -1763,18 +1834,26 @@
           "P": ""
         }
       },
-      "abilities": []
+      "abilities": [
+        {
+          "triggerType": "TEXT",
+          "metadata": {},
+          "abilityName": "Take a Look, Read a Book",
+          "abilityText": "Start with more cards, draw more cards, but gain no mana.",
+          "speed": 2
+        }
+      ]
     },
-    "cyberdruid": {
+    "mxears": {
       "playerID": "",
       "startingResource": {
         "mana": {
-          "V": 1,
-          "A": 1,
-          "P": 1
+          "V": 0,
+          "A": 0,
+          "P": 0
         },
         "intrinsic": {
-          "health": 300
+          "health": 200
         }
       },
       "resourcePerTurn": {
@@ -1784,7 +1863,7 @@
           "P": 1
         }
       },
-      "startingHand": 1,
+      "startingHand": 2,
       "drawPerTurn": 1,
       "maxHand": 5,
       "expansion": "base",
@@ -1793,9 +1872,9 @@
       "subtype": "",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "Mx Ears, Skyrian P.I.",
+      "name": "Administrator T",
       "picture": "persona.jpg",
-      "cardtext": "",
+      "cardtext": "Match begins in sixty seconds.",
       "type": "PERSONA",
       "sac": {
         "mana": {
@@ -1811,7 +1890,34 @@
           "P": ""
         }
       },
-      "abilities": []
+      "abilities": [
+        {
+          "triggerType": "AUTOMATIC",
+          "activateCode": "ManaGenerate",
+          "triggerCode": "TriggerStage",
+          "metadata": {
+            "triggername": "start_stage",
+            "triggerstage": "initial",
+            "color": "A",
+            "amount": 1
+          },
+          "abilityName": "Capture the Flag",
+          "abilityText": "3(A) Your opponent discards a card."
+        },
+        {
+          "triggerType": "AUTOMATIC",
+          "activateCode": "ManaGenerate",
+          "triggerCode": "TriggerStage",
+          "metadata": {
+            "triggername": "start_stage",
+            "triggerstage": "initial",
+            "color": "A",
+            "amount": 1
+          },
+          "abilityName": "Meet the Team",
+          "abilityText": "3(A) You draw a card."
+        }
+      ]
     },
     "necro": {
       "expansion": "base",
@@ -3691,8 +3797,10 @@
           "triggerType": "AUTOMATIC",
           "targetCode": "Match",
           "activateCode": "GainLife",
-
+          "triggerCode": "TriggerStage",
           "metadata": {
+            "triggername": "resolve",
+            "triggerstage": "initial",
             "matchplayer": "OWNER",
             "matchpattern": {
               "type": "MONSTER"

@@ -23,6 +23,7 @@ enum TriggerType {
   CONSTANT_FILTERED = "CONSTANT_FILTERED",
   ACTIVATED_CHAIN = "ACTIVATED_CHAIN",
   COMBAT_MODIFIER = "COMBAT_MODIFIER",
+  TEXT = "TEXT",
 }
 
 enum AbilitySpeed {
@@ -35,7 +36,7 @@ enum AbilitySpeed {
   "F" = 10,
 }
 enum TriggerNames {
-  START_TURN = "start_turn",
+  START_STAGE = "start_stage",
   END_STAGE = "end_stage",
   END_TURN = "end_turn",
   ON_DESTROY = "destroy",

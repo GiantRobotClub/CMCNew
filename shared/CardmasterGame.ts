@@ -361,6 +361,7 @@ export const CardmasterConflict: Game<CMCGameState> = {
             G.wait = false;
             G.gameStarted = true;
             //time to start the game
+
             events.endPhase();
           }
         },
@@ -374,7 +375,9 @@ export const CardmasterConflict: Game<CMCGameState> = {
         // sjhuffle decks
         G.secret.decks["0"] = random.Shuffle(G.secret.decks["0"]);
         G.secret.decks["1"] = random.Shuffle(G.secret.decks["1"]);
-
+        if (random.D6() % 2) {
+          PlayerIDs.reverse(); // swap turn order.
+        }
         // go through every card and reset the guids to something random
         for (const playerno in PlayerIDs) {
           for (const card in G.secret.decks[playerno]) {
@@ -413,7 +416,7 @@ export const CardmasterConflict: Game<CMCGameState> = {
         order: TurnOrder.CUSTOM(PlayerIDs), // anyone else is a spectator
         onBegin: ({ G, ctx, events, random }) => {
           if (ctx.activePlayers !== null) {
-            TriggerAuto(TriggerNames.START_TURN, ctx, G, random, events);
+            TriggerAuto(TriggerNames.START_STAGE, ctx, G, random, events);
 
             const activePlayer = GetActivePlayer(ctx);
             // do turn mana, unless this is the first turn, then do initial mana and hand

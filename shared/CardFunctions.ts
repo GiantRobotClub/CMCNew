@@ -631,7 +631,7 @@ export function Match(args: AbilityFunctionArgs): Targets {
     return [];
   }
   const targets: CMCCard[] = ValidTargets(args, AllCards(G).allinplay);
-  const realtargets: CMCCard[] = [];
+  let realtargets: CMCCard[] = [];
   let found = false;
   for (const target of targets) {
     if (ability.metadata.matchplayer) {
@@ -679,6 +679,9 @@ export function Match(args: AbilityFunctionArgs): Targets {
       }
     }
     realtargets.push(target);
+  }
+  if (ability.metadata.matchone) {
+    realtargets = realtargets.slice(1);
   }
   return realtargets;
 }
