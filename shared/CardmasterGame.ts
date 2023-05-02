@@ -401,7 +401,14 @@ export const CardmasterConflict: Game<CMCGameState> = {
         // this is the beginning of the game
         for (const playerno in PlayerIDs) {
           const player: CMCPlayer = G.playerData[playerno];
-          const okay = DrawCard(playerno, player.persona.startingHand, G);
+          const okay = DrawCard(
+            playerno,
+            player.persona.startingHand,
+            G,
+            ctx,
+            random,
+            events
+          );
           if (!okay) {
             console.log("player lost due to draw out during inital setup");
             G.loser = playerno;

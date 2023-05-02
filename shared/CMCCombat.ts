@@ -13,6 +13,7 @@ import {
 import { CardType } from "./Constants";
 import { CardScan, DamageResult, DealDamage } from "./LogicFunctions";
 import { EventsAPI } from "boardgame.io/src/plugins/plugin-events";
+import { TriggerCard, TriggerNames } from "./Abilities";
 
 interface CMCCombatant {
   attacker: CMCMonsterCard;
@@ -97,7 +98,22 @@ function ResolveCombat(
       "attack" in resolution.defender
     ) {
       // attacker->defender damage for agility
-
+      TriggerCard(
+        TriggerNames.PRECOMBAT,
+        ctx,
+        resolution.attacker,
+        G,
+        random,
+        events
+      );
+      TriggerCard(
+        TriggerNames.PRECOMBATDEF,
+        ctx,
+        resolution.defender,
+        G,
+        random,
+        events
+      );
       // check card state
       //  defender->attacker damage
       const moddef = GetModifiedStatCard(
@@ -152,6 +168,23 @@ function ResolveCombat(
         G
       );
     }
+
+    TriggerCard(
+      TriggerNames.POSTCOMBAT,
+      ctx,
+      resolution.attacker,
+      G,
+      random,
+      events
+    );
+    TriggerCard(
+      TriggerNames.POSTCOMBATDEF,
+      ctx,
+      resolution.defender,
+      G,
+      random,
+      events
+    );
     // add results
     const result: CMCCombatResult = {
       attacker: resolvedatk,

@@ -326,7 +326,7 @@ export function ManaGenerate(args: AbilityFunctionArgs): Targets {
 }
 
 export function DrawACard(args: AbilityFunctionArgs): Targets {
-  const { card, G, ability, ctx, target } = args;
+  const { card, G, ability, ctx, target, random, events } = args;
   if (!ability) {
     return [];
   }
@@ -337,10 +337,17 @@ export function DrawACard(args: AbilityFunctionArgs): Targets {
   const doop: boolean = ability.metadata.opponent;
   let playerid = OwnerOf(card, G);
   if (doyou) {
-    DrawCard(playerid, ability.metadata.amount, G);
+    DrawCard(playerid, ability.metadata.amount, G, ctx, random!, events!);
   }
   if (doop) {
-    DrawCard(OtherPlayer(playerid), ability.metadata.amount, G);
+    DrawCard(
+      OtherPlayer(playerid),
+      ability.metadata.amount,
+      G,
+      ctx,
+      random!,
+      events!
+    );
   }
 
   return card;

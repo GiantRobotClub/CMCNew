@@ -42,10 +42,13 @@ enum TriggerNames {
   ON_DESTROY = "destroy",
   ON_PLAY = "play",
   SPELL = "spell",
+  ABILITY = "ability",
+  ABILITYTARGET = "abilitytarget",
   PRECOMBAT = "precombat",
   POSTCOMBAT = "postcombat",
   PRECOMBATDEF = "precombatdef",
   POSTCOMBATDEF = "postcombatdef",
+  DRAW = "drawcard",
 }
 
 interface CombatCode {
@@ -381,6 +384,28 @@ function ActivateAbility(
           console.error("Did not pass " + abilityFunc);
           return false;
         }
+        if (Array.isArray(target)) {
+          for (const card of target) {
+            TriggerCard(
+              TriggerNames.ABILITYTARGET,
+              ctx,
+              card,
+              G,
+              random,
+              events
+            );
+          }
+        } else if (target) {
+          TriggerCard(
+            TriggerNames.ABILITYTARGET,
+            ctx,
+            target,
+            G,
+            random,
+            events
+          );
+        }
+        TriggerCard(TriggerNames.ABILITY, ctx, card, G, random, events);
       }
       //console.log(newG);
     }
@@ -415,6 +440,8 @@ function ActivateAbility(
       // put the card in the graveyard and out of your hand
       AddToGraveyard(card, G);
       RemoveFromHand(card, cardowner, G);
+
+      TriggerCard(TriggerNames.SPELL, ctx, card, G, random, events);
     }
     if (ability.metadata.chain !== undefined) {
       // run another ability afterwards.

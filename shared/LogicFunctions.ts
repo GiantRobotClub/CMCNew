@@ -30,7 +30,10 @@ import { AbilityFunctionArgs } from "./CardFunctions";
 function DrawCard(
   playerId: string,
   cardcount: number,
-  G: CMCGameState
+  G: CMCGameState,
+  ctx: Ctx,
+  random: RandomAPI,
+  events: EventsAPI
 ): boolean {
   if (G.secret.decks[playerId].length < cardcount) {
     //get milled idiot
@@ -39,6 +42,8 @@ function DrawCard(
   for (let i = 0; i < cardcount; i++) {
     const card = G.secret.decks[playerId].pop();
     G.players[playerId].hand.push(card);
+
+    TriggerCard(TriggerNames.DRAW, ctx, card, G, random, events);
   }
 
   return true;
@@ -321,7 +326,7 @@ function PlayEntity(
     console.error("cannot remove from hand");
     return false;
   }
-
+  TriggerCard(TriggerNames.ON_PLAY, ctx, card, G, random, events);
   return G;
 }
 
@@ -729,6 +734,7 @@ function Discard(
     return false;
   }
   AddToGraveyard(card, G);
+
   return true;
 }
 function Sacrifice(

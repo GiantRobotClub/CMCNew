@@ -69,7 +69,14 @@ const passStage: Move<CMCGameState> = ({ G, ctx, events, random }) => {
   if (GetActiveStage(ctx) == Stages.initial) {
     // going into draw phase
     const player: CMCPlayer = G.playerData[activePlayer];
-    const okay = DrawCard(activePlayer, player.persona.drawPerTurn, G);
+    const okay = DrawCard(
+      activePlayer,
+      player.persona.drawPerTurn,
+      G,
+      ctx,
+      random,
+      events
+    );
     Undizzy(activePlayer, G, ctx);
 
     if (!okay) {
