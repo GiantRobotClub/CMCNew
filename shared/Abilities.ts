@@ -44,6 +44,8 @@ enum TriggerNames {
   SPELL = "spell",
   PRECOMBAT = "precombat",
   POSTCOMBAT = "postcombat",
+  PRECOMBATDEF = "precombatdef",
+  POSTCOMBATDEF = "postcombatdef",
 }
 
 interface CombatCode {
@@ -311,7 +313,7 @@ function ResolveStack(
   }
   G.lastAbilityStack = [];
 
-  CardScan(G, random);
+  CardScan(G, random, ctx, events);
 }
 function ActivateAbility(
   card: CMCCard,
@@ -437,7 +439,7 @@ function ActivateAbility(
       return false;
     }
   }
-  CardScan(G, random);
+  CardScan(G, random, ctx, events);
   return true;
 }
 
@@ -483,6 +485,30 @@ function TriggerAuto(
   if (ctx.activePlayers !== null) {
     Ability_Trigger(
       {
+        name: name,
+        stage: ctx.activePlayers[ctx.currentPlayer],
+        triggeringPlayer: ctx.currentPlayer,
+      },
+      G,
+      ctx,
+      random,
+      events
+    );
+  }
+}
+
+function TriggerCard(
+  name: string,
+  ctx: Ctx,
+  target: CMCCard,
+  G: CMCGameState,
+  random: RandomAPI,
+  events: EventsAPI
+): void {
+  if (ctx.activePlayers !== null) {
+    Ability_Trigger(
+      {
+        triggeringcard: target,
         name: name,
         stage: ctx.activePlayers[ctx.currentPlayer],
         triggeringPlayer: ctx.currentPlayer,
@@ -570,4 +596,5 @@ export {
   Targets,
   ValidTargets,
   GetModifiedCopy,
+  TriggerCard,
 };

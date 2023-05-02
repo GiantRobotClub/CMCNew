@@ -12,6 +12,7 @@ import {
 } from "./CMCCard";
 import { CardType } from "./Constants";
 import { CardScan, DamageResult, DealDamage } from "./LogicFunctions";
+import { EventsAPI } from "boardgame.io/src/plugins/plugin-events";
 
 interface CMCCombatant {
   attacker: CMCMonsterCard;
@@ -49,7 +50,12 @@ function StartCombatPhase(): CMCCombat {
 
 // do combat calculations including damage
 
-function ResolveCombat(G: CMCGameState, ctx: Ctx, random: RandomAPI) {
+function ResolveCombat(
+  G: CMCGameState,
+  ctx: Ctx,
+  random: RandomAPI,
+  events: EventsAPI
+) {
   if (G.combat === undefined) {
     // combat is not ready, return.
     return false;
@@ -153,7 +159,7 @@ function ResolveCombat(G: CMCGameState, ctx: Ctx, random: RandomAPI) {
     };
     fullresults.results.push(result);
   }
-  CardScan(G, random);
+  CardScan(G, random, ctx, events);
   // complete
   G.resolution = fullresults;
 }

@@ -135,7 +135,7 @@ const passStage: Move<CMCGameState> = ({ G, ctx, events, random }) => {
       events.setActivePlayers({ others: Stages.defense });
     }
   } else if (GetActiveStage(ctx) == Stages.defense) {
-    ResolveCombat(G, ctx, random);
+    ResolveCombat(G, ctx, random, events);
     events.setActivePlayers({ currentPlayer: Stages.resolve });
     events.endStage();
   } else if (GetActiveStage(ctx) == Stages.resolve) {
@@ -494,7 +494,7 @@ const pickEntity: Move<CMCGameState> = (
     if (!CanClickCard(card, playerId, clickType, ctx, G)) {
       return INVALID_MOVE;
     }
-    if (!Sacrifice(card, G, ctx, random)) {
+    if (!Sacrifice(card, G, ctx, random, events)) {
       return INVALID_MOVE;
     }
   }

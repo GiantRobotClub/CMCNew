@@ -22,7 +22,7 @@ import {
   RandomAPI,
 } from "boardgame.io/dist/types/src/plugins/random/random";
 import { GetActivePlayer, GetActiveStage } from "./Util";
-import { CanActivateAbility } from "./Abilities";
+import { CanActivateAbility, TriggerCard, TriggerNames } from "./Abilities";
 import { EventsAPI } from "boardgame.io/dist/types/src/plugins/plugin-events";
 import { AbilityFunctionArgs } from "./CardFunctions";
 
@@ -86,7 +86,12 @@ interface DamageResult {
 }
 
 // check if any card needs updating, eg: is destroyed
-function CardScan(G: CMCGameState, random: RandomAPI): void {
+function CardScan(
+  G: CMCGameState,
+  random: RandomAPI,
+  ctx: Ctx,
+  events: EventsAPI
+): void {
   for (const slotplayer in G.slots) {
     for (const subplayer in G.slots[slotplayer]) {
       for (const [index, card] of G.slots[slotplayer][subplayer].entries()) {
@@ -97,6 +102,7 @@ function CardScan(G: CMCGameState, random: RandomAPI): void {
 
         // is it dead
         if (entity.destroyed) {
+          TriggerCard(TriggerNames.ON_DESTROY, ctx, entity, G, random, events);
           // add monster to graveyard
           AddToGraveyard(entity, G);
           //new slot
@@ -729,7 +735,8 @@ function Sacrifice(
   card: CMCCard,
   G: CMCGameState,
   ctx: Ctx,
-  random: RandomAPI
+  random: RandomAPI,
+  events: EventsAPI
 ) {
   if (GetActivePlayer(ctx) != OwnerOf(card, G)) {
     return false;
@@ -751,7 +758,7 @@ function Sacrifice(
       }
     }
   }
-  CardScan(G, random);
+  CardScan(G, random, ctx, events);
   return true;
 }
 
