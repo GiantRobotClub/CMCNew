@@ -179,6 +179,7 @@ function CreateEffectCard(): CMCEffectCard {
   return card;
 }
 function GetCardPrototype(name: string): CMCCard {
+  console.log("card id", name);
   const newprototype = JSON.parse(JSON.stringify(prototypes[name]));
 
   newprototype.original = prototypes[name];

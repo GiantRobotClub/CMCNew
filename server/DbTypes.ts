@@ -1,11 +1,3 @@
-interface DbPlayer {
-  playerid: string;
-  username: string;
-  visualname: string;
-  authenticationcode: string;
-  selecteddeck: string;
-}
-
 interface DbDeck {
   deckid: string;
   ownerid: string;
@@ -23,6 +15,13 @@ interface DbOwnedCard {
   playerid: string;
   cardid: string;
   amount: number;
+}
+interface DbPlayer {
+  playerid: string;
+  username: string;
+  visualname: string;
+  authenticationcode: string;
+  selecteddeck: string;
 }
 
 interface DbFullDeck {
@@ -51,9 +50,9 @@ export {
   DbDeck,
   DbFullDeck,
   DbOwnedCard,
-  DbPlayer,
   DbDeckCard,
   DbCraftingMat,
   DbCraftingMats,
   DbCompletion,
+  DbPlayer,
 };

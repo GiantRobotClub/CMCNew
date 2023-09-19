@@ -20,6 +20,12 @@
       "persona": "farisin",
       "deckicon": "default",
       "cards": [{ "cardid": "debugslime", "amount": 75 }]
+    },
+    "premade-slimequeen": {
+      "deckname": "Debug Deck",
+      "persona": "slimesorceress",
+      "deckicon": "slime",
+      "cards": [{ "cardid": "debugslime", "amount": 75 }]
     }
   }
 }

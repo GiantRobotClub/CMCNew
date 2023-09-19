@@ -39,9 +39,16 @@ import { CMCPlayer } from "./Player";
 import { GetActivePlayer, GetActiveStage, OtherPlayer } from "./Util";
 
 // go to next turn, must be in resolve state.
-const passTurn: Move<CMCGameState> = ({ G, ctx, events }) => {
+const passTurn: Move<CMCGameState> = ({ G, ctx, events, random }) => {
   resetActive(G);
-  events.endTurn();
+  if (
+    G.playerData[GetActivePlayer(ctx)].persona.maxHand <
+    G.players[GetActivePlayer(ctx)].hand.length
+  ) {
+    ForceDiscard(true, GetActivePlayer(ctx), G, ctx, random, events);
+  } else {
+    events.endTurn();
+  }
 };
 
 // move to next stage and handle the new stage's start
@@ -285,6 +292,12 @@ const cancel: Move<CMCGameState> = ({ G, ctx, events }, playerId: string) => {
     if (Stages.pickCombatTarget && G.returnStage.length == 0) {
       console.error("This is a bad state, getting out of it");
       events.setStage(Stages.combat);
+    } else {
+      const returnStage = G.returnStage.pop();
+      if (!returnStage) {
+        return INVALID_MOVE;
+      }
+      events.setStage(returnStage);
     }
   } else if (
     GetActiveStage(ctx) == Stages.defense ||
@@ -352,7 +365,7 @@ const pickEntity: Move<CMCGameState> = (
   }
   // determine based on state
   if (GetActiveStage(ctx) == Stages.combat) {
-    if (G.abilityStack) {
+    if (G.abilityStack && G.abilityStack.length > 0) {
       // cant go to combat target stage without resolving first.
       return INVALID_MOVE;
     }
@@ -583,7 +596,7 @@ const StagesDefiniton = {
   combat: {
     moves: {
       playCardFromHand: playCardFromHand,
-      activateAbility: activateAbility,
+      // activateAbility: activateAbility,
       passStage: passStage,
       pickEntity: pickEntity,
       cancel: cancel,
@@ -594,7 +607,7 @@ const StagesDefiniton = {
   defense: {
     moves: {
       playCardFromHand: playCardFromHand,
-      activateAbility: activateAbility,
+      //  activateAbility: activateAbility,
       passStage: passStage,
       pickEntity: pickEntity,
       cancel: cancel,
@@ -605,7 +618,7 @@ const StagesDefiniton = {
   resolve: {
     moves: {
       playCardFromHand: playCardFromHand,
-      activateAbility: activateAbility,
+      //    activateAbility: activateAbility,
       passTurn: passTurn,
     },
     next: Stages.draw,

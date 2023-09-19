@@ -136,7 +136,7 @@ export const CardmasterConflict: Game<CMCGameState> = {
       "1": CreateDefaultPlayer("1"),
     };
     let gamemode = GameMode.NORMAL;
-    if (setupData.hasOwnProperty("gamemode")) {
+    if (setupData && setupData.hasOwnProperty("gamemode")) {
       gamemode = setupData.gamemode;
     }
     return {
@@ -384,6 +384,12 @@ export const CardmasterConflict: Game<CMCGameState> = {
             G.secret.decks[playerno][card].guid = GenerateRandomGuid(random);
           }
           G.playerData[playerno].persona.guid = GenerateRandomGuid(random);
+          console.log(
+            "PLAYER:",
+            playerno,
+            "GUID:",
+            G.playerData[playerno].persona.guid
+          );
         }
 
         for (const slotplayer in G.slots) {
@@ -423,7 +429,7 @@ export const CardmasterConflict: Game<CMCGameState> = {
         order: TurnOrder.CUSTOM(PlayerIDs), // anyone else is a spectator
         onBegin: ({ G, ctx, events, random }) => {
           if (ctx.activePlayers !== null) {
-            TriggerAuto(TriggerNames.START_STAGE, ctx, G, random, events);
+            TriggerAuto(TriggerNames.START_TURN, ctx, G, random, events);
 
             const activePlayer = GetActivePlayer(ctx);
             // do turn mana, unless this is the first turn, then do initial mana and hand
@@ -438,12 +444,6 @@ export const CardmasterConflict: Game<CMCGameState> = {
           if (ctx.activePlayers !== null) {
             TriggerAuto(TriggerNames.END_STAGE, ctx, G, random, events);
             TriggerAuto(TriggerNames.END_TURN, ctx, G, random, events);
-            if (
-              G.playerData[GetActivePlayer(ctx)].persona.maxHand <
-              G.players[GetActivePlayer(ctx)].hand.length
-            ) {
-              ForceDiscard(true, GetActivePlayer(ctx), G, ctx, random, events);
-            }
           }
 
           resetCombat(G);

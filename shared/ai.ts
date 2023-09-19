@@ -97,24 +97,29 @@ function AllowedMoveVariants(
     case "pickEntity": {
       // go through all entities and check if you can click
       for (const card of AllCards(G).allinplay) {
-        if (OwnerOf(card, G) == activeplayer) {
-          if (card.type != CardType.EMPTY) {
-            if (card.type == CardType.MONSTER) {
-              if (CanClickCard(card, activeplayer, ClickType.MONSTER, ctx, G)) {
-                if (isSmart(card, stage, G, playerid))
-                  addmove([card, activeplayer]);
-              }
+        if (card.type == CardType.PERSONA) {
+          console.log("target of persona ", card);
+        }
+        if (card.type != CardType.EMPTY) {
+          if (card.type == CardType.MONSTER) {
+            if (CanClickCard(card, activeplayer, ClickType.MONSTER, ctx, G)) {
+              if (isSmart(card, stage, G, playerid))
+                addmove([card, activeplayer]);
             }
-            if (card.type == CardType.EFFECT) {
-              if (CanClickCard(card, activeplayer, ClickType.EFFECT, ctx, G)) {
-                if (isSmart(card, stage, G, playerid))
-                  addmove([card, activeplayer]);
-              }
+          }
+          if (card.type == CardType.EFFECT) {
+            if (CanClickCard(card, activeplayer, ClickType.EFFECT, ctx, G)) {
+              if (isSmart(card, stage, G, playerid))
+                addmove([card, activeplayer]);
             }
-            if (card.type == CardType.PERSONA) {
-              if (CanClickCard(card, activeplayer, ClickType.PERSONA, ctx, G)) {
-                if (isSmart(card, stage, G, playerid))
-                  addmove([card, activeplayer]);
+          }
+          if (card.type == CardType.PERSONA) {
+            console.log("A");
+            if (CanClickCard(card, activeplayer, ClickType.PERSONA, ctx, G)) {
+              console.log("B");
+              if (isSmart(card, stage, G, playerid)) {
+                console.log("C");
+                addmove([card, activeplayer]);
               }
             }
           }
@@ -167,18 +172,20 @@ function AllowedMoveVariants(
 const ai = {
   enumerate: (G: CMCGameState, ctx: Ctx, playerid: string) => {
     let moves: moveshape[] = [];
-
+    console.log("CTX", ctx);
     const stage = GetActiveStage(ctx);
     const activeplayer = GetActivePlayer(ctx);
 
     if (activeplayer != playerid) {
       console.error("You are not active anyway");
     }
-
+    console.log("Stages Definition", StagesDefiniton, stage);
     if (StagesDefiniton.hasOwnProperty(stage)) {
+      console.log("stage", stage);
       const stagedef = StagesDefiniton[stage];
       if (stagedef.hasOwnProperty("moves")) {
         const movelist = stagedef["moves"];
+        console.log("movelist", movelist);
         const allowedmoves = Object.keys(movelist);
         // check if each possible move is allowed.
         for (const movename of allowedmoves) {
@@ -193,6 +200,7 @@ const ai = {
         }
       }
     }
+    console.log("move variants: ", moves);
     return moves;
   },
 };

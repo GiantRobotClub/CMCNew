@@ -134,14 +134,14 @@ export function DefaultCost(args: AbilityFunctionArgs): Targets {
   const fullplayer: CMCPlayer = G.playerData[cardowner];
 
   if (!fullplayer) {
-    console.log("no full player");
+    //console.log("no full player");
     return [];
   }
   const modcard = GetModifiedStatCard(card, G, ctx);
   for (const check in modcard.cost) {
     for (const sub in modcard.cost[check]) {
       if (fullplayer.resources[check][sub] < modcard.cost[check][sub]) {
-        console.log("Cant play " + modcard.name);
+        //console.log("Cant play " + modcard.name);
         return [];
       }
     }
@@ -163,7 +163,7 @@ export function DiscardCost(args: AbilityFunctionArgs): Targets {
   const fullplayer: CMCPlayer = G.playerData[cardowner];
 
   if (!fullplayer) {
-    console.log("no full player");
+    //console.log("no full player");
     return [];
   }
 
@@ -190,7 +190,7 @@ export function ResourceCost(args: AbilityFunctionArgs): Targets {
   const fullplayer: CMCPlayer = G.playerData[cardowner];
 
   if (!fullplayer) {
-    console.log("no full player");
+    //console.log("no full player");
     return [];
   }
   if (!ability || !ability.metadata || !ability.metadata.cost) {
@@ -206,6 +206,9 @@ export function ResourceCost(args: AbilityFunctionArgs): Targets {
 }
 
 function ApplyRecursion(target: any, stats: any, add: boolean) {
+  if (!target) {
+    return target;
+  }
   if (typeof stats == "object") {
     for (const [key, value] of Object.entries(stats)) {
       ApplyRecursion(target[key], value, add);
@@ -374,7 +377,7 @@ export function TriggerStage(args: AbilityFunctionArgs): Targets {
   if (trigger.name != ability.metadata.triggername) {
     return [];
   }
-  return G.location;
+  return AllCards(G).all;
 }
 
 export function TriggerIntoPlay(args: AbilityFunctionArgs): Targets {
@@ -406,7 +409,7 @@ export function LifeGain(args: AbilityFunctionArgs): Targets {
   const realtargets: CMCCard[] = [];
   for (const target of targets) {
     if (![CardType.PERSONA, CardType.MONSTER].includes(target.type)) {
-      console.log("isnt persona or");
+      //console.log("isnt persona or");
       continue;
     }
     if (IsMonster(target) || IsPersona(target)) {
@@ -428,17 +431,24 @@ export function SpawnEntity(args: AbilityFunctionArgs): Targets {
   if (!ability) {
     return [];
   }
+  console.log("targets:", target);
   const playablecard = GetCardPrototype(ability.metadata.cardid);
+  const count = ability.metadata.count ?? 1;
   const targets: CMCCard[] = ValidTargets(args, AllCards(G).field);
+  let curcount = 0;
   for (const target of targets) {
     if (target.type != CardType.EMPTY) {
-      return [];
+      continue;
     }
     const thiscard: CMCEntityCard = JSON.parse(JSON.stringify(playablecard));
     thiscard.guid = nanoid();
     thiscard.status.token = true;
 
-    PlaceCard(card, target, OwnerOf(target, G), G);
+    PlaceCard(playablecard, target, OwnerOf(target, G), G);
+    curcount++;
+    if (curcount >= count) {
+      break;
+    }
   }
   return realtargs;
 }
@@ -478,7 +488,7 @@ export function DamageTarget(args: AbilityFunctionArgs): Targets {
   let found = false;
   for (const target of targets) {
     if (![CardType.PERSONA, CardType.MONSTER].includes(target.type)) {
-      console.log("isnt persona or");
+      //console.log("isnt persona or");
       continue;
     }
     if (IsMonster(target) || IsPersona(target)) {
@@ -580,7 +590,7 @@ export function Bounce(args: AbilityFunctionArgs): Targets {
   let found = false;
   for (const target of targets) {
     if (![CardType.PERSONA, CardType.MONSTER].includes(target.type)) {
-      console.log("isnt persona or");
+      //console.log("isnt persona or");
       continue;
     }
     if (IsMonster(target) || IsPersona(target)) {

@@ -33,7 +33,7 @@ function ParseDbDeck(playerid: string, deck: DbFullDeck, G: CMCGameState) {
       newDeck.push(JSON.parse(JSON.stringify(GetCardPrototype(card.cardid))));
     }
   });
-  console.dir(playerid, newDeck);
+  //console.dir(playerid, newDeck);
   G.secret.decks[playerid] = newDeck;
 }
 

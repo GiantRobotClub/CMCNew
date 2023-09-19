@@ -9,7 +9,6 @@ import {
   OwnerOf,
   RemoveFromHand,
 } from "./LogicFunctions";
-import { dataToEsm } from "@rollup/pluginutils";
 import { CardType } from "./Constants";
 import { Random, RandomAPI } from "boardgame.io/src/plugins/random/random";
 import { EventsAPI } from "boardgame.io/src/plugins/events/events";
@@ -36,7 +35,7 @@ enum AbilitySpeed {
   "F" = 10,
 }
 enum TriggerNames {
-  START_STAGE = "start_stage",
+  START_TURN = "start_turn",
   END_STAGE = "end_stage",
   END_TURN = "end_turn",
   ON_DESTROY = "destroy",
@@ -147,7 +146,11 @@ function handleTrigger(
         target: undefined,
         dry: false,
       };
-      if (triggerFunc(args)) {
+      let triggerResult = triggerFunc(args);
+      if (
+        (Array.isArray(triggerResult) && triggerResult.length > 0) ||
+        (!Array.isArray(triggerResult) && triggerResult)
+      ) {
         if (ability.activateCode) {
           var codearray: string[] = [];
           if (Array.isArray(ability.activateCode)) {
@@ -155,7 +158,9 @@ function handleTrigger(
           } else {
             codearray = [ability.activateCode];
           }
+
           for (const code of codearray) {
+            //console.log("Ability code", code);
             const abilityFunc: Function = CardFunctions[code];
             const args: AbilityFunctionArgs = {
               card: card,
@@ -166,7 +171,9 @@ function handleTrigger(
               ctx: ctx,
               random: random,
               events: events,
-              target: undefined,
+              target: trigger_data.triggeringcard
+                ? trigger_data.triggeringcard
+                : [],
               dry: false,
             };
             abilityFunc(args);
@@ -561,10 +568,17 @@ function ValidTargets(args: AbilityFunctionArgs, possible: CMCCard[]) {
     return [];
   }
   const targets: CMCCard[] = [];
-  if (!target) {
-    // no base target so let's create it based on the 'truth'
 
-    targets.push(...possible);
+  if (!target || (Array.isArray(target) && target.length == 0)) {
+    if (ability.targetCode) {
+      args.target = possible;
+      const targetFunc: Function = CardFunctions[ability.targetCode];
+      const newTargets = targetFunc(args);
+      targets.push(...newTargets);
+    }
+
+    // no base target so let's create it based on the 'truth'
+    else targets.push(...possible);
   } else {
     targets.push(...(Array.isArray(target) ? target : [target]));
   }
@@ -595,8 +609,11 @@ function GetModifiedCopy(card: CMCCard, G: CMCGameState, ctx: Ctx) {
           const activatecode = Array.isArray(ability.activateCode)
             ? ability.activateCode
             : [ability.activateCode];
-          for (const code in activatecode) {
+          //console.log("Ability ", ability, activatecode);
+          for (const code of activatecode) {
+            //console.log("Got code ", code);
             const applyFunc: Function = CardFunctions[code];
+            //console.log("Ability apply", code, applyFunc, args);
             applyFunc(args);
           }
         }

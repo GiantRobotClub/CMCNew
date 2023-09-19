@@ -217,6 +217,71 @@
       "expansion": "base"
     },
 
+    "slimefriend": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "slime",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Slime Friend",
+      "picture": "placeholder.jpg",
+      "cardtext": "With all the pollution, they thrived.",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "0",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "1",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "1",
+      "life": "1",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+    "gloop": {
+      "expansion": "base",
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "slime",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "Slime",
+      "picture": "placeholder.jpg",
+      "cardtext": "With all the pollution, they thrived.",
+      "type": "MONSTER",
+      "sac": {
+        "mana": {
+          "V": "",
+          "A": "0",
+          "P": ""
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": "",
+          "A": "0",
+          "P": ""
+        }
+      },
+      "abilities": [],
+      "attack": "5",
+      "life": "5",
+      "dizzy": true,
+      "destroyed": false,
+      "status": {}
+    },
+
     "slime": {
       "expansion": "base",
       "alignment": "ANODYNE",
@@ -1754,18 +1819,19 @@
           "activateCode": "SpawnEntity",
           "triggerCode": "TriggerStage",
           "metadata": {
-            "triggername": "start_stage",
+            "triggername": "end_turn",
             "triggerstage": "resolve",
-            "matchplayer": "ACTIVE",
+            "matchplayer": "OWNER",
             "matchone": true,
             "matchpattern": {
-              "type": "EMPTY",
-              "allCardsPattern": "MONSTER"
+              "type": "EMPTY"
             },
+
+            "allCardsPattern": "monsters",
             "cardid": "slimefriend"
           },
           "abilityName": "All My Slime Friends!",
-          "abilityText": "At the beginning of your turn, spawn a Slime Friend in an open monster slot",
+          "abilityText": "At the end of your turn, spawn a Slime Friend in an open monster slot",
           "speed": 2
         },
         {
@@ -1926,9 +1992,9 @@
       "subtype": "",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "melrak necrocultist",
+      "name": "Melrak Necrocultist",
       "picture": "placeholder.jpg",
-      "cardtext": "",
+      "cardtext": "When you stare into the Dark Web, the Dark Web stares back.",
       "type": "MONSTER",
       "sac": {
         "mana": {
@@ -1945,8 +2011,8 @@
         }
       },
       "abilities": [],
-      "attack": "",
-      "life": "",
+      "attack": "15",
+      "life": "7",
       "dizzy": true,
       "destroyed": false,
       "status": {}
@@ -3775,7 +3841,7 @@
         {
           "triggerType": "CONSTANT_FILTERED",
           "targetCode": "Match",
-          "activateCode": "DamageTarget",
+          "activateCode": "ApplyStats",
           "metadata": {
             "matchplayer": "OWNER",
             "matchpattern": {
@@ -3796,7 +3862,7 @@
         {
           "triggerType": "AUTOMATIC",
           "targetCode": "Match",
-          "activateCode": "GainLife",
+          "activateCode": "LifeGain",
           "triggerCode": "TriggerStage",
           "metadata": {
             "triggername": "resolve",
