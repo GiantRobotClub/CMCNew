@@ -651,21 +651,21 @@ export function Match(args: AbilityFunctionArgs): Targets {
   let realtargets: CMCCard[] = [];
   let found = false;
   for (const target of targets) {
-    if (ability.metadata.matchplayer) {
-      if (ability.metadata.matchplayer == TriggerPlayerType.EITHER) {
-      } else if (ability.metadata.matchplayer == TriggerPlayerType.OWNER) {
+    if (ability.metadata.matchPlayer) {
+      if (ability.metadata.matchPlayer == TriggerPlayerType.EITHER) {
+      } else if (ability.metadata.matchPlayer == TriggerPlayerType.OWNER) {
         if (cardowner != OwnerOf(target, G)) {
           continue;
         }
-      } else if (ability.metadata.matchplayer == TriggerPlayerType.OPPONENT) {
+      } else if (ability.metadata.matchPlayer == TriggerPlayerType.OPPONENT) {
         if (cardowner == OwnerOf(target, G)) {
           continue;
         }
-      } else if (ability.metadata.matchplayer == TriggerPlayerType.INACTIVE) {
+      } else if (ability.metadata.matchPlayer == TriggerPlayerType.INACTIVE) {
         if (GetActivePlayer(ctx) == OwnerOf(target, G)) {
           continue;
         }
-      } else if (ability.metadata.matchplayer == TriggerPlayerType.ACTIVE) {
+      } else if (ability.metadata.matchPlayer == TriggerPlayerType.ACTIVE) {
         if (GetActivePlayer(ctx) != OwnerOf(target, G)) {
           continue;
         }
@@ -697,7 +697,7 @@ export function Match(args: AbilityFunctionArgs): Targets {
     }
     realtargets.push(target);
   }
-  if (ability.metadata.matchone) {
+  if (ability.metadata.matchOne) {
     realtargets = realtargets.slice(1);
   }
   return realtargets;

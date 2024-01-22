@@ -501,7 +501,7 @@
           "targetCode": "Match",
           "activateCode": "SpawnCopy",
           "metadata": {
-            "matchplayer": "OWNER",
+            "matchPlayer": "OWNER",
             "matchPattern": {
               "type": "EMPTY"
             },
@@ -700,7 +700,7 @@
           "triggerType": "AUTOMATIC",
           "targetCode": "Match",
           "metadata": {
-            "matchplayer": "OPPONENT",
+            "matchPlayer": "OPPONENT",
             "matchPattern": { "type": "PERSONA" }
           },
           "abilityName": "Splash Damage",
@@ -832,7 +832,7 @@
           "activateCode": "SpawnCopy",
           "metadata": {
             "cardid": "engineer_turret",
-            "matchplayer": "OWNER",
+            "matchPlayer": "OWNER",
             "matchPattern": {
               "type": "EMPTY"
             },
@@ -978,10 +978,10 @@
           "activateCode": "Discard",
           "triggerCode": "Match",
           "metadata": {
-            "matchpattern": {
+            "matchPattern": {
               "type": "PERSONA"
             },
-            "matchplayer": "EITHER"
+            "matchPlayer": "EITHER"
           },
           "speed": 2,
           "abilityName": "Phone Preak",
@@ -1028,7 +1028,7 @@
           "activateCode": "SpawnEntity",
           "metadata": {
             "cardid": "timeslime",
-            "matchplayer": "BOTH",
+            "matchPlayer": "BOTH",
             "matchPattern": {
               "type": "EMPTY"
             },
@@ -1153,8 +1153,8 @@
           "targetCode": "Match",
           "activateCode": "DizzyTarget",
           "metadata": {
-            "matchplayer": "OWNER",
-            "matchpattern": {
+            "matchPlayer": "OWNER",
+            "matchPattern": {
               "type": "MONSTER"
             }
           },
@@ -1208,8 +1208,8 @@
           "activateCode": "DamageTarget",
           "metadata": {
             "amount": 10,
-            "matchplayer": "EITHER",
-            "matchpattern": {
+            "matchPlayer": "EITHER",
+            "matchPattern": {
               "type": "MONSTER"
             }
           },
@@ -1222,8 +1222,8 @@
           "targetCode": "Match",
           "activateCode": "ApplyStats",
           "metadata": {
-            "matchplayer": "OWNER",
-            "matchpattern": {
+            "matchPlayer": "OWNER",
+            "matchPattern": {
               "type": "MONSTER"
             },
             "triggername": "start_stage",
@@ -1242,8 +1242,8 @@
           "targetCode": "Match",
           "activateCode": "DizzyTarget",
           "metadata": {
-            "matchplayer": "EITHER",
-            "matchpattern": {
+            "matchPlayer": "EITHER",
+            "matchPattern": {
               "type": "MONSTER"
             }
           },
@@ -1447,7 +1447,7 @@
           "activateCode": "SpawnCopy",
           "metadata": {
             "cardid": "gloop",
-            "matchplayer": "OWNER",
+            "matchPlayer": "OWNER",
             "matchPattern": {
               "type": "EMPTY"
             },
@@ -1614,7 +1614,7 @@
           "metadata": {
             "triggername": "ON_PLAY",
             "triggerstage": "initial",
-            "matchplayer": "OWNER",
+            "matchPlayer": "OWNER",
             "matchPattern": {
               "type": "MONSTER"
             },
@@ -1663,7 +1663,7 @@
           "targetCode": "Match",
           "activateCode": "CopyTarget",
           "metadata": {
-            "matchpattern": {
+            "matchPattern": {
               "type": "EFFECT"
             }
           },
@@ -1753,8 +1753,8 @@
           "metadata": {
             "triggername": "start_stage",
             "triggerstage": "initial",
-            "matchplayer": "ACTIVE",
-            "matchpattern": {
+            "matchPlayer": "ACTIVE",
+            "matchPattern": {
               "type": "EMPTY",
               "allCardsPattern": "EFFECTS"
             },
@@ -1821,9 +1821,9 @@
           "metadata": {
             "triggername": "end_turn",
             "triggerstage": "resolve",
-            "matchplayer": "OWNER",
-            "matchone": true,
-            "matchpattern": {
+            "matchPlayer": "OWNER",
+            "matchOne": true,
+            "matchPattern": {
               "type": "EMPTY"
             },
 
@@ -1838,9 +1838,9 @@
           "triggerType": "COMBAT_MODIFIER",
           "targetCode": "Match",
           "metadata": {
-            "matchplayer": "OWNER",
+            "matchPlayer": "OWNER",
             "combatCodes": ["SLIPPERY"],
-            "matchpattern": {
+            "matchPattern": {
               "subtype": "SLIME",
               "allCardsPattern": "MONSTER"
             },
@@ -3843,8 +3843,8 @@
           "targetCode": "Match",
           "activateCode": "ApplyStats",
           "metadata": {
-            "matchplayer": "OWNER",
-            "matchpattern": {
+            "matchPlayer": "OWNER",
+            "matchPattern": {
               "type": "EFFECT"
             },
             "statmod": {
@@ -3867,8 +3867,8 @@
           "metadata": {
             "triggername": "resolve",
             "triggerstage": "initial",
-            "matchplayer": "OWNER",
-            "matchpattern": {
+            "matchPlayer": "OWNER",
+            "matchPattern": {
               "type": "MONSTER"
             },
             "amount": 10
