@@ -190,15 +190,16 @@ function CMCCardVisual({
     );
   }
   if (card.type == CardType.MONSTER) {
+    const monsterCard = (cardObject as CMCMonsterCard);
     attackLine = (
       <div className="attackline">
         <div className="attack">
           {icons.sword}
-          {(cardObject as CMCMonsterCard).attack}
+          {monsterCard.attack + (monsterCard.temporaryAttack ?? 0)}
         </div>
         <div className="life">
           {icons.life}
-          <span className="curlife">{(cardObject as CMCMonsterCard).life}</span>
+          <span className="curlife">{monsterCard.life + (monsterCard.temporaryLife ?? 0)}</span>
         </div>
       </div>
     );
