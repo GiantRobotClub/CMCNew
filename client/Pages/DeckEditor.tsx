@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import {
   DbDeck,
   DbDeckCard,
@@ -48,7 +48,6 @@ const DeckEditor = ({ deckid }: { deckid: string }) => {
     newDeck.deck.deckicon = icon;
     setFullDeck(newDeck);
   };
-
   const nav = useNavigate();
   const savedeck = () => {
     console.log("Saving deck");
@@ -67,6 +66,25 @@ const DeckEditor = ({ deckid }: { deckid: string }) => {
           nav("/decks");
         } else {
           console.error("Couldnt save deck");
+        }
+      });
+  };
+  const deleteDeck = () => {
+    console.log("Deleting deck");
+    // save deck
+    const requestOptions = {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    };
+    fetch("/api/manage/decks/delete/" + FullDeck.deck.deckid, requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.success) {
+          // nav back to decks
+          nav("/decks");
+        } else {
+          console.error("Couldnt delete deck");
         }
       });
   };
@@ -198,6 +216,7 @@ const DeckEditor = ({ deckid }: { deckid: string }) => {
   const player = CreateDefaultPlayer(PlayerID);
   player.name = FullDeck.deck.deckname;
   const Genericplayer = CreateDefaultPlayer(PlayerID);
+  const canDeleteDeck = useLocation().state != FullDeck.deck.deckid;
   Genericplayer.name = "";
   if (Loading) {
     return <div className="loading">Loading</div>;
@@ -218,7 +237,8 @@ const DeckEditor = ({ deckid }: { deckid: string }) => {
             );
           })}
         </div>
-        <div className="personapicker">
+        <div className="deckEditorInner">
+          <div className="deckEditorTopBanner">
           <div className="deckname">
             <input
               type="text"
@@ -234,41 +254,58 @@ const DeckEditor = ({ deckid }: { deckid: string }) => {
               SAVE
             </button>
           </div>
-          <div className="currentpersona">
-            <div className="currentpersonabox">
-              <CMCCardVisual
-                card={GetCardPrototype(FullDeck.deck.persona)}
-                big={true}
-                canClick={true}
-                doClick={() => {}}
-                activeCard={false}
-                player={player}
-                showplayer={false}
-              />
-              <div className="deckicon">{icons[FullDeck.deck.deckicon]}</div>
+          <div className="deleteDeck" title ={canDeleteDeck ? "" : "Unable to delete as its your current main deck"}>
+            <button
+                onClick={() => {
+                  if (confirm("Are you sure you want to delete this deck?"))
+                  {
+                    deleteDeck();
+                  }
+                }}
+                style={!canDeleteDeck ? {pointerEvents: "none"} : {}}
+                disabled = {!canDeleteDeck}
+              >
+                Delete deck <span style={ canDeleteDeck ? {color: "red"} : {}}> X </span>
+              </button>
+
             </div>
           </div>
-          <div className="ownedpersonalist">
-            {personas.map((deckcard) => {
-              return (
-                <div className="deckcardvisual">
-                  <CMCCardVisual
-                    card={GetCardPrototype(deckcard.cardid)}
-                    big={true}
-                    canClick={true}
-                    doClick={() => {
-                      selectpersona(deckcard.cardid);
-                    }}
-                    activeCard={false}
-                    player={Genericplayer}
-                    showplayer={false}
-                  />
-                </div>
-              );
-            })}
+          <div className="personapicker">
+            <div className="currentpersona">
+              <div className="currentpersonabox">
+                <CMCCardVisual
+                  card={GetCardPrototype(FullDeck.deck.persona)}
+                  big={true}
+                  canClick={true}
+                  doClick={() => {}}
+                  activeCard={false}
+                  player={player}
+                  showplayer={false}
+                />
+                <div className="deckicon">{icons[FullDeck.deck.deckicon]}</div>
+              </div>
+            </div>
+            <div className="ownedpersonalist">
+              {personas.map((deckcard) => {
+                return (
+                  <div className="deckcardvisual">
+                    <CMCCardVisual
+                      card={GetCardPrototype(deckcard.cardid)}
+                      big={true}
+                      canClick={true}
+                      doClick={() => {
+                        selectpersona(deckcard.cardid);
+                      }}
+                      activeCard={false}
+                      player={Genericplayer}
+                      showplayer={false}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
-        <div className="cardpicker">
+          <div className="cardpicker">
           <div className="currentdeck">
             {FullDeck.cards.map((deckcard) => {
               return (
@@ -309,6 +346,7 @@ const DeckEditor = ({ deckid }: { deckid: string }) => {
               );
             })}
           </div>
+        </div>
         </div>
       </div>
     );

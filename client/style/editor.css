@@ -130,15 +130,38 @@
 
   overflow-y: scroll;
 }
+.deckname {
+  border: 1px solid white;
+  border-radius: 1em;
+  display: inline-block;
+  margin-left: 1em;
+}
+.deleteDeck {
+  border: 1px solid white;
+  border-radius: 1em;
+  float:right;
+  margin-right: 1em;
+}
+.deckEditorInner {
+  margin-top: 1em;
+  width: 50rem;
+}
+.deckEditorTopBanner {
+  height: 2em;
+  width: 100%;
+}
 .personapicker {
   border: 1px solid white;
   border-radius: 1em;
   padding: 1em;
+  width: 13rem;
+  display: inline-block;
 }
 .cardpicker {
   border: 1px solid white;
   border-radius: 1em;
   padding: 1em;
+  display: inline-block;
 }
 
 .currentpersona {

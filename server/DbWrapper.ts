@@ -54,6 +54,13 @@ function GetFullDeck(...args) {
   }
   return dbmod.GetFullDeck(...args);
 }
+function DeleteDeck(...args) {
+  if (isClient) {
+    return undefined;
+  }
+  return dbmod.DeleteDeck(...args);
+}
+
 function GetOwnedCards(...args) {
   if (isClient) {
     return undefined;
@@ -84,6 +91,7 @@ export {
   GetPlayer,
   GetOwnedCards,
   GetFullDeck,
+  DeleteDeck,
   GetPlayerIdFromName,
   LoadJsonDeck,
   DbDeckCard,

@@ -392,6 +392,12 @@ Manage.get("/decks/get/:deckid", (ctx, next) => {
   const deckid = ctx.params.deckid;
   ctx.body = { deckid: deckid, decks: GetFullDeck(deckid) };
 });
+Manage.del("/decks/delete/:deckid", (ctx, next) => {
+  const deckid = ctx.params.deckid;
+  DeleteDeck(deckid);
+  ctx.body = { success: true };
+  return true;
+});
 Manage.get("/decks/create/:playerid", (ctx, next) => {
   const newdeckid = nanoid();
   const newemptydeck = NewEmptyDeck(ctx.params.playerid, newdeckid);
