@@ -239,23 +239,23 @@ const DeckEditor = ({ deckid }: { deckid: string }) => {
         </div>
         <div className="deckEditorInner">
           <div className="deckEditorTopBanner">
-          <div className="deckname">
-            <input
+            <input className="deckName"
               type="text"
               name="deckname"
               onChange={handletextchange}
               value={FullDeck.deck.deckname}
             />
-            <button
+          <div style={{display:"inline-block"}}>
+          <button className="deckEditorButton"
               onClick={() => {
                 savedeck();
               }}
             >
-              SAVE
+              Save
             </button>
           </div>
           <div className="deleteDeck" title ={canDeleteDeck ? "" : "Unable to delete as its your current main deck"}>
-            <button
+            <button className="deckEditorButton"
                 onClick={() => {
                   if (confirm("Are you sure you want to delete this deck?"))
                   {
