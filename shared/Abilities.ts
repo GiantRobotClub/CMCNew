@@ -195,7 +195,7 @@ function CanActivateAbility(
   random?: RandomAPI,
   events?: EventsAPI,
   target?: Targets
-): Targets {
+): Boolean {
   const successTargets: Targets = [];
   const cardowner = OwnerOf(card, G);
   if (
@@ -203,7 +203,7 @@ function CanActivateAbility(
       ability.triggerType
     )
   ) {
-    return [];
+    return false;
   }
 
   // is the card a spell in your hand
@@ -215,7 +215,7 @@ function CanActivateAbility(
       }
     });
     if (!found) {
-      return [];
+      return false;
     }
   }
   // is the trigger target valid
@@ -242,13 +242,13 @@ function CanActivateAbility(
         target: target,
         dry: true,
       };
-      if (targetFunc(args)) {
+      const targets = targetFunc(args);
+      if (targets.length > 0) {
         found = true;
-        continue;
       }
     }
     if (!found) {
-      return [];
+      return false;
     }
     // can pay
     const costcodes = ability.costCode
@@ -256,28 +256,34 @@ function CanActivateAbility(
         ? ability.costCode
         : [ability.costCode]
       : [];
-    for (const costcode of costcodes) {
-      const costFunc: Function = CardFunctions[costcode];
-      const args: AbilityFunctionArgs = {
-        card: card,
-        ability: ability,
-        cardowner: cardowner,
-        G: G,
-        ctx: ctx,
-        random: random,
-        events: events,
-        target: target,
-        dry: true,
-      };
-      successTargets.push(card);
-      // do dry run of cost.  will run the actual one afterwards.
-      const result = costFunc(args);
-      if (!result || result.length == 0) {
-        return []; // cant afford
+    if (costcodes.length > 0) {
+      for (const costcode of costcodes) {
+        const costFunc: Function = CardFunctions[costcode];
+        const args: AbilityFunctionArgs = {
+          card: card,
+          ability: ability,
+          cardowner: cardowner,
+          G: G,
+          ctx: ctx,
+          random: random,
+          events: events,
+          target: target,
+          dry: true,
+        };
+      
+        successTargets.push(card);
+        // do dry run of cost.  will run the actual one afterwards.
+        const result = costFunc(args);
+        if (!result || result.length == 0) {
+          return false; // cant afford
+        }
       }
+    } else {
+      successTargets.push(card);
     }
+
   }
-  return successTargets;
+  return successTargets.length > 0;
 }
 function ResolveStack(
   G: CMCGameState,
@@ -336,7 +342,7 @@ function ActivateAbility(
   target?: Targets
 ): boolean {
   const cardowner = OwnerOf(card, G);
-  if (!CanActivateAbility(card, ability, G, ctx, random, events)) {
+  if (!CanActivateAbility(card, ability, G, ctx, random, events, target)) {
     console.error("Cant activate");
     return false;
   }
