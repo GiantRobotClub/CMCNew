@@ -34,7 +34,7 @@ const DeckChooser = () => {
         setfetchflag(!fetchflag);
       });
     } else {
-      nav("/decks/" + deckid);
+      nav("/decks/" + deckid, { state: DbPlayer.selecteddeck });
     }
   }
   function selectdeck(deckid: string) {
