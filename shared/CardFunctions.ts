@@ -27,6 +27,7 @@ import {
   DrawCard,
   ForceDiscard,
   GainLife,
+  GainTemporaryStats,
   IsEffect,
   IsMonster,
   IsPersona,
@@ -247,6 +248,28 @@ export function ApplyStats(args: AbilityFunctionArgs): Targets {
       realtargets.push(target);
     }
   }
+  return realtargets;
+}
+
+
+export function TemporaryStatGain(args: AbilityFunctionArgs): Targets {
+  const { target, card, ability, G } = args;
+  if (!ability ) {
+    return [];
+  }
+  const targets: CMCCard[] = ValidTargets(args, AllCards(G).allinplay);
+  const realtargets: CMCCard[] = [];
+  for (const target of targets) {
+
+    if (IsMonster(target)) {
+      GainTemporaryStats(target, ability.metadata.lifeAmount, ability.metadata.attackAmount, G);
+      realtargets.push(target);
+    } else {
+      console.error("isnt monster");
+      continue;
+    }
+  }
+
   return realtargets;
 }
 

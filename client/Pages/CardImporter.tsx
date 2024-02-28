@@ -45,6 +45,8 @@ const Importer = () => {
               ...newCard,
               attack: record.attack,
               life: record.life,
+              temporaryAttack: 0,
+              temporaryLife: 0,
               dizzy: true,
               destroyed: false,
               status: {},

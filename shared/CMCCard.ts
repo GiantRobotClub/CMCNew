@@ -97,7 +97,9 @@ interface CMCEntityCard extends CMCCard {
 interface CMCEffectCard extends CMCEntityCard {}
 interface CMCMonsterCard extends CMCEntityCard {
   attack: number;
+  temporaryAttack: number;
   life: number;
+  temporaryLife: number;
 }
 
 interface CMCPersonaCard extends CMCCard {
@@ -165,7 +167,9 @@ function CreateEntityCard(): CMCEntityCard {
 function CreateMonsterCard(): CMCMonsterCard {
   const card: CMCMonsterCard = {
     life: 0,
+    temporaryLife: 0,
     attack: 0,
+    temporaryAttack: 0,
     ...CreateEntityCard(),
   };
   card.type = CardType.MONSTER;

@@ -87,6 +87,7 @@ function ResolveCombat(
       G,
       ctx
     ) as CMCMonsterCard;
+    modatk.attack += modatk.temporaryAttack;
     // phase zero, trigger
     // check if card is dead yet
     if (resolution.attacker.destroyed) {
@@ -121,6 +122,8 @@ function ResolveCombat(
         G,
         ctx
       ) as CMCMonsterCard;
+      moddef.attack += moddef.temporaryAttack;
+
       let dresult: DamageResult = DealDamage(
         resolution.attacker,
         resolution.defender,
@@ -128,7 +131,7 @@ function ResolveCombat(
         G
       );
       resolvedatk.damage = dresult.damage;
-      resolvedatk.destroyed = resolution.attacker.life <= 0;
+      resolvedatk.destroyed = dresult.destroyed;
       resolvedatk.overage = dresult.overage;
       resolvedatk.resisted = 0;
 
@@ -144,7 +147,7 @@ function ResolveCombat(
       );
 
       resolveddef.damage = dresult.damage;
-      resolveddef.destroyed = resolution.defender.life <= 0;
+      resolveddef.destroyed = dresult.destroyed
       resolveddef.overage = dresult.overage;
       resolveddef.resisted = 0;
     }
