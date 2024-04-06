@@ -243,9 +243,11 @@
         }
       },
       "abilities": [],
-      "attack": "1",
-      "life": "1",
+      "attack": 1,
+      "life": 1,
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -278,6 +280,8 @@
       "attack": "5",
       "life": "5",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -323,6 +327,8 @@
       "attack": "10",
       "life": "10",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -367,6 +373,8 @@
       "attack": "15",
       "life": "15",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -419,6 +427,8 @@
       "attack": "20",
       "life": "20",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -426,6 +436,8 @@
       "life": 10,
       "attack": 10,
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "status": {},
       "destroyed": false,
       "alignment": "ANODYNE",
@@ -517,6 +529,8 @@
       "attack": "20",
       "life": "20",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -558,6 +572,8 @@
       "attack": "45",
       "life": "45",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -626,6 +642,8 @@
       "attack": "60",
       "life": "60",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -667,6 +685,8 @@
       "attack": "0",
       "life": "60",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -713,6 +733,8 @@
       "attack": "30",
       "life": "30",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -754,6 +776,8 @@
       "attack": "15",
       "life": "15",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -799,6 +823,8 @@
       "attack": "20",
       "life": "20",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -850,6 +876,8 @@
       "attack": "1",
       "life": "20",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -893,6 +921,8 @@
       "attack": "40",
       "life": "40",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -946,6 +976,8 @@
       "attack": "40",
       "life": "40",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -995,6 +1027,8 @@
       "attack": "30",
       "life": "30",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -2017,6 +2051,8 @@
       "attack": "15",
       "life": "7",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -2049,6 +2085,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -2081,6 +2119,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -2113,6 +2153,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -2145,6 +2187,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -2177,6 +2221,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -2209,6 +2255,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -2241,6 +2289,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -2273,6 +2323,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -2305,6 +2357,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -2337,6 +2391,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -2369,6 +2425,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -2401,6 +2459,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -2433,6 +2493,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -2465,6 +2527,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -2497,6 +2561,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -2529,6 +2595,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -2561,6 +2629,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -3072,6 +3142,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -3104,6 +3176,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -3136,6 +3210,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -3168,6 +3244,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -3200,6 +3278,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -3232,6 +3312,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -3264,6 +3346,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -3296,6 +3380,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -3328,6 +3414,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -3360,6 +3448,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -3392,6 +3482,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -3424,6 +3516,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -4008,6 +4102,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -4040,6 +4136,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -4072,6 +4170,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -4104,6 +4204,8 @@
       "attack": "",
       "life": "",
       "dizzy": true,
+      "temporaryAttack": 0,
+      "temporaryLife": 0,
       "destroyed": false,
       "status": {}
     },
@@ -4403,6 +4505,130 @@
         }
       },
       "abilities": []
+    },    
+    "TemporaryAttackDebugSpell": {
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "tempAttack",
+      "picture": "placeholder.jpg",
+      "cardtext": "Grant monster 10 temporary attack",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": 0,
+          "A": 0,
+          "P": 0
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": 0,
+          "A": 1,
+          "P": 0
+        }
+      },
+      "abilities": [
+        {
+          "triggerType": "ACTIVATED_TARGETED",
+          "targetCode": "IsDamagable",
+          "activateCode": "TemporaryStatGain",
+          "metadata": {
+            "lifeAmount": 0,
+            "attackAmount":10
+          },
+          "abilityName": "tempAttack",
+          "abilityText": "Grant monster 10 temporary attack",
+          "speed": 2
+        }
+      ],
+      "expansion": "base"
+    },
+    "TemporaryLifeDebugSpell": {
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "tempLife",
+      "picture": "placeholder.jpg",
+      "cardtext": "Grant monster 10 temporary life",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": 0,
+          "A": 0,
+          "P": 0
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": 0,
+          "A": 1,
+          "P": 0
+        }
+      },
+      "abilities": [
+        {
+          "triggerType": "ACTIVATED_TARGETED",
+          "targetCode": "IsDamagable",
+          "activateCode": "TemporaryStatGain",
+          "metadata": {
+            "lifeAmount": 10,
+            "attackAmount":0
+          },
+          "abilityName": "tempLife",
+          "abilityText": "Grant monster 10 temporary life",
+          "speed": 2
+        }
+      ],
+      "expansion": "base"
+    },
+    "TemporaryStatsDebugSpell": {
+      "alignment": "ANODYNE",
+      "guid": "TEMPORARY",
+      "subtype": "",
+      "costFunction": "DefaultCost",
+      "playFunction": "DefaultPlay",
+      "name": "tempLifeAndAttack",
+      "picture": "placeholder.jpg",
+      "cardtext": "Grant monster 10 temporary life & 10 temporary attack",
+      "type": "SPELL",
+      "sac": {
+        "mana": {
+          "V": 0,
+          "A": 0,
+          "P": 0
+        }
+      },
+      "cost": {
+        "mana": {
+          "V": 0,
+          "A": 1,
+          "P": 0
+        }
+      },
+      "abilities": [
+        {
+          "triggerType": "ACTIVATED_TARGETED",
+          "targetCode": "Match",
+          "activateCode": "TemporaryStatGain",
+          "metadata": {
+            "lifeAmount": 20,
+            "attackAmount":20,
+            "matchPattern": {
+              "type": "MONSTER"
+            }
+          },
+          "abilityName": "tempLifeAndAttack",
+          "abilityText": "Grant monster 10 temporary life & 10 temporary attack",
+          "speed": 2
+        }
+      ],
+      "expansion": "base"
     }
+
   }
 }

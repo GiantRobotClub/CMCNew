@@ -34,6 +34,7 @@ import {
   ForceDiscard,
   Discard,
   Undizzy,
+  RemoveTemporaryStats
 } from "./LogicFunctions";
 import { CMCPlayer } from "./Player";
 import { GetActivePlayer, GetActiveStage, OtherPlayer } from "./Util";
@@ -76,6 +77,7 @@ const passStage: Move<CMCGameState> = ({ G, ctx, events, random }) => {
   if (GetActiveStage(ctx) == Stages.initial) {
     // going into draw phase
     const player: CMCPlayer = G.playerData[activePlayer];
+    RemoveTemporaryStats(activePlayer, G, ctx);
     const okay = DrawCard(
       activePlayer,
       player.persona.drawPerTurn,

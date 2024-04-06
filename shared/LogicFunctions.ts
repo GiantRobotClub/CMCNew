@@ -88,6 +88,7 @@ interface DamageResult {
   card: CMCCard;
   damage: number;
   overage: number; // damage - health, except in certain circumstances
+  destroyed: boolean;
 }
 
 // check if any card needs updating, eg: is destroyed
@@ -143,8 +144,8 @@ function GainLife(
   if ("life" in card) {
     for (const slotplayer in G.slots) {
       for (const subplayer in G.slots[slotplayer]) {
-        for (const [index, card] of G.slots[slotplayer][subplayer].entries()) {
-          if (card.guid == card.guid) {
+        for (const [index, innerCard] of G.slots[slotplayer][subplayer].entries()) {
+          if (card.guid == innerCard.guid) {
             G.slots[slotplayer][subplayer][index].life += amount;
             if (G.slots[slotplayer][subplayer][index].life <= 0) {
               G.slots[slotplayer][subplayer][index].destroyed = true;
@@ -154,6 +155,39 @@ function GainLife(
       }
     }
   }
+}
+
+function GainTemporaryStats(
+  card: CMCMonsterCard | CMCPersonaCard,
+  lifeAmount: number,
+  attackAmount: number,
+  G: CMCGameState
+) {
+  if (lifeAmount != 0 && "life" in card) {
+    for (const slotplayer in G.slots) {
+      for (const subplayer in G.slots[slotplayer]) {
+        for (const [index, innerCard] of G.slots[slotplayer][subplayer].entries()) {
+          if (card.guid == innerCard.guid) {
+            G.slots[slotplayer][subplayer][index].temporaryLife += lifeAmount;
+          }
+        }
+      }
+    }
+  }
+  //Loop done twice instead of once to account for the chance of there being a card variants which
+  //has life but not attack such as giving temp life to a persona
+  if (attackAmount != 0 && "attack" in card) {
+    for (const slotplayer in G.slots) {
+      for (const subplayer in G.slots[slotplayer]) {
+        for (const [index, innerCard] of G.slots[slotplayer][subplayer].entries()) {
+          if (card.guid == innerCard.guid) {
+            G.slots[slotplayer][subplayer][index].temporaryAttack += attackAmount;
+          }
+        }
+      }
+    }
+  }
+
 }
 
 // deal damage. source is used for triggers of various kinds.
@@ -168,16 +202,23 @@ function DealDamage(
       card: damagee,
       damage: 0,
       overage: 0,
+      destroyed: false,
     };
     damageResult.damage = amount;
-    damageResult.overage = amount - damagee.life;
+    damageResult.overage = amount - (damagee.life + damagee.temporaryLife);
     for (const slotplayer in G.slots) {
       for (const subplayer in G.slots[slotplayer]) {
         for (const [index, card] of G.slots[slotplayer][subplayer].entries()) {
           if (card.guid == damagee.guid) {
-            G.slots[slotplayer][subplayer][index].life -= amount;
-            if (G.slots[slotplayer][subplayer][index].life <= 0) {
-              G.slots[slotplayer][subplayer][index].destroyed = true;
+            if (amount > G.slots[slotplayer][subplayer][index].temporaryLife) {
+              G.slots[slotplayer][subplayer][index].life -= (amount - G.slots[slotplayer][subplayer][index].temporaryLife);
+              G.slots[slotplayer][subplayer][index].temporaryLife = 0;
+              if (G.slots[slotplayer][subplayer][index].life <= 0) {
+                G.slots[slotplayer][subplayer][index].destroyed = true;
+                damageResult.destroyed = true;
+              }
+            } else {
+              G.slots[slotplayer][subplayer][index].temporaryLife -= amount
             }
           }
         }
@@ -190,6 +231,7 @@ function DealDamage(
       card: damagee,
       damage: 0,
       overage: 0,
+      destroyed: false
     };
     damageResult.damage = amount;
     G.playerData[damagee.playerID].resources.intrinsic.health -= amount;
@@ -819,6 +861,17 @@ function AllCards(G: CMCGameState) {
   return cards;
 }
 
+function RemoveTemporaryStats(activeplayer: string, G: CMCGameState, ctx: Ctx) {
+  const entities = AllCards(G).field.filter(
+    (card) => OwnerOf(card, G) == activeplayer && card.type == CardType.MONSTER
+  );
+  entities.forEach((card) => {
+    const entity = card as CMCMonsterCard;
+    entity.temporaryAttack = 0;
+    entity.temporaryLife = 0;
+  });
+}
+
 function Undizzy(activeplayer: string, G: CMCGameState, ctx: Ctx) {
   const entities = AllCards(G).field.filter(
     (card) => OwnerOf(card, G) == activeplayer
@@ -865,6 +918,8 @@ export {
   ForceDiscard,
   IsInHand,
   AllCards,
+  GainTemporaryStats,
+  RemoveTemporaryStats,
   Undizzy,
   DizzyOne,
   GainLife,
