@@ -48,11 +48,11 @@ interface DbCompletion {
 
 export {
   DbDeck,
-  DbPlayer,
   DbFullDeck,
   DbOwnedCard,
   DbDeckCard,
   DbCraftingMat,
   DbCraftingMats,
   DbCompletion,
+  DbPlayer,
 };

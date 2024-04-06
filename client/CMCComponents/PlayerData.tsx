@@ -16,7 +16,7 @@ const emptydbfulldeck: DbFullDeck = {
 };
 function CMCPlayerVisual({ player }: { player: Server.PlayerMetadata }) {
   const [DeckID, setDeckID] = useState("");
-  const [DbPlayer, setDbPlayer] = useState("");
+  const [DataPlayer, setDbPlayer] = useState("");
   const [FullDeck, setFullDeck] = useState(emptydbfulldeck);
   let playervisual = <></>;
   let deckvisual = <></>;

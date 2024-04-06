@@ -352,7 +352,6 @@ export {
   GiveMats,
   SetMats,
   GetMats,
-  DbPlayer,
   SaveOwned,
   SetDeck,
   AddCompletionData,
