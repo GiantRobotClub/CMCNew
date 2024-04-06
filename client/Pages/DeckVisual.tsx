@@ -26,7 +26,7 @@ export function CreateDeckVisual(
           canClick={true}
           doClick={() => {
             console.log("Clicked");
-            gotodeck;
+            gotodeck();
           }}
           activeCard={false}
           player={player}
