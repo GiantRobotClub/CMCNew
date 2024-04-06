@@ -701,8 +701,11 @@
           "targetCode": "Match",
           "metadata": {
             "matchplayer": "OPPONENT",
-            "matchPattern": { "type": "PERSONA" }
+            "matchPattern": { "type": "PERSONA" },
+            "amount": 10
           },
+          "activateCode": "DamageTarget",
+
           "abilityName": "Splash Damage",
           "abilityText": "Deals 10 damage to opponent when attacking"
         }
@@ -744,7 +747,7 @@
           "targetCode": "Self",
           "combatCodes": ["STEALTH"],
           "metadata": {},
-          "abilityName": "Trained Soldier",
+          "abilityName": "They could be any one of us!",
           "abilityText": "(stealth) Cannot be defended(#br)(slippery) Cannot be attacked"
         }
       ],
