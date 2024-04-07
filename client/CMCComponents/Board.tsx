@@ -106,7 +106,7 @@ export function CMCBoard(props: CMCProps) {
     setInspectMode(false);
   };
   const clickCard = (card: CMCCard) => {
-    console.log("Clicked " + card.name);
+    console.log("Clicked " + card.name + " with guid " + card.guid);
     if (inspectMode) {
       //show big card on right.
       console.log("Inspecting " + card.name);
@@ -126,7 +126,7 @@ export function CMCBoard(props: CMCProps) {
     }
   };
   const clickCardFromHand = (card: CMCCard) => {
-    console.log("Clicked " + card.name);
+    console.log("Clicked " + card.name + " with guid " + card.guid);
     if (inspectMode) {
       //show big card on right.
       console.log("Inspecting " + card.name);

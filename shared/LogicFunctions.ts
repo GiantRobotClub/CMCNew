@@ -144,7 +144,9 @@ function GainLife(
   if ("life" in card) {
     for (const slotplayer in G.slots) {
       for (const subplayer in G.slots[slotplayer]) {
-        for (const [index, innerCard] of G.slots[slotplayer][subplayer].entries()) {
+        for (const [index, innerCard] of G.slots[slotplayer][
+          subplayer
+        ].entries()) {
           if (card.guid == innerCard.guid) {
             G.slots[slotplayer][subplayer][index].life += amount;
             if (G.slots[slotplayer][subplayer][index].life <= 0) {
@@ -166,7 +168,9 @@ function GainTemporaryStats(
   if (lifeAmount != 0 && "life" in card) {
     for (const slotplayer in G.slots) {
       for (const subplayer in G.slots[slotplayer]) {
-        for (const [index, innerCard] of G.slots[slotplayer][subplayer].entries()) {
+        for (const [index, innerCard] of G.slots[slotplayer][
+          subplayer
+        ].entries()) {
           if (card.guid == innerCard.guid) {
             G.slots[slotplayer][subplayer][index].temporaryLife += lifeAmount;
           }
@@ -179,15 +183,17 @@ function GainTemporaryStats(
   if (attackAmount != 0 && "attack" in card) {
     for (const slotplayer in G.slots) {
       for (const subplayer in G.slots[slotplayer]) {
-        for (const [index, innerCard] of G.slots[slotplayer][subplayer].entries()) {
+        for (const [index, innerCard] of G.slots[slotplayer][
+          subplayer
+        ].entries()) {
           if (card.guid == innerCard.guid) {
-            G.slots[slotplayer][subplayer][index].temporaryAttack += attackAmount;
+            G.slots[slotplayer][subplayer][index].temporaryAttack +=
+              attackAmount;
           }
         }
       }
     }
   }
-
 }
 
 // deal damage. source is used for triggers of various kinds.
@@ -211,14 +217,15 @@ function DealDamage(
         for (const [index, card] of G.slots[slotplayer][subplayer].entries()) {
           if (card.guid == damagee.guid) {
             if (amount > G.slots[slotplayer][subplayer][index].temporaryLife) {
-              G.slots[slotplayer][subplayer][index].life -= (amount - G.slots[slotplayer][subplayer][index].temporaryLife);
+              G.slots[slotplayer][subplayer][index].life -=
+                amount - G.slots[slotplayer][subplayer][index].temporaryLife;
               G.slots[slotplayer][subplayer][index].temporaryLife = 0;
               if (G.slots[slotplayer][subplayer][index].life <= 0) {
                 G.slots[slotplayer][subplayer][index].destroyed = true;
                 damageResult.destroyed = true;
               }
             } else {
-              G.slots[slotplayer][subplayer][index].temporaryLife -= amount
+              G.slots[slotplayer][subplayer][index].temporaryLife -= amount;
             }
           }
         }
@@ -231,7 +238,7 @@ function DealDamage(
       card: damagee,
       damage: 0,
       overage: 0,
-      destroyed: false
+      destroyed: false,
     };
     damageResult.damage = amount;
     G.playerData[damagee.playerID].resources.intrinsic.health -= amount;
@@ -388,6 +395,7 @@ function OwnerOf(card: CMCCard, G: CMCGameState) {
     const hand: CMCCard[] = G.players[slotplayer].hand;
     let found: boolean = false;
     hand.forEach((handcard, _idx) => {
+      console.log(card.guid + " vs " + handcard.guid);
       if (card.guid == handcard.guid) {
         found = true;
         return slotplayer;
@@ -475,20 +483,26 @@ function CanClickCard(
   }
 
   let stage = GetActiveStage(ctx);
+
   if (clickType == ClickType.HAND) {
     // are we in play phase or combat phase and is it that player's turn
     if (activePlayer === currentPlayer) {
-      if (!["play", "combat"].includes(stage)) {
+      if (!["play", "combat", Stages.discardCard].includes(stage)) {
         return false;
       }
     } else {
       // Are we in the resolve, respond, combat defense
-      if (!["resolve", "respond", "defense"].includes(stage)) {
+      if (
+        !["resolve", "respond", "defense", Stages.discardCard].includes(stage)
+      ) {
         return false;
       }
     }
-
-    // if it's not a spell, you can only play it in play
+    // if we are discarding, then you can click anything in your hand
+    if (stage == Stages.discardCard) {
+      return true;
+    }
+    // if it's not a spell, you can only play it in play,
 
     if (card.type != CardType.SPELL && stage != "play") {
       return false;
@@ -772,10 +786,11 @@ function Discard(
   if (!CanDiscard(playerId, G, ctx, card)) {
     return false;
   }
+  // has to add first because otherwise it's 'floating' with no way to tell who owns it.
+  AddToGraveyard(card, G);
   if (!RemoveFromHand(card, playerId, G)) {
     return false;
   }
-  AddToGraveyard(card, G);
 
   return true;
 }
