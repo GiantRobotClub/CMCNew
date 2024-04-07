@@ -190,7 +190,7 @@ function CMCCardVisual({
     );
   }
   if (card.type == CardType.MONSTER) {
-    const monsterCard = (cardObject as CMCMonsterCard);
+    const monsterCard = cardObject as CMCMonsterCard;
     attackLine = (
       <div className="attackline">
         <div className="attack">
@@ -199,7 +199,9 @@ function CMCCardVisual({
         </div>
         <div className="life">
           {icons.life}
-          <span className="curlife">{monsterCard.life + (monsterCard.temporaryLife ?? 0)}</span>
+          <span className="curlife">
+            {monsterCard.life + (monsterCard.temporaryLife ?? 0)}
+          </span>
         </div>
       </div>
     );
@@ -315,7 +317,7 @@ function CMCCardVisual({
           <div className="playerdeck">
             <div className="player-hand-count">
               {icons.hand}
-              {player.currentHand}
+              {player.currentHand}/{player.persona.maxHand}
             </div>{" "}
             <div className="player-deck-count"> {icons.card}</div>
             {player.currentDeck}
