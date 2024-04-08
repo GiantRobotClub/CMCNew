@@ -10,6 +10,7 @@ import {
   GiBrickWall,
   GiTransparentSlime,
   GiSteampunkGoggles,
+  GiSkeleton,
 } from "react-icons/gi";
 import { SlGameController } from "react-icons/sl";
 import {
@@ -29,7 +30,7 @@ import { TbCards, TbGrave2 } from "react-icons/tb";
 import { CgCardSpades } from "react-icons/cg";
 import { RiStarSFill } from "react-icons/ri";
 import { RxCardStack, RxCardStackPlus } from "react-icons/rx";
-import React from "react";
+import React, { ReactNode } from "react";
 import reactStringReplace from "react-string-replace";
 import { BiTargetLock } from "react-icons/bi";
 import {
@@ -97,7 +98,7 @@ export const icons = {
   cpu: <BsFillCpuFill />,
   cauldron: <GiCauldron />,
   controller: <SlGameController />,
-
+  skeleton: <GiSkeleton />,
   arrowdr: <BsFillArrowDownRightCircleFill />,
   arrowdl: <BsFillArrowDownLeftCircleFill />,
 
@@ -159,8 +160,8 @@ export function scanForIcons(
   string: string,
   ability: Ability | undefined = undefined,
   card: CMCCard | undefined = undefined
-): string | React.ReactNodeArray {
-  let returnstring: string | React.ReactNodeArray = string;
+): string | ReactNode[] {
+  let returnstring: string | ReactNode[] = string;
   for (const icon of Object.keys(icons)) {
     const matchstring = "(" + icon + ")";
     returnstring = reactStringReplace(returnstring, matchstring, (match, i) => (

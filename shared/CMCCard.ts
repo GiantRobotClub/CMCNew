@@ -44,6 +44,8 @@ interface CMCCardBase {
       P: Number;
     };
   };
+
+  counters?: {};
 }
 
 interface CMCCard extends CMCCardBase {

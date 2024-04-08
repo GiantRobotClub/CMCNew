@@ -19,7 +19,7 @@ import {
   GetCardPrototype,
   GetModifiedStatCard,
 } from "./CMCCard";
-import { CardType } from "./Constants";
+import { CardPlace, CardType } from "./Constants";
 import {
   AllCards,
   DealDamage,
@@ -251,18 +251,21 @@ export function ApplyStats(args: AbilityFunctionArgs): Targets {
   return realtargets;
 }
 
-
 export function TemporaryStatGain(args: AbilityFunctionArgs): Targets {
   const { target, card, ability, G } = args;
-  if (!ability ) {
+  if (!ability) {
     return [];
   }
   const targets: CMCCard[] = ValidTargets(args, AllCards(G).allinplay);
   const realtargets: CMCCard[] = [];
   for (const target of targets) {
-
     if (IsMonster(target)) {
-      GainTemporaryStats(target, ability.metadata.lifeAmount, ability.metadata.attackAmount, G);
+      GainTemporaryStats(
+        target,
+        ability.metadata.lifeAmount,
+        ability.metadata.attackAmount,
+        G
+      );
       realtargets.push(target);
     } else {
       console.error("isnt monster");
@@ -669,6 +672,21 @@ export function Match(args: AbilityFunctionArgs): Targets {
   const { ability, G, target, cardowner, ctx } = args;
   if (!ability) {
     return [];
+  }
+  let allCards = AllCards(G);
+  let subCards: CMCCard[] = [];
+  if (ability.metadata.matchPlace) {
+    if (ability.metadata.matchPlace == CardPlace.GRAVE) {
+      subCards = allCards.grave;
+    } else if (ability.metadata.matchPlace == CardPlace.HAND) {
+      subCards = allCards.hand;
+    } else if (ability.metadata.matchPlace == CardPlace.PLAY) {
+      subCards = allCards.allinplay;
+    } else if (ability.metadata.matchPlace == CardPlace.ALL) {
+      subCards = allCards.all;
+    }
+  } else {
+    subCards = allCards.allinplay;
   }
   const targets: CMCCard[] = ValidTargets(args, AllCards(G).allinplay);
   let realtargets: CMCCard[] = [];

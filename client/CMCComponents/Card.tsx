@@ -83,6 +83,7 @@ function CMCCardVisual({
   const cardObject: CMCCard = GetModifiedStatCard(card, G, ctx);
   let costLine = <div style={noshow}></div>;
   let attackLine = <div style={noshow}></div>;
+  let counters = [<div style={noshow}></div>];
   let sacLine = <div style={noshow}></div>;
   let playerLine = <div style={noshow}></div>;
   let playerData = <div style={noshow}></div>;
@@ -137,6 +138,17 @@ function CMCCardVisual({
         <div></div>
       </button>
     );
+  }
+
+  if (card.counters) {
+    counters = Object.keys(cardObject.counters!).map((type) => {
+      return (
+        <div className="counter">
+          {icons[type]}
+          {cardObject.counters![type]}
+        </div>
+      );
+    });
   }
   if (card.type != CardType.PERSONA) {
     costLine = (
@@ -193,6 +205,7 @@ function CMCCardVisual({
     const monsterCard = cardObject as CMCMonsterCard;
     attackLine = (
       <div className="attackline">
+        {counters}
         <div className="attack">
           {icons.sword}
           {Number(monsterCard.attack) + (monsterCard.temporaryAttack ?? 0)}

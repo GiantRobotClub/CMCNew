@@ -1798,8 +1798,7 @@
             "cardid": "slimetrail"
           },
           "abilityName": "That's a lot of slime",
-          "abilityText": "At beginning of turn, spawn Slime Trails in every open effect slot.",
-          "speed": 2
+          "abilityText": "At beginning of turn, spawn Slime Trails in every open effect slot."
         }
       ],
       "owner": "0"
@@ -1868,8 +1867,7 @@
             "cardid": "slimefriend"
           },
           "abilityName": "All My Slime Friends!",
-          "abilityText": "At the end of your turn, spawn a Slime Friend in an open monster slot",
-          "speed": 2
+          "abilityText": "At the end of your turn, spawn a Slime Friend in an open monster slot"
         },
         {
           "triggerType": "COMBAT_MODIFIER",
@@ -1884,8 +1882,7 @@
             "cardid": "slimefriend"
           },
           "abilityName": "It's slurprisingly slimple",
-          "abilityText": "Slimes have (slippery) Slippery",
-          "speed": 2
+          "abilityText": "Slimes have (slippery) Slippery"
         }
       ],
       "expansion": "base"
@@ -1942,8 +1939,7 @@
           "triggerType": "TEXT",
           "metadata": {},
           "abilityName": "Take a Look, Read a Book",
-          "abilityText": "Start with more cards, draw more cards, but gain no mana.",
-          "speed": 2
+          "abilityText": "Start with more cards, draw more cards, but gain no mana."
         }
       ]
     },
@@ -1995,21 +1991,29 @@
       },
       "abilities": [
         {
-          "triggerType": "AUTOMATIC",
-          "activateCode": "ManaGenerate",
+          "triggerType": "ACTIVATED",
+          "activateCode": "Discard",
+          "costCode": ["ResourceCost"],
           "triggerCode": "TriggerStage",
           "metadata": {
-            "triggername": "start_stage",
-            "triggerstage": "initial",
-            "color": "A",
-            "amount": 1
+            "cost": {
+              "mana": {
+                "A": 3
+              }
+            },
+            "matchPattern": {
+              "type": "PERSONA"
+            },
+            "matchPlayer": "OPPONENT"
           },
           "abilityName": "Capture the Flag",
-          "abilityText": "3(A) Your opponent discards a card."
+          "abilityText": "3(A) Your opponent discards a card.",
+          "speed": 2
         },
         {
           "triggerType": "AUTOMATIC",
           "activateCode": "ManaGenerate",
+          "costCode": ["ResourceCost"],
           "triggerCode": "TriggerStage",
           "metadata": {
             "triggername": "start_stage",
@@ -2018,7 +2022,8 @@
             "amount": 1
           },
           "abilityName": "Meet the Team",
-          "abilityText": "3(A) You draw a card."
+          "abilityText": "3(A) You draw a card.",
+          "speed": 2
         }
       ]
     },
@@ -2030,7 +2035,7 @@
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
       "name": "Melrak Necrocultist",
-      "picture": "placeholder.jpg",
+      "picture": "necro.jpg",
       "cardtext": "When you stare into the Dark Web, the Dark Web stares back.",
       "type": "MONSTER",
       "sac": {
@@ -2063,7 +2068,7 @@
       "subtype": "",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "melrak necromancer",
+      "name": "Melrak Necromancer",
       "picture": "placeholder.jpg",
       "cardtext": "",
       "type": "MONSTER",
@@ -2081,9 +2086,24 @@
           "P": "3"
         }
       },
-      "abilities": [],
-      "attack": "",
-      "life": "",
+      "abilities": [
+        {
+          "costCode": "DestroyCost",
+          "triggerType": "ACTIVATED_TARGETED",
+          "activateCode": "Bounce",
+          "targetCode": "Match",
+          "metadata": {
+            "matchPlayer": "OWNER",
+            "matchPlace": "GRAVE"
+          },
+          "speed": 5,
+          "abilityName": "Rise!!",
+          "abilityText": "Return card from graveyard to hand",
+          "abilityCostText": "(dizzy), Destroy self"
+        }
+      ],
+      "attack": 20,
+      "life": 15,
       "dizzy": true,
       "temporaryAttack": 0,
       "temporaryLife": 0,
@@ -2115,9 +2135,22 @@
           "P": "5"
         }
       },
-      "abilities": [],
-      "attack": "",
-      "life": "",
+      "abilities": [
+        {
+          "triggerType": "INTO_PLAY",
+          "activateCode": "DrawACard",
+          "triggerCode": "TriggerIntoPlay",
+          "metadata": {
+            "amount": 1,
+            "opponent": "true",
+            "owner": "false"
+          },
+          "abilityName": "Hack dot EVIL",
+          "abilityText": "On play, your opponent discards a card."
+        }
+      ],
+      "attack": 16,
+      "life": 15,
       "dizzy": true,
       "temporaryAttack": 0,
       "temporaryLife": 0,
@@ -2217,14 +2250,56 @@
           "P": "3"
         }
       },
-      "abilities": [],
-      "attack": "",
-      "life": "",
+      "abilities": [
+        {
+          "costCode": "DestroyCost",
+          "triggerType": "ACTIVATED_TARGETED",
+          "activateCode": "Bounce",
+          "targetCode": "Match",
+          "metadata": {
+            "matchPlayer": "OWNER",
+            "matchPlace": "GRAVE"
+          },
+          "speed": 5,
+          "abilityName": "Dig up",
+          "abilityText": "Add (skeleton)",
+          "abilityCostText": "(dizzy), Destroy target card in graveyard"
+        },
+        {
+          "costCode": ["DizzyCost", "ResourceCost"],
+          "triggerType": "ACTIVATED_TARGETED",
+          "targetCode": "Match",
+          "activateCode": "SpawnCopy",
+          "metadata": {
+            "cardid": "skeleton",
+            "matchPlayer": "OWNER",
+            "matchPattern": {
+              "type": "EMPTY"
+            },
+            "allCardsPattern": "monsters",
+            "cost": {
+              "counters": {
+                "skeleton": 1
+              }
+            }
+          },
+          "speed": 3,
+          "abilityName": "Assemble",
+          "abilityText": "Create a Skeleton monster in target slot.",
+          "abilityCostText": "(dizzy)(skeleton)"
+        }
+      ],
+      "attack": 10,
+      "life": 30,
+
       "dizzy": true,
       "temporaryAttack": 0,
       "temporaryLife": 0,
       "destroyed": false,
-      "status": {}
+      "status": {},
+      "counters": {
+        "skeleton": 0
+      }
     },
     "recruiter": {
       "expansion": "base",

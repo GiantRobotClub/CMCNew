@@ -9,6 +9,13 @@ enum GameMode {
   CLASSIC = "CLASSIC",
 }
 
+enum CardPlace {
+  ALL = "ALL",
+  GRAVE = "GRAVE",
+  HAND = "HAND",
+  PLAY = "INPLAY",
+}
+
 enum CardType {
   EMPTY = "EMPTY",
   DUMMY = "DUMMY",
@@ -69,4 +76,5 @@ export {
   Alignment,
   PlayerIDs,
   GameMode,
+  CardPlace,
 };
