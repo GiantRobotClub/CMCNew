@@ -444,6 +444,7 @@
 .cardsubtype .subtype {
   font-size: 0.4em;
   padding-left: 0.2em;
+  text-transform: capitalize;
 }
 
 .cardRow .dizzy {

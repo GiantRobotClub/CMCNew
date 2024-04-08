@@ -195,12 +195,12 @@ function CMCCardVisual({
       <div className="attackline">
         <div className="attack">
           {icons.sword}
-          {monsterCard.attack + (monsterCard.temporaryAttack ?? 0)}
+          {Number(monsterCard.attack) + (monsterCard.temporaryAttack ?? 0)}
         </div>
         <div className="life">
           {icons.life}
           <span className="curlife">
-            {monsterCard.life + (monsterCard.temporaryLife ?? 0)}
+            {Number(monsterCard.life) + (monsterCard.temporaryLife ?? 0)}
           </span>
         </div>
       </div>

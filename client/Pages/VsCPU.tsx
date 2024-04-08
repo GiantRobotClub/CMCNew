@@ -25,7 +25,7 @@ const CPUClient = () => {
   const playerid = pid ? pid : "";
   const enemyid = enemy ? enemy : "none";
   return (
-    <div>
+    <div className="cmc-container">
       <Cmcpu
         dbplayerid={playerid}
         goesfirst="0"

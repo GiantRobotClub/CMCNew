@@ -18,7 +18,7 @@ const CmcClient = Client({
 const Cmc = () => {
   const { mid, pid, cred } = useParams();
   return (
-    <div>
+    <div className="cmc-container">
       <CmcClient
         credentials={cred ? JSON.parse(cred).playerCredentials : ""}
         matchID={mid}

@@ -698,7 +698,7 @@
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
       "name": "Skyrian Trooper",
-      "picture": "placeholder.jpg",
+      "picture": "soldier.png",
       "cardtext": "Just out of boot camp, and wing camp.",
       "type": "MONSTER",
       "sac": {
@@ -1828,10 +1828,10 @@
       "maxHand": 5,
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
-      "subtype": "",
+      "subtype": "slime sorceress",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "Sluissa, Slime Sorceress",
+      "name": "Sluissa",
       "picture": "slimesorceress.png",
       "cardtext": "This cauldron is my brewing one, THIS one is for sleeping.",
       "type": "PERSONA",
@@ -1916,10 +1916,10 @@
       "expansion": "base",
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
-      "subtype": "",
+      "subtype": "skyrian narrator",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
-      "name": "esecutore, narrator",
+      "name": "Esecutore",
       "picture": "persona.jpg",
       "cardtext": "It was a dark and stormy night, where our tale begins",
       "type": "PERSONA",
@@ -1972,7 +1972,7 @@
       "expansion": "base",
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
-      "subtype": "",
+      "subtype": "skyrian administrator",
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
       "name": "Administrator T",
@@ -3189,7 +3189,7 @@
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
       "name": "PALADIN peacekeeper",
-      "picture": "placeholder.jpg",
+      "picture": "paladinp.jpg",
       "cardtext": "",
       "type": "MONSTER",
       "sac": {
@@ -3325,7 +3325,7 @@
       "costFunction": "DefaultCost",
       "playFunction": "DefaultPlay",
       "name": "fae subroutine",
-      "picture": "placeholder.jpg",
+      "picture": "fairy.jpg",
       "cardtext": "",
       "type": "MONSTER",
       "sac": {
@@ -4505,7 +4505,7 @@
         }
       },
       "abilities": []
-    },    
+    },
     "TemporaryAttackDebugSpell": {
       "alignment": "ANODYNE",
       "guid": "TEMPORARY",
@@ -4537,7 +4537,7 @@
           "activateCode": "TemporaryStatGain",
           "metadata": {
             "lifeAmount": 0,
-            "attackAmount":10
+            "attackAmount": 10
           },
           "abilityName": "tempAttack",
           "abilityText": "Grant monster 10 temporary attack",
@@ -4577,7 +4577,7 @@
           "activateCode": "TemporaryStatGain",
           "metadata": {
             "lifeAmount": 10,
-            "attackAmount":0
+            "attackAmount": 0
           },
           "abilityName": "tempLife",
           "abilityText": "Grant monster 10 temporary life",
@@ -4617,7 +4617,7 @@
           "activateCode": "TemporaryStatGain",
           "metadata": {
             "lifeAmount": 20,
-            "attackAmount":20,
+            "attackAmount": 20,
             "matchPattern": {
               "type": "MONSTER"
             }
@@ -4629,6 +4629,5 @@
       ],
       "expansion": "base"
     }
-
   }
 }
