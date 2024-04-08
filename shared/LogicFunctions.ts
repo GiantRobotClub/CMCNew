@@ -119,6 +119,16 @@ function CardScan(
       }
     }
   }
+  // scan for hand and graveyard
+
+  for (const slotplayer in G.players) {
+    const hand: CMCCard[] = G.players[slotplayer].hand;
+    G.players[slotplayer].hand = hand.filter((crd, i) => !crd.obliterated);
+  }
+  for (const slotplayer in G.playerData) {
+    const grave: CMCCard[] = G.playerData[slotplayer].grave;
+    G.playerData[slotplayer].grave = grave.filter((crd, i) => !crd.obliterated);
+  }
 }
 
 function AddToGraveyard(card: CMCCard, G: CMCGameState) {

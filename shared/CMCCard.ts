@@ -46,6 +46,7 @@ interface CMCCardBase {
   };
 
   counters?: {};
+  obliterated: boolean;
 }
 
 interface CMCCard extends CMCCardBase {
@@ -83,6 +84,7 @@ function CreateBasicCard(guid: string = ""): CMCCard {
       },
     },
     abilities: [],
+    obliterated: false,
   };
 
   return card;

@@ -1248,7 +1248,8 @@
             "matchPlayer": "EITHER",
             "matchPattern": {
               "type": "MONSTER"
-            }
+            },
+            "chain": 1
           },
           "abilityName": "Artificial sweetner",
           "abilityText": "Deal 10 damage to target monster",
@@ -1259,6 +1260,7 @@
           "targetCode": "Match",
           "activateCode": "ApplyStats",
           "metadata": {
+            "chain": 2,
             "matchPlayer": "OWNER",
             "matchPattern": {
               "type": "MONSTER"
@@ -1271,8 +1273,7 @@
             }
           },
           "abilityName": "Stimulant",
-          "abilityText": "Target monster gains 10 (sword)",
-          "speed": 2
+          "abilityText": "Target monster gains 10 (sword)"
         },
         {
           "triggerType": "ACTIVATED_CHAIN",
@@ -1285,8 +1286,7 @@
             }
           },
           "abilityName": "Sugar crash",
-          "abilityText": "(dizzy) target monster",
-          "speed": 2
+          "abilityText": "(dizzy) target monster"
         }
       ]
     },
@@ -2252,7 +2252,7 @@
       },
       "abilities": [
         {
-          "costCode": "DestroyCost",
+          "costCode": ["DizzyCost"],
           "triggerType": "ACTIVATED_TARGETED",
           "activateCode": "Bounce",
           "targetCode": "Match",
@@ -2263,10 +2263,32 @@
           "speed": 5,
           "abilityName": "Dig up",
           "abilityText": "Add (skeleton)",
-          "abilityCostText": "(dizzy), Destroy target card in graveyard"
+          "abilityCostText": "(dizzy), Destroy target card in graveyard",
+          "chain": 1
         },
         {
-          "costCode": ["DizzyCost", "ResourceCost"],
+          "hide": true,
+          "triggerType": "ACTIVATED_CHAIN",
+          "targetCode": "Self",
+          "activateCode": "ApplyStats",
+          "metadata": {
+            "chain": 2,
+            "matchPlayer": "OWNER",
+            "matchPattern": {
+              "type": "MONSTER"
+            },
+
+            "statmod": {
+              "counters": {
+                "skeleton": 1
+              }
+            }
+          },
+          "abilityName": "Bone Pile",
+          "abilityText": "Add (skeleton)"
+        },
+        {
+          "costCode": ["DizzyCost"],
           "triggerType": "ACTIVATED_TARGETED",
           "targetCode": "Match",
           "activateCode": "SpawnCopy",
@@ -2284,9 +2306,30 @@
             }
           },
           "speed": 3,
-          "abilityName": "Assemble",
+          "abilityName": "Collect",
           "abilityText": "Create a Skeleton monster in target slot.",
           "abilityCostText": "(dizzy)(skeleton)"
+        },
+        {
+          "hide": true,
+          "triggerType": "ACTIVATED_CHAIN",
+          "targetCode": "Self",
+          "activateCode": "ApplyStats",
+          "metadata": {
+            "chain": 2,
+            "matchPlayer": "OWNER",
+            "matchPattern": {
+              "type": "MONSTER"
+            },
+
+            "statcheck": {
+              "counters": {
+                "skeleton": -1
+              }
+            }
+          },
+          "abilityName": "Assemble",
+          "abilityText": "Minus (skeleton)"
         }
       ],
       "attack": 10,

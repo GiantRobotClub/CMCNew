@@ -71,6 +71,7 @@ interface Ability {
   abilityName: string;
   abilityText: string;
   abilityCostText?: string;
+  hide?: boolean;
 }
 
 enum TriggerPlayerType {
@@ -270,7 +271,7 @@ function CanActivateAbility(
           target: target,
           dry: true,
         };
-      
+
         successTargets.push(card);
         // do dry run of cost.  will run the actual one afterwards.
         const result = costFunc(args);
@@ -281,7 +282,6 @@ function CanActivateAbility(
     } else {
       successTargets.push(card);
     }
-
   }
   return successTargets.length > 0;
 }

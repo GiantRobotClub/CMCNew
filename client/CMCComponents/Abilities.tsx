@@ -35,6 +35,9 @@ function CmcCardDetailAbility({
   let abilities = (
     <div className="abilitycontainer">
       {cardObject.abilities.map((ability, index) => {
+        if (ability.hide) {
+          return "";
+        }
         const showbutton =
           clickability &&
           (ability.triggerType == TriggerType.ACTIVATED ||

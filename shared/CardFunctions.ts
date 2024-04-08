@@ -205,21 +205,35 @@ export function ResourceCost(args: AbilityFunctionArgs): Targets {
   }
   return card;
 }
-
-function ApplyRecursion(target: any, stats: any, add: boolean) {
+//TODO: Version of apply stats that works as a Cost//
+function ApplyRecursion(
+  target: any,
+  stats: any,
+  add: boolean,
+  check: boolean = false
+) {
+  let success: boolean = true;
   if (!target) {
-    return target;
+    return [false, target];
   }
   if (typeof stats == "object") {
     for (const [key, value] of Object.entries(stats)) {
-      ApplyRecursion(target[key], value, add);
+      let returntarget;
+      [success, returntarget] = ApplyRecursion(target[key], value, add, check);
     }
   } else if (typeof stats == "number") {
-    target = stats + (add ? target : 0);
+    if (check) {
+      if (stats + target < 0) {
+        return [false, target];
+      }
+      return [true, target];
+    } else {
+      target = stats + (add ? target : 0);
+    }
   } else {
     target = stats;
   }
-  return target;
+  return [success, target];
 }
 export function ApplyStats(args: AbilityFunctionArgs): Targets {
   const { card, G, target, ability } = args;
@@ -239,8 +253,17 @@ export function ApplyStats(args: AbilityFunctionArgs): Targets {
     if (ability.metadata.statmod) {
       const stats = ability.metadata.statmod;
       //go through entire tree and apply
-      ApplyRecursion(target, stats, true);
-      realtargets.push(target);
+      let [success, returntarget] = ApplyRecursion(target, stats, true);
+      if (success) {
+        realtargets.push(target);
+      }
+    } else if (ability.metadata.statcheck) {
+      const stats = ability.metadata.statcheck;
+      //go through entire tree and apply
+      let [success, returntarget] = ApplyRecursion(target, stats, true, true);
+      if (success) {
+        realtargets.push(target);
+      }
     } else if (ability.metadata.statset) {
       const stats = ability.metadata.statset;
       // go through entir etree and set
@@ -573,6 +596,31 @@ export function DestroyTarget(args: AbilityFunctionArgs): Targets {
     if (IsMonster(target) || IsEffect(target)) {
       if (!target.destroyed) {
         target.destroyed = true;
+        realtargets.push(target);
+      }
+    } else {
+      console.error("isnt pereffectsona or monster");
+    }
+  }
+  return realtargets;
+}
+
+export function ObliterateTarget(args: AbilityFunctionArgs): Targets {
+  const { target, card, ability, G } = args;
+  if (!ability) {
+    return [];
+  }
+  const targets: CMCCard[] = ValidTargets(args, AllCards(G).allinplay);
+  const realtargets: CMCCard[] = [];
+  let found = false;
+  for (const target of targets) {
+    if (![CardType.EFFECT, CardType.MONSTER].includes(target.type)) {
+      console.error("isnt effect or monster");
+      continue;
+    }
+    if (IsMonster(target) || IsEffect(target)) {
+      if (!target.obliterated) {
+        target.obliterated = true;
         realtargets.push(target);
       }
     } else {
